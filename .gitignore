@@ -43,3 +43,7 @@ next-env.d.ts
 # local documents
 docs/
 
+# Claude Code instructions (personal, not shared)
+CLAUDE.md
+AGENTS.md
+
