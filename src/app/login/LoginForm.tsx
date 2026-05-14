@@ -45,6 +45,7 @@ const LoginForm = () => {
     //   form.setError("root", {message: "通信エラーが発生しました"});
     // }
     // console.log("OnSubmit is done");
+    form.reset();
   };
   return (
     <Card className="w-full sm:max-w-md mx-auto">
