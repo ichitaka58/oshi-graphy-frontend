@@ -1,0 +1,25 @@
+import { Artist } from "./artist";
+
+export type Diary = {
+  id: number;
+  user_id: number;
+  artist_id: number;
+  happened_on: string;
+  body: string;
+  is_public: boolean;
+  created_at: string;
+  updated_at: string;
+  comments_count: number;
+  likes_count:number;
+  liked_by_me: boolean;
+  artist: Artist;
+  cover_image: CoverImage | null;
+}
+
+export type CoverImage = {
+  id: number;
+  diary_id: number;
+  path: string;
+  created_at: string;
+  updated_at: string;
+}
