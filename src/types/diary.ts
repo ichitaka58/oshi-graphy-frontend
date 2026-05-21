@@ -10,11 +10,11 @@ export type Diary = {
   created_at: string;
   updated_at: string;
   comments_count: number;
-  likes_count:number;
+  likes_count: number;
   liked_by_me: boolean;
   artist: Artist;
   cover_image: CoverImage | null;
-}
+};
 
 export type CoverImage = {
   id: number;
@@ -22,4 +22,4 @@ export type CoverImage = {
   path: string;
   created_at: string;
   updated_at: string;
-}
+};
