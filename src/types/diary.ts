@@ -1,4 +1,5 @@
 import { Artist } from "./artist";
+import { Image } from "./image";
 
 export type Diary = {
   id: number;
@@ -9,11 +10,6 @@ export type Diary = {
   is_public: boolean;
   created_at: string;
   updated_at: string;
-  comments_count: number;
-  likes_count: number;
-  liked_by_me: boolean;
-  artist: Artist;
-  cover_image: CoverImage | null;
 };
 
 export type CoverImage = {
@@ -22,4 +18,20 @@ export type CoverImage = {
   path: string;
   created_at: string;
   updated_at: string;
+};
+
+export type DiaryListItem = Diary & {
+  comments_count: number;
+  likes_count: number;
+  liked_by_me: boolean;
+  artist: Artist;
+  cover_image: CoverImage | null;
+};
+
+export type DiaryDetail = Diary & {
+  comments_count: number;
+  likes_count: number;
+  liked_by_me: boolean;
+  artist: Artist;
+  images: Image[];
 };
