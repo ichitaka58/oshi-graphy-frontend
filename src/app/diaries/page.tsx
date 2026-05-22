@@ -34,7 +34,7 @@ const Diaries = async ({
   const lastPage: number = fetchData.diaries.last_page;
   const currentPage: number = fetchData.diaries.current_page;
   return (
-    <div className="max-w-4xl mx-auto">
+    <div className="max-w-4xl mx-auto pt-6">
       {/* <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
         {diaries.map((diary) => (
           <Card key={diary.id} className="">

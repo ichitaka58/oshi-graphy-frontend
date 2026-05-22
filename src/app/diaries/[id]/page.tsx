@@ -1,6 +1,17 @@
-import { Comment } from "@/types/comment";
-import { Diary } from "@/types/diary";
+import { DateFormatForHappenedOn, DateFormatForUpdatedAt } from "@/lib/date";
+import type { Comment } from "@/types/comment";
+import type { DiaryDetail } from "@/types/diary";
+import type { Image } from "@/types/image";
+import { ChevronLeft, Heart } from "lucide-react";
 import { cookies } from "next/headers";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+import "dayjs/locale/ja";
+import { DiaryCarousel } from "@/components/DiaryCarousel";
+import Link from "next/link";
+
+dayjs.extend(relativeTime);
+dayjs.locale("ja");
 
 const DiaryDetail = async ({ params }: { params: Promise<{ id: string }> }) => {
   const { id } = await params;
@@ -13,32 +24,53 @@ const DiaryDetail = async ({ params }: { params: Promise<{ id: string }> }) => {
   });
 
   const data = await res.json();
-  const diary: Diary = data.diary;
+  const diary: DiaryDetail = data.diary;
   const comments: Comment[] = data.comments;
-  console.log(comments);
+  const images: Image[] = diary.images;
+  // console.log(comments);
 
   return (
     <div>
-      <section>
-        <div>{diary.artist.name}</div>
-        <div>{diary.happened_on}</div>
-        <div>{diary.is_public ? "公開" : "非公開"}</div>
-        <div>{diary.body}</div>
-        <div>更新日時: {diary.updated_at}</div>
-        <div>{diary.likes_count}</div>
+      <Link href="/diaries">
+        <ChevronLeft />
+      </Link>
+      <section className="flex justify-between text-sm px-2">
+        <div className="flex">
+          <div>{DateFormatForHappenedOn(diary.happened_on)}</div>
+          <div>{diary.artist.name}</div>
+        </div>
+        <div>{diary.is_public ? "公 開" : "非公開"}</div>
       </section>
       <section>
+        <DiaryCarousel images={images} apiUrl={process.env.LARAVEL_API_URL!} />
+      </section>
+      <section className="p-2">
+        <div className="text-sm mb-2">{diary.body}</div>
+        <div className="flex justify-between">
+          <div className="text-xs">
+            更新日時: {DateFormatForUpdatedAt(diary.updated_at)}
+            {/* {dayjs(diary.updated_at).fromNow()} */}
+          </div>
+          <div className="flex gap-1 pr-4">
+            <Heart className="size-5" />
+            <div>{diary.likes_count}</div>
+          </div>
+        </div>
+      </section>
+      <section className="px-2 text-sm">
         {comments.length === 0 ? (
           <p>まだコメントはありません</p>
         ) : (
           comments.map((comment) => {
-            const hasReply: boolean = comment.depth > 0;
+            const isReply: boolean = comment.depth > 0;
             return (
-              <div key={comment.id}>
-                <div>{comment.user.name}</div>
-                <div>{comment.created_at}</div>
-                <div>{comment.likes_count}</div>
-                <div>{comment.likes_count}</div>
+              <div key={comment.id} className={`${isReply ? "ml-2" : "mt-2"}`}>
+                <div className="flex items-center gap-1 text-xs">
+                  <div>{comment.user.name}</div>
+                  <div>{dayjs(comment.created_at).fromNow()}</div>
+                  <Heart className="size-4" />
+                  <div>{comment.likes_count}</div>
+                </div>
                 <div>{comment.body}</div>
               </div>
             );
