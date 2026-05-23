@@ -31,15 +31,22 @@ const DiaryDetail = async ({ params }: { params: Promise<{ id: string }> }) => {
 
   return (
     <div>
-      <Link href="/diaries">
-        <ChevronLeft />
-      </Link>
-      <section className="flex justify-between text-sm px-2">
-        <div className="flex">
-          <div>{DateFormatForHappenedOn(diary.happened_on)}</div>
-          <div>{diary.artist.name}</div>
+      <section className="flex justify-between text-sm py-2 pr-2">
+        <div className="flex items-center gap-1">
+          <Link href="/diaries">
+            <ChevronLeft />
+          </Link>
+          <div className="flex gap-1">
+            <div>{DateFormatForHappenedOn(diary.happened_on)}</div>
+            <div>{diary.artist.name}</div>
+          </div>
+          <div
+            className={`text-[11px] px-2 py-0.5 rounded ${diary.is_public ? "bg-green-500 text-white" : "bg-gray-400 text-white"}`}
+          >
+            {diary.is_public ? "公 開" : "非公開"}
+          </div>
         </div>
-        <div>{diary.is_public ? "公 開" : "非公開"}</div>
+        <div>...</div>
       </section>
       <section>
         <DiaryCarousel images={images} apiUrl={process.env.LARAVEL_API_URL!} />
