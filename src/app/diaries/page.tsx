@@ -12,6 +12,7 @@ import { Heart, MessageCircle } from "lucide-react";
 import { cookies } from "next/headers";
 import Image from "next/image";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 
 const Diaries = async ({
   searchParams,
@@ -30,6 +31,9 @@ const Diaries = async ({
     },
   );
   const fetchData = await res.json();
+  if(res.status === 401) {
+    redirect("/login");
+  }
   const diaries: DiaryListItem[] = fetchData.diaries.data;
   const lastPage: number = fetchData.diaries.last_page;
   const currentPage: number = fetchData.diaries.current_page;
