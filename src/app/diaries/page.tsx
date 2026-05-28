@@ -21,19 +21,31 @@ const Diaries = async ({
 }) => {
   const { page = "1" } = await searchParams;
   const token = (await cookies()).get("token")?.value;
-  const res = await fetch(
-    `${process.env.LARAVEL_API_URL}/api/diaries?page=${page}`,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        Accept: "application/json",
-      },
-    },
-  );
-  const fetchData = await res.json();
-  if(res.status === 401) {
+  if (!token) {
     redirect("/login");
   }
+  let res: Response;
+  try {
+    res = await fetch(
+      `${process.env.LARAVEL_API_URL}/api/diaries?page=${page}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: "application/json",
+        },
+      },
+    );
+  } catch {
+    throw new Error("通信エラーが発生しました");
+  }
+  if (res.status === 401) {
+    redirect("/login");
+  }
+  if(!res.ok) {
+    throw new Error("データの取得に失敗しました");
+  }
+
+  const fetchData = await res.json();
   const diaries: DiaryListItem[] = fetchData.diaries.data;
   const lastPage: number = fetchData.diaries.last_page;
   const currentPage: number = fetchData.diaries.current_page;
@@ -83,9 +95,7 @@ const Diaries = async ({
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 motion-safe:animate-fade-up">
         {diaries.map((diary) => (
           <Link key={diary.id} href={`/diaries/${diary.id}`}>
-            <article
-              className="w-72 bg-slate-50 dark:text-gray-800 border border-gray-600 dark:border-gray-200 rounded-2xl shadow-md overflow-hidden transform transition-transform duration-200 hover:scale-105 hover:shadow-xl"
-            >
+            <article className="w-72 bg-slate-50 dark:text-gray-800 border border-gray-600 dark:border-gray-200 rounded-2xl shadow-md overflow-hidden transform transition-transform duration-200 hover:scale-105 hover:shadow-xl">
               <img
                 src={
                   diary.cover_image
