@@ -61,7 +61,7 @@ const LoginForm = () => {
             <Controller name="email" control={form.control} render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid}>
                 <FieldLabel htmlFor="form-login-email">email</FieldLabel>
-                <Input {...field} id="form-login-email" aria-invalid={fieldState.invalid} placeholder="メールアドレスを入力" autoComplete="email" />
+                <Input {...field} id="form-login-email" type="email" aria-invalid={fieldState.invalid} placeholder="メールアドレスを入力" autoComplete="email" />
                 {fieldState.invalid && (
                   <FieldError errors={[fieldState.error]} />
                 )}
@@ -70,7 +70,7 @@ const LoginForm = () => {
             <Controller name="password" control={form.control} render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid}>
                 <FieldLabel htmlFor="form-login-password">Password</FieldLabel>
-                <Input {...field} id="form-login-password" aria-invalid={fieldState.invalid} placeholder="パスワードを入力" autoComplete="current-password" />
+                <Input {...field} id="form-login-password" type="password" aria-invalid={fieldState.invalid} placeholder="パスワードを入力" autoComplete="current-password" />
                 {fieldState.invalid && (
                   <FieldError errors={[fieldState.error]} />
                 )}
