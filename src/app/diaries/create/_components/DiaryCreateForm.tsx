@@ -36,40 +36,67 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
+import { useEffect, useRef, useState } from "react";
 
 const DiaryCreateForm = () => {
   const form = useForm<DiaryCreateFormValues>({
     resolver: zodResolver(DiaryCreateFormSchema),
-    mode: "onBlur",
+    mode: "onSubmit",
     defaultValues: {
       happened_on: "",
       artist_id: 0,
       body: "",
+      images: [],
       is_public: false,
     },
   });
 
-  // onSubmitに修正する
+  // ファイル入力は value を React state で制御できないため、
+  // リセット時に imperatively クリアするために ref を保持する
+  const imageInputRef = useRef<HTMLInputElement>(null);
+
+  const [previewUrl, setPreviewUrl] = useState<string[]>([]);
+  // watch はフォームの値を監視し、変化のたびに再レンダーを起こす。
+  // 初回レンダー前は undefined を返す可能性があるため ?? [] でガードして
+  // 後続の useEffect 内での map を安全に実行できるようにする。
+  const imageFiles = form.watch("images") ?? [];
+  useEffect(() => {
+    const urls = imageFiles.map((file) => URL.createObjectURL(file));
+    setPreviewUrl(urls);
+    // Object URL は GC されないため、imageFiles が変わるたびに手動解放してメモリリークを防ぐ
+    return () => urls.forEach((url) => URL.revokeObjectURL(url));
+  }, [imageFiles]);
+
   const onSubmit = async (data: DiaryCreateFormValues) => {
+    // ファイルを含むため JSON ではなく FormData で送信する
     const formData = new FormData();
     formData.append("happened_on", data.happened_on);
     formData.append("artist_id", String(data.artist_id));
     formData.append("body", data.body);
+    // FormData は文字列しか扱えないため boolean を "1"/"0" に変換する
     formData.append("is_public", data.is_public ? "1" : "0");
+    // Laravel の配列フィールドは "images[]" というキー名で受け取る
     data.images?.forEach((file) => formData.append("images[]", file));
 
+    // 成功時は createDiary 内で redirect() が例外をスローして終了するため戻り値がなく、result は undefined になる
     const result = await createDiary(formData);
     if (result && !result.success) {
       form.setError("root", { message: result.message });
     }
   };
+
   return (
     <Card className="w-full sm:max-w-md">
-      <CardHeader>
-        <CardTitle>日記作成</CardTitle>
+      <CardHeader className="flex justify-center">
+        <CardTitle className="font-semibold">日記作成</CardTitle>
       </CardHeader>
       <CardContent>
         <form id="form-create-diary" onSubmit={form.handleSubmit(onSubmit)}>
+          {form.formState.errors.root && (
+            <p className="mb-4 rounded-md bg-red-50 px-4 py-2 text-sm text-red-600">
+              {form.formState.errors.root.message}
+            </p>
+          )}
           <FieldGroup>
             {/* 日付 */}
             <Controller
@@ -77,7 +104,10 @@ const DiaryCreateForm = () => {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="form-create-diary-happened_on">
+                  <FieldLabel
+                    htmlFor="form-create-diary-happened_on"
+                    className="font-semibold"
+                  >
                     日付
                   </FieldLabel>
                   <Input
@@ -88,7 +118,10 @@ const DiaryCreateForm = () => {
                     autoComplete="off"
                   />
                   {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
+                    <FieldError
+                      errors={[fieldState.error]}
+                      className="text-xs"
+                    />
                   )}
                 </Field>
               )}
@@ -100,7 +133,10 @@ const DiaryCreateForm = () => {
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldContent>
-                    <FieldLabel htmlFor="form-create-diary-artist_id">
+                    <FieldLabel
+                      htmlFor="form-create-diary-artist_id"
+                      className="font-semibold"
+                    >
                       アーティスト
                     </FieldLabel>
                   </FieldContent>
@@ -122,7 +158,10 @@ const DiaryCreateForm = () => {
                     </SelectContent>
                   </Select>
                   {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
+                    <FieldError
+                      errors={[fieldState.error]}
+                      className="text-xs"
+                    />
                   )}
                 </Field>
               )}
@@ -133,7 +172,12 @@ const DiaryCreateForm = () => {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="form-create-diary-body">本文</FieldLabel>
+                  <FieldLabel
+                    htmlFor="form-create-diary-body"
+                    className="font-semibold"
+                  >
+                    本文
+                  </FieldLabel>
                   <Textarea
                     {...field}
                     id="form-create-diary-body"
@@ -141,7 +185,10 @@ const DiaryCreateForm = () => {
                     rows={6}
                   />
                   {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
+                    <FieldError
+                      errors={[fieldState.error]}
+                      className="text-xs"
+                    />
                   )}
                 </Field>
               )}
@@ -152,7 +199,10 @@ const DiaryCreateForm = () => {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="form-crete-diary-images">
+                  <FieldLabel
+                    htmlFor="form-crete-diary-images"
+                    className="font-semibold"
+                  >
                     写真
                   </FieldLabel>
                   <Input
@@ -162,7 +212,10 @@ const DiaryCreateForm = () => {
                     aria-invalid={fieldState.invalid}
                     multiple
                     name={field.name}
-                    ref={field.ref}
+                    ref={(el) => {
+                      field.ref(el);
+                      imageInputRef.current = el;
+                    }}
                     onBlur={field.onBlur}
                     onChange={(e) => {
                       const files = e.target.files;
@@ -172,6 +225,19 @@ const DiaryCreateForm = () => {
                   {fieldState.invalid && (
                     <FieldError errors={[fieldState.error]} />
                   )}
+                  {/* 写真のプレビュー表示 */}
+                  {previewUrl && (
+                    <div className="grid grid-cols-2 gap-1">
+                      {previewUrl.map((url, index) => (
+                        <img
+                          key={index}
+                          src={url}
+                          alt={`preview-${index}`}
+                          className="h-24 w-full object-cover"
+                        />
+                      ))}
+                    </div>
+                  )}
                 </Field>
               )}
             />
@@ -180,41 +246,55 @@ const DiaryCreateForm = () => {
               name="is_public"
               control={form.control}
               render={({ field, fieldState }) => (
-                <FieldSet>
-                  <FieldLegend variant="label">公開設定</FieldLegend>
-                  <Field
-                    orientation="horizontal"
-                    data-invalid={fieldState.invalid}
-                  >
-                    <FieldContent>
-                      <FieldLabel htmlFor="form-create-diary-is_public">
-                        公開する
-                      </FieldLabel>
-                      {fieldState.invalid && (
-                        <FieldError errors={[fieldState.error]} />
-                      )}
-                    </FieldContent>
-                    <Switch
-                      id="form-create-diary-is_public"
-                      name={field.name}
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                      aria-invalid={fieldState.invalid}
-                    />
-                  </Field>
-                </FieldSet>
+                <Field
+                  orientation="horizontal"
+                  data-invalid={fieldState.invalid}
+                >
+                  <FieldContent>
+                    <FieldLabel
+                      htmlFor="form-create-diary-is_public"
+                      className="font-semibold"
+                    >
+                      公開する
+                    </FieldLabel>
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </FieldContent>
+                  <Switch
+                    id="form-create-diary-is_public"
+                    name={field.name}
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                    aria-invalid={fieldState.invalid}
+                    className="data-checked:bg-[#F8DE6F]"
+                  />
+                </Field>
               )}
             />
           </FieldGroup>
         </form>
       </CardContent>
       <CardFooter>
-        <Field orientation="horizontal">
-          <Button type="button" variant="outline" onClick={() => form.reset()}>
-            クリア
-          </Button>
-          <Button type="submit" form="form-create-diary">
+        <Field orientation="horizontal" className="justify-center">
+          <Button
+            type="submit"
+            form="form-create-diary"
+            className="bg-[#F8DE6F] text-black font-semibold"
+          >
             保存
+          </Button>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => {
+              form.reset();
+              if (imageInputRef.current) {
+                imageInputRef.current.value = "";
+              }
+            }}
+          >
+            クリア
           </Button>
         </Field>
       </CardFooter>
