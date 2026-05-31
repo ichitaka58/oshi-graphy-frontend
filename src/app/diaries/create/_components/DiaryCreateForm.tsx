@@ -20,23 +20,15 @@ import {
   FieldError,
   FieldGroup,
   FieldLabel,
-  FieldLegend,
-  FieldSet,
 } from "@/components/ui/field";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { useEffect, useRef, useState } from "react";
+import { Artist } from "@/types/artist";
+import { searchArtists } from "@/app/artists/actions";
+import { Combobox, ComboboxContent, ComboboxEmpty, ComboboxInput, ComboboxItem, ComboboxList } from "@/components/ui/combobox";
 
 const DiaryCreateForm = () => {
   const form = useForm<DiaryCreateFormValues>({
@@ -66,6 +58,23 @@ const DiaryCreateForm = () => {
     // Object URL は GC されないため、imageFiles が変わるたびに手動解放してメモリリークを防ぐ
     return () => urls.forEach((url) => URL.revokeObjectURL(url));
   }, [imageFiles]);
+
+  const [query, setQuery] = useState<string>("");
+  const [artists, setArtists] = useState<Artist[]>([]);
+  // 選択後に artists（検索結果）が変わっても名前を表示し続けるため別 state で保持する
+  const [selectedArtistName, setSelectedArtistName] = useState<string>("");
+
+  // 入力のたびに API を叩かないよう 300ms デバウンスする
+  useEffect(() => {
+    if(query.length < 1) return;
+    const timer = setTimeout(async() => {
+      const results = await searchArtists(query);
+      setArtists(results)
+    }, 300);
+    return () => clearTimeout(timer);
+  }, [query])
+
+  console.log(artists);
 
   const onSubmit = async (data: DiaryCreateFormValues) => {
     // ファイルを含むため JSON ではなく FormData で送信する
@@ -140,23 +149,55 @@ const DiaryCreateForm = () => {
                       アーティスト
                     </FieldLabel>
                   </FieldContent>
-                  <Select
+                  {/*
+                    items ではなく filteredItems を使う理由:
+                    items を渡すと base-ui がクライアント側でさらにフィルタリングしてしまう。
+                    サーバー検索済みの結果をそのまま表示するために filteredItems を使う。
+                  */}
+                  <Combobox
+                    filteredItems={artists}
                     name={field.name}
-                    value={field.value ? String(field.value) : ""}
-                    onValueChange={field.onChange}
+                    value={field.value > 0 ? field.value : null}
+                    onValueChange={(value) => {
+                      if (value) {
+                        const artist = artists.find((a) => a.id === value);
+                        // 選択時点の名前を保存しておく（itemToStringLabel で使用）
+                        setSelectedArtistName(artist?.name ?? "");
+                        field.onChange(value);
+                      } else {
+                        setSelectedArtistName("");
+                        field.onChange(0);
+                      }
+                    }}
+                    onInputValueChange={(value, details) => {
+                      // アイテム選択時にも onInputValueChange が発火するため reason で絞る。
+                      // "input-change" 以外（"item-press" 等）でも setQuery すると
+                      // 選択直後に id の文字列で検索が走り、選択が崩れる。
+                      if (details.reason === "input-change") {
+                        setQuery(value);
+                      }
+                    }}
+                    // value は artist.id（number）のため、そのままでは id 文字列がインプットに表示される。
+                    // itemToStringLabel で選択後のインプット表示を名前に上書きする。
+                    itemToStringLabel={() => selectedArtistName}
                   >
-                    <SelectTrigger
+                    <ComboboxInput
+                      placeholder="アーティストを選択"
                       id="form-create-diary-artist_id"
                       aria-invalid={fieldState.invalid}
-                    >
-                      <SelectValue placeholder="--アーティストを選択--" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="1">森高千里</SelectItem>
-                      <SelectItem value="10">DREAM COME TRUE</SelectItem>
-                      <SelectItem value="12">伊藤蘭</SelectItem>
-                    </SelectContent>
-                  </Select>
+                      showClear
+                    />
+                    <ComboboxContent>
+                      <ComboboxEmpty>アーティストが存在しません</ComboboxEmpty>
+                      <ComboboxList>
+                        {(item: Artist) => (
+                          <ComboboxItem key={item.id} value={item.id}>
+                            {item.name}
+                          </ComboboxItem>
+                        )}
+                      </ComboboxList>
+                    </ComboboxContent>
+                  </Combobox>
                   {fieldState.invalid && (
                     <FieldError
                       errors={[fieldState.error]}
