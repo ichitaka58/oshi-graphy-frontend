@@ -9,6 +9,7 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import "dayjs/locale/ja";
 import { DiaryCarousel } from "@/components/DiaryCarousel";
 import Link from "next/link";
+import DiaryActionsMenu from "./_components/diary-actions-menu";
 
 dayjs.extend(relativeTime);
 dayjs.locale("ja");
@@ -27,11 +28,11 @@ const DiaryDetail = async ({ params }: { params: Promise<{ id: string }> }) => {
   const diary: DiaryDetail = data.diary;
   const comments: Comment[] = data.comments;
   const images: Image[] = diary.images;
-  // console.log(comments);
+
 
   return (
     <div>
-      <section className="flex justify-between text-sm py-2 pr-2">
+      <section className="flex justify-between text-sm py-2 pr-2 mb-4">
         <div className="flex items-center gap-1">
           <Link href="/diaries">
             <ChevronLeft />
@@ -46,44 +47,54 @@ const DiaryDetail = async ({ params }: { params: Promise<{ id: string }> }) => {
             {diary.is_public ? "公 開" : "非公開"}
           </div>
         </div>
-        <div>...</div>
-      </section>
-      <section>
-        <DiaryCarousel images={images} apiUrl={process.env.LARAVEL_API_URL!} />
-      </section>
-      <section className="p-2">
-        <div className="text-sm mb-2">{diary.body}</div>
-        <div className="flex justify-between">
-          <div className="text-xs">
-            更新日時: {DateFormatForUpdatedAt(diary.updated_at)}
-            {/* {dayjs(diary.updated_at).fromNow()} */}
-          </div>
-          <div className="flex gap-1 pr-4">
-            <Heart className="size-5" />
-            <div>{diary.likes_count}</div>
-          </div>
+        <div>
+          <DiaryActionsMenu id={id} />
         </div>
       </section>
-      <section className="px-2 text-sm">
-        {comments.length === 0 ? (
-          <p>まだコメントはありません</p>
-        ) : (
-          comments.map((comment) => {
-            const isReply: boolean = comment.depth > 0;
-            return (
-              <div key={comment.id} className={`${isReply ? "ml-2" : "mt-2"}`}>
-                <div className="flex items-center gap-1 text-xs">
-                  <div>{comment.user.name}</div>
-                  <div>{dayjs(comment.created_at).fromNow()}</div>
-                  <Heart className="size-4" />
-                  <div>{comment.likes_count}</div>
+      <div className="w-72 mx-auto">
+        <section className="mb-4">
+          <DiaryCarousel
+            images={images}
+            apiUrl={process.env.LARAVEL_API_URL!}
+          />
+        </section>
+        <section className="p-4 bg-white">
+          <div className="text-sm mb-2">{diary.body}</div>
+          <div className="flex justify-between">
+            <div className="text-xs">
+              更新日時: {DateFormatForUpdatedAt(diary.updated_at)}
+              {/* {dayjs(diary.updated_at).fromNow()} */}
+            </div>
+            <div className="flex gap-1 pr-4">
+              <Heart className="size-5" />
+              <div>{diary.likes_count}</div>
+            </div>
+          </div>
+        </section>
+        <section className="px-2 text-sm">
+          {comments.length === 0 ? (
+            <p>まだコメントはありません</p>
+          ) : (
+            comments.map((comment) => {
+              const isReply: boolean = comment.depth > 0;
+              return (
+                <div
+                  key={comment.id}
+                  className={`${isReply ? "ml-2" : "mt-2"}`}
+                >
+                  <div className="flex items-center gap-1 text-xs">
+                    <div>{comment.user.name}</div>
+                    <div>{dayjs(comment.created_at).fromNow()}</div>
+                    <Heart className="size-4" />
+                    <div>{comment.likes_count}</div>
+                  </div>
+                  <div>{comment.body}</div>
                 </div>
-                <div>{comment.body}</div>
-              </div>
-            );
-          })
-        )}
-      </section>
+              );
+            })
+          )}
+        </section>
+      </div>
     </div>
   );
 };
