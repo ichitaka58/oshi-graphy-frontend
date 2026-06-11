@@ -24,24 +24,20 @@ const Diaries = async ({
   if (!token) {
     redirect("/login");
   }
-  let res: Response;
-  try {
-    res = await fetch(
-      `${process.env.LARAVEL_API_URL}/api/diaries?page=${page}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: "application/json",
-        },
+  
+  const res = await fetch(
+    `${process.env.LARAVEL_API_URL}/api/diaries?page=${page}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: "application/json",
       },
-    );
-  } catch {
-    throw new Error("通信エラーが発生しました");
-  }
+    },
+  );
   if (res.status === 401) {
     redirect("/login");
   }
-  if(!res.ok) {
+  if (!res.ok) {
     throw new Error("データの取得に失敗しました");
   }
 
@@ -49,6 +45,7 @@ const Diaries = async ({
   const diaries: DiaryListItem[] = fetchData.diaries.data;
   const lastPage: number = fetchData.diaries.last_page;
   const currentPage: number = fetchData.diaries.current_page;
+
   return (
     <div className="max-w-4xl mx-auto pt-6">
       {/* <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
