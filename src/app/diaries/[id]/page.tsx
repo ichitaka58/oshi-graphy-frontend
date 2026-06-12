@@ -69,7 +69,6 @@ const DiaryDetail = async ({ params }: { params: Promise<{ id: string }> }) => {
           <div className="flex justify-between">
             <div className="text-xs">
               更新日時: {DateFormatForUpdatedAt(diary.updated_at)}
-              {/* {dayjs(diary.updated_at).fromNow()} */}
             </div>
             <div className="flex gap-1 pr-4">
               <Heart className="size-5" />
