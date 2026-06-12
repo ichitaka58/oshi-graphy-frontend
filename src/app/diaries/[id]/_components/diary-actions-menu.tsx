@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Ellipsis, SquarePen, Trash2 } from "lucide-react";
 import { deleteDiary } from "../../actions";
+import Link from "next/link";
 
 
 const DiaryActionsMenu = ({id}: {id: string}) => {
@@ -29,10 +30,12 @@ const DiaryActionsMenu = ({id}: {id: string}) => {
       </DropdownMenuTrigger>
       <DropdownMenuContent>
         <DropdownMenuGroup>
-          <DropdownMenuItem>
-            <SquarePen />
-            編集
-          </DropdownMenuItem>
+          <Link href={`/diaries/${id}/edit`}>
+            <DropdownMenuItem>
+              <SquarePen />
+              編集
+            </DropdownMenuItem>
+          </Link>
           <DropdownMenuItem variant="destructive" onClick={handleDelete}>
             <Trash2 />
             削除
