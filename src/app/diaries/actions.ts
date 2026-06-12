@@ -32,6 +32,31 @@ export async function createDiary(formData: FormData) {
   redirect("/diaries");
 }
 
+// 日記の更新処理
+export async function updateDiary(id: string, formData: FormData) {
+  const token = (await cookies()).get("token")?.value;
+  if (!token) {
+    redirect("/login");
+  }
+  formData.append("_method", "PUT");
+  const res = await fetch(`${process.env.LARAVEL_API_URL}/api/diaries/${id}`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: formData,
+  });
+  if (res.status === 401) redirect("/login");
+  if (!res.ok) {
+    return {
+      success: false,
+      message: `日記の更新に失敗しました(${res.status})`,
+    };
+  }
+  redirect(`/diaries/${id}`);
+
+}
+
 // 日記の削除処理
 export async function deleteDiary(id: string) {
   const token = (await cookies()).get("token")?.value;

@@ -35,3 +35,8 @@ export type DiaryDetail = Diary & {
   artist: Artist;
   images: Image[];
 };
+
+export type DiaryEditItem = Diary & {
+  artist: Artist;
+  images: Image[];
+}
