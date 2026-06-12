@@ -10,6 +10,7 @@ import "dayjs/locale/ja";
 import { DiaryCarousel } from "@/components/DiaryCarousel";
 import Link from "next/link";
 import DiaryActionsMenu from "./_components/diary-actions-menu";
+import { redirect } from "next/navigation";
 
 dayjs.extend(relativeTime);
 dayjs.locale("ja");
@@ -23,12 +24,17 @@ const DiaryDetail = async ({ params }: { params: Promise<{ id: string }> }) => {
       Accept: "application/json",
     },
   });
+  if (res.status === 401) {
+    redirect("/login");
+  }
+  if (!res.ok) {
+    throw new Error("データの取得に失敗しました");
+  }
 
   const data = await res.json();
   const diary: DiaryDetail = data.diary;
   const comments: Comment[] = data.comments;
   const images: Image[] = diary.images;
-
 
   return (
     <div>
