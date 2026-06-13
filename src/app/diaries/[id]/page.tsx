@@ -7,7 +7,7 @@ import { cookies } from "next/headers";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import "dayjs/locale/ja";
-import { DiaryCarousel } from "@/components/DiaryCarousel";
+import { DiaryCarousel } from "@/components/diary-carousel";
 import Link from "next/link";
 import DiaryActionsMenu from "./_components/diary-actions-menu";
 import { redirect } from "next/navigation";
