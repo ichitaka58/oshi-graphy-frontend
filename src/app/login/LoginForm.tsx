@@ -52,7 +52,7 @@ const LoginForm = () => {
   };
   return (
     <Card className="w-full sm:max-w-md mx-auto">
-      <CardHeader>
+      <CardHeader className="flex justify-center">
         <CardTitle>ログイン</CardTitle>
       </CardHeader>
       <CardContent>
