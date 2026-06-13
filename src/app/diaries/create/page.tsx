@@ -1,4 +1,4 @@
-import DiaryCreateForm from "./_components/DiaryCreateForm";
+import DiaryCreateForm from "./_components/diary-create-form";
 
 const DiaryCreatePage = () => {
   return (
