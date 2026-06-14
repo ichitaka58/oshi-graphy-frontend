@@ -46,4 +46,5 @@ docs/
 # Claude Code instructions (personal, not shared)
 CLAUDE.md
 AGENTS.md
+CLAUDE.local.md
 
