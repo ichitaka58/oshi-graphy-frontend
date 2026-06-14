@@ -1,16 +1,9 @@
 import DiariesPagination from "@/components/diaries-pagination";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from "@/components/ui/card";
-import { Pagination } from "@/components/ui/pagination";
+import { Badge } from "@/components/ui/badge";
 import { DateFormatForHappenedOn } from "@/lib/date";
 import type { DiaryListItem } from "@/types/diary";
 import { Heart, MessageCircle } from "lucide-react";
 import { cookies } from "next/headers";
-import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
@@ -48,51 +41,10 @@ const Diaries = async ({
 
   return (
     <div className="max-w-4xl mx-auto pt-6">
-      {/* <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2">
-        {diaries.map((diary) => (
-          <Card key={diary.id} className="">
-            <div className="absolute inset-0 z-30 aspect-video" />
-            <Image
-              src="/placeholder.png"
-              alt="cover image"
-              width={400}
-              height={225}
-              className="w-full object-cover h-40"
-              // className="relative z-20 aspect-video w-full object-cover h-40"
-            />
-            <CardHeader className="flex items-center justify-between pb-0">
-              <div className="text-gray-600 text-xs">
-                {new Intl.DateTimeFormat("ja-JP", {
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                }).format(new Date(diary.happened_on))}
-              </div>
-              <div className="text-red-500">{diary.artist.name}</div>
-            </CardHeader>
-            <CardContent className="w-full pt-0">
-              <p className="text-sm line-clamp-2 lg:line-clamp-3 mb-2">
-                {diary.body}
-              </p>
-            </CardContent>
-            <CardFooter className="justify-between">
-              <div>{diary.is_public ? "公開" : "非公開"}</div>
-              <div className="flex gap-2">
-                <div className="flex items-center gap-1">
-                  <Heart className="size-5" />
-                  <span>{diary.likes_count}</span>
-                </div>
-                <div>コメント({diary.comments_count})</div>
-              </div>
-            </CardFooter>
-          </Card>
-        ))}
-      </div> */}
-
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 motion-safe:animate-fade-up">
         {diaries.map((diary) => (
           <Link key={diary.id} href={`/diaries/${diary.id}`}>
-            <article className="w-72 bg-slate-50 dark:text-gray-800 border border-gray-600 dark:border-gray-200 rounded-2xl shadow-md overflow-hidden transform transition-transform duration-200 hover:scale-105 hover:shadow-xl">
+            <article className="w-72 bg-card text-card-foreground border border-border rounded-2xl shadow-md overflow-hidden transform transition-transform duration-200 hover:scale-105 hover:shadow-xl">
               <img
                 src={
                   diary.cover_image
@@ -104,9 +56,12 @@ const Diaries = async ({
               />
               <div className="flex flex-col justify-between h-32 p-3">
                 <div>
-                  <div className="flex justify-between text-xs text-gray-600 mb-1">
-                    <span>{DateFormatForHappenedOn(diary.happened_on)}</span>
-                    <span className="text-red-500">{diary.artist.name}</span>
+                  <div className="flex justify-between text-xs mb-1">
+                    <span className="text-muted-foreground">
+                      {DateFormatForHappenedOn(diary.happened_on)}
+                    </span>
+                    <Badge variant="secondary" className="text-red-500">{diary.artist.name}</Badge>
+                    {/* <span className="text-red-500">{diary.artist.name}</span> */}
                   </div>
                   <p className="text-sm line-clamp-2 lg:line-clamp-3 mb-2">
                     {diary.body}
@@ -118,7 +73,7 @@ const Diaries = async ({
                   >
                     {diary.is_public ? "公開" : "非公開"}
                   </span>
-                  <div className="flex items-center gap-1">
+                  <div className="flex items-center gap-1 text-accent">
                     <Heart className="size-5" />
                     <span>{diary.likes_count}</span>
                     <MessageCircle className="size-5" />

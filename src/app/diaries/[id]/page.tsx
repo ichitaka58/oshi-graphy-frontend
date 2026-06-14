@@ -39,13 +39,13 @@ const DiaryDetail = async ({ params }: { params: Promise<{ id: string }> }) => {
   return (
     <div>
       <section className="flex justify-between text-sm py-2 pr-2 mb-4">
-        <div className="flex items-center gap-1">
+        <div className="flex items-center gap-1 text-muted-foreground">
           <Link href="/diaries">
             <ChevronLeft />
           </Link>
           <div className="flex gap-1">
             <div>{DateFormatForHappenedOn(diary.happened_on)}</div>
-            <div>{diary.artist.name}</div>
+            <div className="text-primary-foreground">{diary.artist.name}</div>
           </div>
           <div
             className={`text-[11px] px-2 py-0.5 rounded ${diary.is_public ? "bg-green-500 text-white" : "bg-gray-400 text-white"}`}
@@ -64,13 +64,13 @@ const DiaryDetail = async ({ params }: { params: Promise<{ id: string }> }) => {
             apiUrl={process.env.LARAVEL_API_URL!}
           />
         </section>
-        <section className="p-4 bg-white">
-          <div className="text-sm mb-2">{diary.body}</div>
+        <section className="p-4 bg-card">
+          <div className="text-sm mb-2 text-primary-foreground">{diary.body}</div>
           <div className="flex justify-between">
-            <div className="text-xs">
+            <div className="text-xs text-muted-foreground">
               更新日時: {DateFormatForUpdatedAt(diary.updated_at)}
             </div>
-            <div className="flex gap-1 pr-4">
+            <div className="flex gap-1 pr-4 text-accent">
               <Heart className="size-5" />
               <div>{diary.likes_count}</div>
             </div>
@@ -78,7 +78,7 @@ const DiaryDetail = async ({ params }: { params: Promise<{ id: string }> }) => {
         </section>
         <section className="px-2 text-sm">
           {comments.length === 0 ? (
-            <p>まだコメントはありません</p>
+            <p className="text-muted-foreground mt-4">まだコメントはありません</p>
           ) : (
             comments.map((comment) => {
               const isReply: boolean = comment.depth > 0;
