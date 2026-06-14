@@ -5,7 +5,6 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
 import { Controller, useForm } from "react-hook-form";
 import z from "zod";
 
@@ -17,7 +16,6 @@ const LoginFormSchema = z.object({
 });
 
 const LoginForm = () => {
-  const router = useRouter();
 
   const form = useForm<z.infer<typeof LoginFormSchema>>({
     resolver: zodResolver(LoginFormSchema),
@@ -29,7 +27,6 @@ const LoginForm = () => {
   });
 
   const onSubmit = async (data: z.infer<typeof LoginFormSchema>) => {
-    // console.log(data);
     try {
       const res = await fetch("/api/auth/login", {
         method: "POST",
@@ -42,7 +39,7 @@ const LoginForm = () => {
         form.setError("root", {message: "メールアドレスまたはパスワードが違います"});
         return;
       }
-      router.push("/diaries");
+      window.location.href = "/diaries";
     } catch (error) {
       console.error("Error:", error);
       form.setError("root", {message: "通信エラーが発生しました"});
