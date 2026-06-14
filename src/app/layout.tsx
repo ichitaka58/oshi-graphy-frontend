@@ -1,11 +1,19 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist_Mono, M_PLUS_Rounded_1c, Poppins } from "next/font/google";
 import "./globals.css";
 import Header from "@/components/header";
+import Footer from "@/components/footer";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const poppins = Poppins({
+  variable: "--font-heading",
   subsets: ["latin"],
+  weight: ["400", "600", "700"],
+});
+
+const mPlusRounded = M_PLUS_Rounded_1c({
+  variable: "--font-sans",
+  weight: ["400", "500", "700"],
+  preload: false,
 });
 
 const geistMono = Geist_Mono({
@@ -25,12 +33,13 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      lang="ja"
+      className={`${poppins.variable} ${mPlusRounded.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col bg-[#FCF9F0]">
+      <body className="min-h-screen flex flex-col bg-background">
         <Header />
-        <main className="flex flex-col">{children}</main>
+        <main className="flex flex-col flex-1">{children}</main>
+        <Footer />
       </body>
     </html>
   );
