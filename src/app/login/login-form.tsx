@@ -7,7 +7,6 @@ import { Input } from "@/components/ui/input";
 import { LoginFormSchema, LoginFormValues } from "@/lib/schemas/login";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
-import z from "zod";
 
 
 const LoginForm = () => {
@@ -41,16 +40,18 @@ const LoginForm = () => {
       console.error("Error:", error);
       form.setError("root", { message: "通信エラーが発生しました" });
     }
-    console.log("OnSubmit is done");
     form.reset();
   };
   return (
     <Card className="w-full sm:max-w-md mx-auto">
       <CardHeader className="flex justify-center">
-        <CardTitle>ログイン</CardTitle>
+        <CardTitle className="font-bold">ログイン</CardTitle>
       </CardHeader>
       <CardContent>
         <form id="form-login" onSubmit={form.handleSubmit(onSubmit)}>
+          {form.formState.errors.root && (
+            <FieldError errors={[form.formState.errors.root]} />
+          )}
           <FieldGroup>
             <Controller name="email" control={form.control} render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid}>
@@ -74,7 +75,7 @@ const LoginForm = () => {
         </form>
       </CardContent>
       <CardFooter>
-        <Field orientation="horizontal">
+        <Field orientation="horizontal" className="justify-center">
           <Button type="button" variant="outline" onClick={() => form.reset()}>Reset</Button>
           <Button type="submit" form="form-login">ログイン</Button>
         </Field>
