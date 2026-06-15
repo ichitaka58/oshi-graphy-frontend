@@ -4,20 +4,15 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
+import { LoginFormSchema, LoginFormValues } from "@/lib/schemas/login";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import z from "zod";
 
-const LoginFormSchema = z.object({
-  email: z
-    .email("メールアドレスが無効です")
-    .min(1, "メールアドレスを入力してください"),
-  password: z.string().min(1, "パスワードを入力してください"),
-});
 
 const LoginForm = () => {
 
-  const form = useForm<z.infer<typeof LoginFormSchema>>({
+  const form = useForm<LoginFormValues>({
     resolver: zodResolver(LoginFormSchema),
     mode: "onBlur",
     defaultValues: {
@@ -26,7 +21,7 @@ const LoginForm = () => {
     },
   });
 
-  const onSubmit = async (data: z.infer<typeof LoginFormSchema>) => {
+  const onSubmit = async (data: LoginFormValues) => {
     try {
       const res = await fetch("/api/auth/login", {
         method: "POST",
@@ -36,13 +31,15 @@ const LoginForm = () => {
         body: JSON.stringify(data),
       });
       if (!res.ok) {
-        form.setError("root", {message: "メールアドレスまたはパスワードが違います"});
+        form.setError("root", {
+          message: "メールアドレスまたはパスワードが違います",
+        });
         return;
       }
       window.location.href = "/diaries";
     } catch (error) {
       console.error("Error:", error);
-      form.setError("root", {message: "通信エラーが発生しました"});
+      form.setError("root", { message: "通信エラーが発生しました" });
     }
     console.log("OnSubmit is done");
     form.reset();
@@ -57,7 +54,7 @@ const LoginForm = () => {
           <FieldGroup>
             <Controller name="email" control={form.control} render={({ field, fieldState }) => (
               <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor="form-login-email">email</FieldLabel>
+                <FieldLabel htmlFor="form-login-email">Email</FieldLabel>
                 <Input {...field} id="form-login-email" type="email" aria-invalid={fieldState.invalid} placeholder="メールアドレスを入力" autoComplete="email" />
                 {fieldState.invalid && (
                   <FieldError errors={[fieldState.error]} />
