@@ -17,12 +17,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { RegisterFormSchema, RegisterFormValues } from "@/lib/schemas/register";
 import { zodResolver } from "@hookform/resolvers/zod";
+import Link from "next/link";
 import { Controller, useForm } from "react-hook-form";
 
 const RegisterForm = () => {
   const form = useForm<RegisterFormValues>({
     resolver: zodResolver(RegisterFormSchema),
-    mode: "onBlur",
+    mode: "onSubmit",
     defaultValues: {
       name: "",
       email: "",
@@ -158,7 +159,7 @@ const RegisterForm = () => {
           </FieldGroup>
         </form>
       </CardContent>
-      <CardFooter>
+      <CardFooter className="flex-col gap-2">
         <Field orientation="horizontal" className="justify-center">
           <Button type="button" variant="outline" onClick={() => form.reset()}>
             Reset
@@ -166,6 +167,14 @@ const RegisterForm = () => {
           <Button type="submit" form="form-register">
             新規登録
           </Button>
+        </Field>
+        <Field orientation="horizontal" className="justify-center">
+          <p className="text-xs text-muted-foreground/80">
+            登録済みの方は
+            <Link href="/login" className="underline">
+              こちら
+            </Link>
+          </p>
         </Field>
       </CardFooter>
     </Card>
