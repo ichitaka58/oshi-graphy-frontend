@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import Image from "next/image"
 import {
   Carousel,
   CarouselContent,
@@ -9,14 +10,13 @@ import {
   CarouselPrevious,
   type CarouselApi,
 } from "@/components/ui/carousel"
-import type { Image } from "@/types/image"
+import type { Image as ImageType } from "@/types/image"
 
 type Props = {
-  images: Image[]
-  apiUrl: string
+  images: ImageType[]
 }
 
-export function DiaryCarousel({ images, apiUrl }: Props) {
+export function DiaryCarousel({ images }: Props) {
   const [api, setApi] = useState<CarouselApi>()
   const [current, setCurrent] = useState(0)
   const [count, setCount] = useState(0)
@@ -36,12 +36,30 @@ export function DiaryCarousel({ images, apiUrl }: Props) {
         <CarouselContent>
           {slides === null ? (
             <CarouselItem>
-              <img src="/placeholder.png" alt="ダミー画像" />
+              <div className="relative aspect-square w-full">
+                <Image
+                  src="/placeholder.png"
+                  alt="ダミー画像"
+                  fill
+                  sizes="288px"
+                  priority
+                  className="object-contain"
+                />
+              </div>
             </CarouselItem>
           ) : (
-            slides.map((image) => (
+            slides.map((image, index) => (
               <CarouselItem key={image.id}>
-                <img src={`${apiUrl}/storage/${image.path}`} />
+                <div className="relative aspect-square w-full">
+                  <Image
+                    src={`/storage/${image.path}`}
+                    alt="日記の写真"
+                    fill
+                    sizes="288px"
+                    priority={index === 0}
+                    className="object-contain"
+                  />
+                </div>
               </CarouselItem>
             ))
           )}

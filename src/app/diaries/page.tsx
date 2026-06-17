@@ -4,6 +4,7 @@ import { DateFormatForHappenedOn } from "@/lib/date";
 import type { DiaryListItem } from "@/types/diary";
 import { Heart, MessageCircle } from "lucide-react";
 import { cookies } from "next/headers";
+import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
@@ -41,19 +42,27 @@ const Diaries = async ({
 
   return (
     <div className="max-w-4xl mx-auto pt-6">
+      <h1 className="text-center mb-4 text-2xl text-primary-foreground font-extrabold">My Diaries</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 motion-safe:animate-fade-up">
-        {diaries.map((diary) => (
+        {diaries.length === 0 ? (
+          <p>まだ日記がありません</p>
+        ) : diaries.map((diary, index) => (
           <Link key={diary.id} href={`/diaries/${diary.id}`}>
             <article className="w-72 bg-card text-card-foreground border border-border rounded-2xl shadow-md overflow-hidden transform transition-transform duration-200 hover:scale-105 hover:shadow-xl">
-              <img
-                src={
-                  diary.cover_image
-                    ? `${process.env.LARAVEL_API_URL}/storage/${diary.cover_image?.path}`
-                    : `/placeholder.png`
-                }
-                alt="cover image"
-                className="w-full h-48 object-cover"
-              />
+              <div className="relative w-full h-48">
+                <Image
+                  src={
+                    diary.cover_image
+                      ? `/storage/${diary.cover_image.path}`
+                      : `/placeholder.png`
+                  }
+                  alt="cover image"
+                  fill
+                  sizes="288px"
+                  priority={index < 3} // 先頭3カードだけ先読み
+                  className="object-cover"
+                />
+              </div>
               <div className="flex flex-col justify-between h-32 p-3">
                 <div>
                   <div className="flex justify-between text-xs mb-1">
