@@ -21,8 +21,11 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "./ui/alert-dialog";
+import { User } from "@/types/user";
+import Link from "next/link";
 
-const HeaderUserMenu = () => {
+
+const HeaderUserMenu = ({ user }: { user: User }) => {
   const [alertOpen, setAlertOpen] = useState<boolean>(false);
 
   const handleLogout = async () => {
@@ -45,14 +48,16 @@ const HeaderUserMenu = () => {
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" size="icon" className="rounded-full">
             <Avatar>
-              <AvatarImage src="/oshi-graphy-logo.png" alt="user icon" />
+              <AvatarImage src={user.icon_url} alt={`${user.name}icon`} />
               <AvatarFallback>OG</AvatarFallback>
             </Avatar>
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
           <DropdownMenuGroup>
-            <DropdownMenuItem>Profile</DropdownMenuItem>
+            <Link href={`/users/${user.id}`}>
+              <DropdownMenuItem>Profile</DropdownMenuItem>
+            </Link>
             <DropdownMenuItem>Setting</DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
