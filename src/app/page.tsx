@@ -10,6 +10,7 @@ export default function Home() {
           alt="application-logo"
           width={200}
           height={200}
+          priority
         />
       </div>
       <div className="flex flex-col items-center justify-center gap-4">
