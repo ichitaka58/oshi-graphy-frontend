@@ -23,7 +23,14 @@ import {
 } from "./ui/alert-dialog";
 import { User } from "@/types/user";
 import Link from "next/link";
-
+import {
+  BookHeart,
+  LogOutIcon,
+  Notebook,
+  NotebookPen,
+  SettingsIcon,
+  UserIcon,
+} from "lucide-react";
 
 const HeaderUserMenu = ({ user }: { user: User }) => {
   const [alertOpen, setAlertOpen] = useState<boolean>(false);
@@ -54,11 +61,34 @@ const HeaderUserMenu = ({ user }: { user: User }) => {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
+          <Link href="/diaries">
+            <DropdownMenuItem>
+              <BookHeart />
+              自分の日記
+            </DropdownMenuItem>
+          </Link>
+          <DropdownMenuItem>
+            <Notebook />
+            みんなの日記
+          </DropdownMenuItem>
+          <Link href="/diaries/create">
+            <DropdownMenuItem>
+              <NotebookPen />
+              日記作成
+            </DropdownMenuItem>
+          </Link>
+          <DropdownMenuSeparator />
           <DropdownMenuGroup>
             <Link href={`/users/${user.id}`}>
-              <DropdownMenuItem>Profile</DropdownMenuItem>
+              <DropdownMenuItem>
+                <UserIcon />
+                プロフィール
+              </DropdownMenuItem>
             </Link>
-            <DropdownMenuItem>Setting</DropdownMenuItem>
+            <DropdownMenuItem>
+              <SettingsIcon />
+              設定
+            </DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
@@ -66,7 +96,8 @@ const HeaderUserMenu = ({ user }: { user: User }) => {
               variant="destructive"
               onClick={() => setAlertOpen(true)}
             >
-              Log Out
+              <LogOutIcon />
+              ログアウト
             </DropdownMenuItem>
           </DropdownMenuGroup>
         </DropdownMenuContent>
