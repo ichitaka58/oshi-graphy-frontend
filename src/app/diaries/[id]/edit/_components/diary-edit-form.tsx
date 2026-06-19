@@ -401,7 +401,6 @@ const DiaryEditForm = ({ id, diary }: Props) => {
           <Button
             type="submit"
             form="form-update-diary"
-            className="bg-[#F8DE6F] text-black font-semibold"
           >
             保存
           </Button>

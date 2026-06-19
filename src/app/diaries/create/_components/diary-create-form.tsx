@@ -308,7 +308,7 @@ const DiaryCreateForm = () => {
                     checked={field.value}
                     onCheckedChange={field.onChange}
                     aria-invalid={fieldState.invalid}
-                    className="data-checked:bg-[#F8DE6F]"
+                    className="data-checked:bg-primary"
                   />
                 </Field>
               )}
@@ -321,7 +321,6 @@ const DiaryCreateForm = () => {
           <Button
             type="submit"
             form="form-create-diary"
-            className="bg-[#F8DE6F] text-black font-semibold"
           >
             保存
           </Button>
