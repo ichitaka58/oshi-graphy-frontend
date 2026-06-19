@@ -2,6 +2,7 @@ import { cookies } from "next/headers";
 import DiaryEditForm from "./_components/diary-edit-form";
 import { redirect } from "next/navigation";
 import { DiaryEditItem } from "@/types/diary";
+import BackButton from "@/components/back-button";
 
 const DiaryEditPage = async ({
   params,
@@ -26,8 +27,13 @@ const DiaryEditPage = async ({
   const diary: DiaryEditItem = data.diary;
 
   return (
-    <div className="w-75 mx-auto mt-4">
-      <DiaryEditForm id={id} diary={diary} />
+    <div>
+      <div className="text-muted-foreground py-3 flex items-center text-sm">
+        <BackButton />
+      </div>
+      <div className="w-75 mx-auto mt-4">
+        <DiaryEditForm id={id} diary={diary} />
+      </div>
     </div>
   );
 };
