@@ -114,6 +114,7 @@ const DiaryEditForm = ({ id, diary }: Props) => {
     const result = await updateDiary(id, formData);
     if (result && !result.success) {
       form.setError("root", { message: result.message });
+      return;
     }
   };
 

@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
@@ -53,7 +54,9 @@ export async function updateDiary(id: string, formData: FormData) {
       message: `日記の更新に失敗しました(${res.status})`,
     };
   }
-  redirect(`/diaries/${id}`);
+  revalidatePath("/diaries");
+  redirect("/diaries");
+  // return { success: true };
 
 }
 
