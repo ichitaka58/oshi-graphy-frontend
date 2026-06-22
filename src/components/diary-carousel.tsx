@@ -19,7 +19,7 @@ type Props = {
 export function DiaryCarousel({ images }: Props) {
   const [api, setApi] = useState<CarouselApi>()
   const [current, setCurrent] = useState(0)
-  const [count, setCount] = useState(0)
+  const [count, setCount] = useState(images.length)
 
   useEffect(() => {
     if (!api) return

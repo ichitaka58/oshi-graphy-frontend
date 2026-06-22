@@ -28,7 +28,7 @@ export type DiaryListItem = Diary & {
   cover_image: CoverImage | null;
 };
 
-export type DiaryDetail = Diary & {
+export type DiaryDetailItem = Diary & {
   comments_count: number;
   likes_count: number;
   liked_by_me: boolean;
