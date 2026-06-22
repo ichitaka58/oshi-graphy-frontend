@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import BackToListButton from "./back-to-list-button";
 import { DateFormatForHappenedOn, DateFormatForUpdatedAt } from "@/lib/date";
 import DiaryActionsMenu from "./diary-actions-menu";
-import { DiaryCarousel } from "@/components/diary-carousel";
+import { DiaryCarousel } from "./diary-carousel";
 import { Heart, MessageCircle } from "lucide-react";
 import CommentList from "./comment-list";
 import { Comment } from "@/types/comment";

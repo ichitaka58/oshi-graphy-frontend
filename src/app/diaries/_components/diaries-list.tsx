@@ -1,4 +1,4 @@
-import DiariesPagination from "@/components/diaries-pagination";
+import DiariesPagination from "./diaries-pagination";
 import { Badge } from "@/components/ui/badge";
 import { DateFormatForHappenedOn } from "@/lib/date";
 import type { DiaryListItem } from "@/types/diary";
