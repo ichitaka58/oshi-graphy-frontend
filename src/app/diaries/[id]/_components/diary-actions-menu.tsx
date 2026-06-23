@@ -36,7 +36,7 @@ const DiaryActionsMenu = ({ id }: { id: string }) => {
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <button>
-            <Ellipsis className="text-muted-foreground" />
+            <Ellipsis />
           </button>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
