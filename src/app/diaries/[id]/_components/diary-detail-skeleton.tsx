@@ -17,9 +17,9 @@ const DiaryDetailSkeleton = () => {
       </div>
       <div className="w-72 mx-auto">
         {/* カルーセル部分 */}
-        <div className="mb-4">
+        <div className="mb-2">
           <Skeleton className="w-72 h-72" /> {/* 写真部分 */}
-          <div className="flex justify-center mt-2">
+          <div className="flex justify-center mt-2 pb-2">
             <Skeleton className="w-16 h-1.5" /> {/* インジケーター部分 */}
           </div>
         </div>

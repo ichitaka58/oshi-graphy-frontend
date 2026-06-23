@@ -39,19 +39,19 @@ const CommentList = ({ comments }: { comments: Comment[] }) => {
               <div className="flex items-center gap-1">
                 <div>{comment.user.name ?? "退会ユーザー"}</div>
                 <div>{dayjs(comment.created_at).fromNow()}</div>
-                <Heart className="size-4 text-accent" />
-                <div className="text-accent">{comment.likes_count}</div>
+                <Heart className="size-4 text-accent/80" />
+                <div className="text-accent/80">{comment.likes_count}</div>
               </div>
               {/* コメント本文の表示 */}
               <CommentBodyText text={comment.body} />
-              <button type="button" className="text-secondary-foreground">
+              <button type="button">
                 -返信-
               </button>
               {comment.replies_count > 0 && (
                 <button
                   type="button"
                   onClick={() => toggleReply(comment.id)}
-                  className="ml-2 text-secondary-foreground"
+                  className="ml-2"
                 >
                   {openReplyIds.has(comment.id)
                     ? "-返信を隠す-"

@@ -12,6 +12,7 @@ import { Comment } from "@/types/comment";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import "dayjs/locale/ja";
+import { Badge } from "@/components/ui/badge";
 
 dayjs.extend(relativeTime);
 dayjs.locale("ja");
@@ -40,16 +41,15 @@ const DiaryDetail = async ({params}: {params: Promise<{id: string}>}) => {
   return (
     <div>
       <section className="flex justify-between text-sm py-2 pr-2 mb-4">
-        <div className="flex items-center gap-1 text-muted-foreground">
-          {/* <Link href="/diaries"> */}
+        <div className="flex items-center gap-1">
           <BackToListButton />
-          {/* </Link> */}
           <div className="flex gap-1">
             <div>{DateFormatForHappenedOn(diary.happened_on)}</div>
-            <div className="text-primary-foreground">{diary.artist.name}</div>
+            {/* <div>{diary.artist.name}</div> */}
+            <Badge variant="default">{diary.artist.name}</Badge>
           </div>
           <div
-            className={`text-[11px] px-2 py-0.5 rounded ${diary.is_public ? "bg-green-500 text-white" : "bg-gray-400 text-white"}`}
+            className={`text-[11px] px-2 py-0.5 rounded ${diary.is_public ? "bg-accent text-accent-foreground" : "bg-muted text-muted-foreground"}`}
           >
             {diary.is_public ? "公 開" : "非公開"}
           </div>
@@ -59,11 +59,11 @@ const DiaryDetail = async ({params}: {params: Promise<{id: string}>}) => {
         </div>
       </section>
       <div className="w-72 mx-auto">
-        <section className="mb-4">
+        <section className="mb-2 bg-secondary text-secondary-foreground">
           <DiaryCarousel images={images} />
         </section>
-        <section className="p-4 bg-card">
-          <div className="text-sm mb-2 text-primary-foreground">
+        <section className="p-4 bg-secondary text-secondary-foreground">
+          <div className="text-sm mb-2">
             {diary.body}
           </div>
           <div className="flex justify-between items-center">
@@ -76,11 +76,11 @@ const DiaryDetail = async ({params}: {params: Promise<{id: string}>}) => {
             </div>
           </div>
         </section>
-        <section className="px-2 text-sm my-4 py-4 bg-card">
+        <section className="px-2 text-sm my-4 py-4 bg-muted text-muted-foreground">
           <div className="flex gap-1 items-center">
-            <h2 className="text-secondary-foreground">コメント</h2>
-            <MessageCircle size={16} className="text-accent" />
-            <span className="text-accent">{diary.comments_count}</span>
+            <h2>コメント</h2>
+            <MessageCircle size={14} className="text-accent/80" />
+            <span className="text-accent/80">{diary.comments_count}</span>
           </div>
           {/* コメントリスト */}
           <CommentList comments={comments} />

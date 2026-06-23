@@ -68,7 +68,7 @@ export function DiaryCarousel({ images }: Props) {
         <CarouselNext className="right-2" />
       </Carousel>
       {count > 1 && (
-        <div className="flex justify-center gap-1.5 mt-2">
+        <div className="flex justify-center gap-1.5 mt-2 pb-2">
           {Array.from({ length: count }).map((_, i) => (
             <span
               key={i}
