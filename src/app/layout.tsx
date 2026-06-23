@@ -36,7 +36,7 @@ export default function RootLayout({
       lang="ja"
       className={`${poppins.variable} ${mPlusRounded.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-screen flex flex-col bg-background">
+      <body className="min-h-screen flex flex-col">
         <Header />
         <main className="flex flex-col flex-1">{children}</main>
         <Footer />
