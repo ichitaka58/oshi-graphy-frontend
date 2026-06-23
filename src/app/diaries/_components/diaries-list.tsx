@@ -69,10 +69,9 @@ const DiariesList = async ({
                       <span className="text-muted-foreground">
                         {DateFormatForHappenedOn(diary.happened_on)}
                       </span>
-                      <Badge variant="secondary" className="text-red-500">
+                      <Badge variant="default">
                         {diary.artist.name}
                       </Badge>
-                      {/* <span className="text-red-500">{diary.artist.name}</span> */}
                     </div>
                     <p className="text-sm line-clamp-2 lg:line-clamp-3 mb-2">
                       {diary.body}
@@ -80,7 +79,7 @@ const DiariesList = async ({
                   </div>
                   <div className="flex justify-between items-center">
                     <span
-                      className={`text-[11px] px-2 py-0.5 rounded ${diary.is_public ? "bg-green-500 text-white" : "bg-gray-400 text-white"}`}
+                      className={`text-[11px] px-2 py-0.5 rounded ${diary.is_public ? "bg-accent text-accent-foreground" : "bg-muted text-muted-foreground"}`}
                     >
                       {diary.is_public ? "公開" : "非公開"}
                     </span>
