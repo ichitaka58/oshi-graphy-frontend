@@ -1,5 +1,6 @@
 import { Artist } from "./artist";
 import { Image } from "./image";
+import { User } from "./user";
 
 export type Diary = {
   id: number;
@@ -39,4 +40,8 @@ export type DiaryDetailItem = Diary & {
 export type DiaryEditItem = Diary & {
   artist: Artist;
   images: Image[];
+}
+
+export type PublicDiaryListItem = DiaryListItem & {
+  user: User;
 }

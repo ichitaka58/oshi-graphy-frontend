@@ -67,10 +67,12 @@ const HeaderUserMenu = ({ user }: { user: User }) => {
               自分の日記
             </DropdownMenuItem>
           </Link>
-          <DropdownMenuItem>
-            <Notebook />
-            みんなの日記
-          </DropdownMenuItem>
+          <Link href="/public-diaries">
+            <DropdownMenuItem>
+              <Notebook />
+              みんなの日記
+            </DropdownMenuItem>
+          </Link>
           <Link href="/diaries/create">
             <DropdownMenuItem>
               <NotebookPen />
