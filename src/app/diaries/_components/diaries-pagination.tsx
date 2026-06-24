@@ -24,6 +24,7 @@ const DiariesPagination = ({ currentPage, lastPage }: DiaryPaginationProps) => {
   const handleDisplayPagesUp = () => {
     const lastPagination = displayPages.at(-1);
     if (currentPage !== lastPagination) return;
+    if (lastPagination! >= lastPage) return;
     const newDisplayPages = displayPages.map((dp) => dp + 1);
     setDisplayPages(newDisplayPages);
   };
@@ -42,6 +43,8 @@ const DiariesPagination = ({ currentPage, lastPage }: DiaryPaginationProps) => {
           <PaginationPrevious
             href={currentPage === 1 ? "#" : `?page=${currentPage - 1}`}
             onClick={handleDisplayPagesDown}
+            aria-disabled={currentPage === 1}
+            className={currentPage === 1 ? "pointer-events-none opacity-50" : ""}
           />
         </PaginationItem>
         {displayPages.at(0) !== 1 && (
@@ -52,7 +55,7 @@ const DiariesPagination = ({ currentPage, lastPage }: DiaryPaginationProps) => {
 
         {(lastPage <= displayPages.length
           ? Array.from({ length: lastPage }, (_, i) => i + 1)
-          : displayPages
+          : displayPages.filter((p) => p <= lastPage)
         ).map((p) => (
           <PaginationItem key={p}>
             <PaginationLink href={`?page=${p}`} isActive={currentPage === p}>
@@ -71,6 +74,8 @@ const DiariesPagination = ({ currentPage, lastPage }: DiaryPaginationProps) => {
           <PaginationNext
             href={currentPage === lastPage ? "#" : `?page=${currentPage + 1}`}
             onClick={handleDisplayPagesUp}
+            aria-disabled={currentPage === lastPage}
+            className={currentPage === lastPage ? "pointer-events-none opacity-50" : ""}
           />
         </PaginationItem>
       </PaginationContent>
