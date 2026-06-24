@@ -308,7 +308,7 @@ const DiaryCreateForm = () => {
                     checked={field.value}
                     onCheckedChange={field.onChange}
                     aria-invalid={fieldState.invalid}
-                    className="data-checked:bg-primary"
+                    className="data-unchecked:bg-input/50"
                   />
                 </Field>
               )}
