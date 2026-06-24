@@ -32,14 +32,14 @@ const UserProfilePage = async ({ params }: { params: Promise<{ id: string }> }) 
       <div className="text-muted-foreground py-3 flex items-center text-sm">
         <BackButton />
       </div>
-      <div className="max-w-md w-full mx-auto px-4 pt-4 pb-8 bg-card">
+      <div className="max-w-md w-full mx-auto px-4 pt-4 pb-8 bg-card text-card-foreground">
         {Number(id) === loginUser.id && (
           <div className="flex justify-end pb-2">
             <UserProfileActionsMenu id={id} />
           </div>
         )}
         <div className="flex flex-col items-center justify-center gap-4 px-6">
-          <h1 className="font-semibold text-lg text-primary-foreground">
+          <h1 className="font-semibold text-lg">
             Profile
           </h1>
           <Image
@@ -48,9 +48,9 @@ const UserProfilePage = async ({ params }: { params: Promise<{ id: string }> }) 
             width={160}
             height={160}
             priority
-            className="rounded-full object-cover shadow-md shadow-black/40"
+            className="rounded-full object-cover shadow-md shadow-black/40 dark:shadow-primary/10"
           />
-          <p className="text-lg text-primary-foreground text-shadow-2xs">
+          <p className="text-lg text-shadow-2xs">
             {user.name}
           </p>
           <p className="text-sm text-muted-foreground">{user.profile}</p>

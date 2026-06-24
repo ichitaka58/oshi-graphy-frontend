@@ -59,7 +59,7 @@ const DiaryDetail = async ({params}: {params: Promise<{id: string}>}) => {
         </div>
       </section>
       <div className="w-72 mx-auto">
-        <section className="mb-2 bg-secondary text-secondary-foreground">
+        <section className="mb-2">
           <DiaryCarousel images={images} />
         </section>
         <section className="p-4 bg-secondary text-secondary-foreground">
