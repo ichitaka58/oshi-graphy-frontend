@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import PublicDiariesList from "./_components/public-diaries-list";
-import DiariesSkeleton from "../diaries/_components/diaries-skeleton";
+import DiarySkeleton from "@/components/diary-skeleton";
 
 const PublicDiariesPage = ({
   searchParams,
@@ -12,7 +12,7 @@ const PublicDiariesPage = ({
       <h1 className="text-center mb-4 text-2xl text-foreground font-extrabold">
         All Diaries
       </h1>
-      <Suspense fallback={<DiariesSkeleton />}>
+      <Suspense fallback={<DiarySkeleton />}>
         <PublicDiariesList searchParams={searchParams} />
       </Suspense>
     </div>
