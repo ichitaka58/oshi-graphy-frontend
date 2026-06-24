@@ -1,11 +1,7 @@
-import DiariesPagination from "@/app/diaries/_components/diaries-pagination";
-import { Badge } from "@/components/ui/badge";
-import { DateFormatForHappenedOn } from "@/lib/date";
+import DiaryPagination from "@/components/diary-pagination";
+import DiaryCardList from "@/components/diary-card-list";
 import { PublicDiaryListItem } from "@/types/diary";
-import { Heart, MessageCircle } from "lucide-react";
 import { cookies } from "next/headers";
-import Image from "next/image";
-import Link from "next/link";
 import { redirect } from "next/navigation";
 
 const PublicDiariesList = async ({
@@ -41,59 +37,16 @@ const PublicDiariesList = async ({
 
   return (
     <>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 motion-safe:animate-fade-up">
-        {diaries.length === 0 ? (
-          <p>まだ日記がありません</p>
-        ) : (
-          diaries.map((diary, index) => (
-            <Link key={diary.id} href={`/diaries/${diary.id}`}>
-              <article className="w-72 bg-card text-card-foreground border border-border rounded-2xl shadow-md overflow-hidden transform transition-transform duration-200 hover:scale-105 hover:shadow-xl">
-                <div className="relative w-full h-48">
-                  <Image
-                    src={
-                      diary.cover_image
-                        ? `/storage/${diary.cover_image.path}`
-                        : `/placeholder.png`
-                    }
-                    alt="cover image"
-                    fill
-                    sizes="288px"
-                    priority={index < 3} // 先頭3カードだけ先読み
-                    className="object-cover"
-                  />
-                </div>
-                <div className="flex flex-col justify-between h-32 p-3">
-                  <div>
-                    <div className="flex justify-between text-xs mb-1">
-                      <span className="text-muted-foreground">
-                        {DateFormatForHappenedOn(diary.happened_on)}
-                      </span>
-                      <Badge variant="default">{diary.artist.name}</Badge>
-                    </div>
-                    <p className="text-sm line-clamp-2 lg:line-clamp-3 mb-2">
-                      {diary.body}
-                    </p>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span
-                      className="text-[11px] px-2 py-0.5 rounded bg-secondary text-secondary-foreground"
-                    >
-                      {diary.user.name}
-                    </span>
-                    <div className="flex items-center gap-1 text-accent">
-                      <Heart className="size-5" />
-                      <span>{diary.likes_count}</span>
-                      <MessageCircle className="size-5" />
-                      <span>{diary.comments_count}</span>
-                    </div>
-                  </div>
-                </div>
-              </article>
-            </Link>
-          ))
+    {/* 日記一覧を表示する共通コンポーネント */}
+      <DiaryCardList
+        diaries={diaries}
+        renderStatus={(diary) => (
+          <span className="text-[11px] px-2 py-0.5 rounded bg-secondary text-secondary-foreground">
+            {(diary as PublicDiaryListItem).user.name}
+          </span>
         )}
-      </div>
-      <DiariesPagination currentPage={currentPage} lastPage={lastPage} />
+      />
+      <DiaryPagination currentPage={currentPage} lastPage={lastPage} />
     </>
   );
 };
