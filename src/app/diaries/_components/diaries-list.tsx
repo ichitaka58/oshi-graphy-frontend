@@ -41,6 +41,7 @@ const DiariesList = async ({
       {/* 日記一覧を表示する共通コンポーネント */}
       <DiaryCardList
         diaries={diaries}
+        pathName="diaries"
         renderStatus={(diary) => (
           <span
             className={`text-[11px] px-2 py-0.5 rounded ${diary.is_public ? "bg-accent text-accent-foreground" : "bg-muted text-muted-foreground"}`}
