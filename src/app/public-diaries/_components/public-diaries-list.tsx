@@ -63,9 +63,10 @@ const PublicDiariesList = async ({
       {/* 日記一覧を表示する共通コンポーネント */}
       <DiaryCardList
         diaries={diaries}
+        pathName="public-diaries"
         renderStatus={(diary) => (
           <span className="text-[11px] px-2 py-0.5 rounded bg-secondary text-secondary-foreground">
-            {(diary as PublicDiaryListItem).user.name}
+            {diary.user.name}
           </span>
         )}
       />

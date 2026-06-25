@@ -5,19 +5,20 @@ import { Badge } from "./ui/badge";
 import { Heart, MessageCircle } from "lucide-react";
 import { DiaryListItem } from "@/types/diary";
 
-type DiaryCardListProps = {
-  diaries: DiaryListItem[];
-  renderStatus: (diary: DiaryListItem) => React.ReactNode;
+type DiaryCardListProps<T extends DiaryListItem> = {
+  diaries: T[];
+  pathName: "diaries" | "public-diaries";
+  renderStatus: (diary: T) => React.ReactNode;
 }
 
-const DiaryCardList = ({diaries, renderStatus}: DiaryCardListProps) => {
+const DiaryCardList = <T extends DiaryListItem>({diaries, pathName, renderStatus}: DiaryCardListProps<T>) => {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 motion-safe:animate-fade-up">
       {diaries.length === 0 ? (
         <p>まだ日記がありません</p>
       ) : (
         diaries.map((diary, index) => (
-          <Link key={diary.id} href={`/diaries/${diary.id}`}>
+          <Link key={diary.id} href={`/${pathName}/${diary.id}`}>
             <article className="w-72 bg-card text-card-foreground border border-border rounded-2xl shadow-md overflow-hidden transform transition-transform duration-200 hover:scale-105 hover:shadow-xl">
               <div className="relative w-full h-48">
                 <Image
@@ -46,8 +47,10 @@ const DiaryCardList = ({diaries, renderStatus}: DiaryCardListProps) => {
                   </p>
                 </div>
                 <div className="flex justify-between items-center">
+                  
                   {/* 公開設定かユーザー名か、を関数のpropsで渡す */}
                   {renderStatus(diary)} 
+
                   <div className="flex items-center gap-1 text-accent">
                     <Heart className="size-5" />
                     <span>{diary.likes_count}</span>

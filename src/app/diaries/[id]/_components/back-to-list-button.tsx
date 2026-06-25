@@ -2,7 +2,9 @@
 import { ChevronLeft } from "lucide-react";
 import { useRouter } from "next/navigation";
 
-const BackToListButton = () => {
+type PathName = "diaries" | "public-diaries";
+
+const BackToListButton = ({ pathName }: { pathName: PathName }) => {
   const router = useRouter();
   const handleClick = () => {
     // 同一タブ内で一覧（例: /diaries?page=2）から遷移してきた場合は、
@@ -12,14 +14,14 @@ const BackToListButton = () => {
     if (window.history.length > 1) {
       router.back();
     } else {
-      router.push("/diaries");
+      router.push(`/${pathName}`);
     }
-  }
+  };
   return (
-    <button type="button" onClick={handleClick} aria-label="日記一覧へ戻る">
+    <button type="button" onClick={handleClick} aria-label="前へ戻る">
       <ChevronLeft />
     </button>
   );
-}
+};
 
 export default BackToListButton;

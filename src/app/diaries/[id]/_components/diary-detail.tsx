@@ -42,7 +42,7 @@ const DiaryDetail = async ({params}: {params: Promise<{id: string}>}) => {
     <div>
       <section className="flex justify-between text-sm py-2 pr-2 mb-4">
         <div className="flex items-center gap-1">
-          <BackToListButton />
+          <BackToListButton pathName="diaries" />
           <div className="flex gap-1">
             <div>{DateFormatForHappenedOn(diary.happened_on)}</div>
             {/* <div>{diary.artist.name}</div> */}
