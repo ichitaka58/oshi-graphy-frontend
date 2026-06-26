@@ -43,15 +43,10 @@ const DiaryDetail = async ({params}: {params: Promise<{id: string}>}) => {
       <section className="flex justify-between text-sm py-2 pr-2 mb-4">
         <div className="flex items-center gap-1">
           <BackToListButton pathName="diaries" />
-          <div className="flex gap-1">
-            <div>{DateFormatForHappenedOn(diary.happened_on)}</div>
-            {/* <div>{diary.artist.name}</div> */}
-            <Badge variant="default">{diary.artist.name}</Badge>
-          </div>
           <div
             className={`text-[11px] px-2 py-0.5 rounded ${diary.is_public ? "bg-accent text-accent-foreground" : "bg-muted text-muted-foreground"}`}
           >
-            {diary.is_public ? "公 開" : "非公開"}
+            {diary.is_public ? "公開中" : "非公開"}
           </div>
         </div>
         <div>
@@ -59,13 +54,15 @@ const DiaryDetail = async ({params}: {params: Promise<{id: string}>}) => {
         </div>
       </section>
       <div className="w-72 mx-auto">
+        <h2 className="flex items-center justify-center gap-2 mb-2 flex-wrap">
+          <span>{DateFormatForHappenedOn(diary.happened_on)}</span>
+          <Badge variant="default">{diary.artist.name}</Badge>
+        </h2>
         <section className="mb-2">
           <DiaryCarousel images={images} />
         </section>
         <section className="p-4 bg-secondary text-secondary-foreground">
-          <div className="text-sm mb-2">
-            {diary.body}
-          </div>
+          <div className="text-sm mb-2">{diary.body}</div>
           <div className="flex justify-between items-center">
             <div className="text-xs text-muted-foreground">
               更新日時: {DateFormatForUpdatedAt(diary.updated_at)}
@@ -87,7 +84,7 @@ const DiaryDetail = async ({params}: {params: Promise<{id: string}>}) => {
         </section>
       </div>
     </div>
-  )
+  );
 }
 
 export default DiaryDetail;
