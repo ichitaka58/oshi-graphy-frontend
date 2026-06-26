@@ -45,3 +45,7 @@ export type DiaryEditItem = Diary & {
 export type PublicDiaryListItem = DiaryListItem & {
   user: User;
 }
+
+export type PublicDiaryDetailItem = DiaryDetailItem & {
+  user: User;
+}
