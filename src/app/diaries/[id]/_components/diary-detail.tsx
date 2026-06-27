@@ -6,8 +6,8 @@ import BackToListButton from "./back-to-list-button";
 import { DateFormatForHappenedOn, DateFormatForUpdatedAt } from "@/lib/date";
 import DiaryActionsMenu from "./diary-actions-menu";
 import { DiaryCarousel } from "./diary-carousel";
-import { Heart, MessageCircle } from "lucide-react";
-import CommentList from "./comment-list";
+import { Heart, MessageCirclePlus } from "lucide-react";
+import CommentList from "@/components/comment/comment-list";
 import { Comment } from "@/types/comment";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
@@ -75,9 +75,9 @@ const DiaryDetail = async ({params}: {params: Promise<{id: string}>}) => {
         </section>
         <section className="px-2 text-sm my-4 py-4 bg-muted text-muted-foreground">
           <div className="flex gap-1 items-center">
-            <h2>コメント</h2>
-            <MessageCircle size={14} className="text-accent/80" />
-            <span className="text-accent/80">{diary.comments_count}</span>
+            <h3>コメント</h3>
+            <span className="text-accent/80">({diary.comments_count})</span>
+            <MessageCirclePlus size={14} className="text-accent/80" />
           </div>
           {/* コメントリスト */}
           <CommentList comments={comments} />

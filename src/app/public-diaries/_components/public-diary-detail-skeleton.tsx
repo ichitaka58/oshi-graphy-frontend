@@ -1,15 +1,14 @@
 import { Skeleton } from "@/components/ui/skeleton";
-import { ChevronLeft, Ellipsis } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
 
-const DiaryDetailSkeleton = () => {
+const PublicDiaryDetailSkeleton = () => {
   return (
     <div>
       <div className="flex justify-between py-2 pr-2 mb-4">
         <div className="flex items-center gap-1">
           <ChevronLeft className="text-muted" /> {/* 戻るボタン */}
-          <Skeleton className="w-10 h-4" /> {/* 公開設定 */}
+          <Skeleton className="w-32 h-5" /> {/* ユーザー名 */}
         </div>
-        <Ellipsis className="text-muted" /> {/* ３点リーダ */}
       </div>
       <div className="w-72 mx-auto">
         <div className="w-full h-6 mb-2 flex items-center justify-center gap-2">
@@ -52,6 +51,6 @@ const DiaryDetailSkeleton = () => {
       </div>
     </div>
   );
-}
+};
 
-export default DiaryDetailSkeleton;
+export default PublicDiaryDetailSkeleton;
