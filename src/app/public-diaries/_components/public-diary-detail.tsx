@@ -1,5 +1,5 @@
 import BackToListButton from "@/app/diaries/[id]/_components/back-to-list-button";
-import CommentList from "@/app/diaries/[id]/_components/comment-list";
+import CommentList from "@/components/comment/comment-list";
 import { DiaryCarousel } from "@/app/diaries/[id]/_components/diary-carousel";
 import { Badge } from "@/components/ui/badge";
 import { DateFormatForHappenedOn, DateFormatForUpdatedAt } from "@/lib/date";
@@ -8,7 +8,7 @@ import { Image } from "@/types/image";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import "dayjs/locale/ja";
-import { Heart, MessageCircle } from "lucide-react";
+import { Heart, MessageCirclePlus } from "lucide-react";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { Comment } from "@/types/comment";
@@ -43,10 +43,10 @@ const PublicDiaryDetail = async({ params }: { params: Promise<{ id: string }> })
         <div className="flex items-center gap-1">
           <BackToListButton pathName="public-diaries" />
           <p>
-            <span className="text-foreground font-bold">{diary.user.name}</span>さんの日記
+            <span className="text-foreground font-bold">{diary.user.name}</span>
+            さんの日記
           </p>
         </div>
-
       </section>
       <div className="w-72 mx-auto">
         <h2 className="flex items-center justify-center gap-2 mb-2 flex-wrap">
@@ -70,9 +70,9 @@ const PublicDiaryDetail = async({ params }: { params: Promise<{ id: string }> })
         </section>
         <section className="px-2 text-sm my-4 py-4 bg-muted text-muted-foreground">
           <div className="flex gap-1 items-center">
-            <h2>コメント</h2>
-            <MessageCircle size={14} className="text-accent/80" />
-            <span className="text-accent/80">{diary.comments_count}</span>
+            <h3>コメント</h3>
+            <span className="text-accent/80">({diary.comments_count})</span>
+            <MessageCirclePlus size={14} className="text-accent/80" />
           </div>
           {/* コメントリスト */}
           <CommentList comments={comments} />
