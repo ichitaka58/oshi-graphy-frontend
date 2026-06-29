@@ -1,4 +1,4 @@
-import BackToListButton from "@/app/diaries/[id]/_components/back-to-list-button";
+import BackToListButton from "@/components/back-to-list-button";
 import CommentList from "@/components/comment/comment-list";
 import { DiaryCarousel } from "@/app/diaries/[id]/_components/diary-carousel";
 import { Badge } from "@/components/ui/badge";
@@ -13,30 +13,41 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { Comment } from "@/types/comment";
 import CommentFormDrawer from "@/components/comment/comment-form-drawer";
+import { getCurrentUser } from "@/lib/auth";
 
 dayjs.extend(relativeTime);
 dayjs.locale("ja");
 
-const PublicDiaryDetail = async({ params }: { params: Promise<{ id: string }> }) => {
-     const { id } = await params;
-      const token = (await cookies()).get("token")?.value;
-      const res = await fetch(`${process.env.LARAVEL_API_URL}/api/public-diaries/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: "application/json",
-        },
-      });
-      if (res.status === 401) {
-        redirect("/login");
-      }
-      if (!res.ok) {
-        throw new Error("データの取得に失敗しました");
-      }
-    
-      const data = await res.json();
-      const diary: PublicDiaryDetailItem = data.diary;
-      const comments: Comment[] = data.comments;
-      const images: Image[] = diary.images;
+const PublicDiaryDetail = async ({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) => {
+  const { id } = await params;
+  const token = (await cookies()).get("token")?.value;
+  const res = await fetch(
+    `${process.env.LARAVEL_API_URL}/api/public-diaries/${id}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: "application/json",
+      },
+    },
+  );
+  if (res.status === 401) {
+    redirect("/login");
+  }
+  if (!res.ok) {
+    throw new Error("データの取得に失敗しました");
+  }
+
+  const data = await res.json();
+  const diary: PublicDiaryDetailItem = data.diary;
+  const comments: Comment[] = data.comments;
+  const images: Image[] = diary.images;
+
+  // ログインユーザーを取得、CommentListに渡す
+  const loginUser = await getCurrentUser();
 
   return (
     <div>
@@ -74,10 +85,18 @@ const PublicDiaryDetail = async({ params }: { params: Promise<{ id: string }> })
             <h3>コメント</h3>
             <span className="text-accent/80">({diary.comments_count})</span>
             {/* <MessageCirclePlus size={14} className="text-accent/80" /> */}
-            <CommentFormDrawer diaryId={id} path={`/public-diaries/${id}`} isReply={false} />
+            <CommentFormDrawer
+              diaryId={id}
+              path={`/public-diaries/${id}`}
+              isReply={false}
+            />
           </div>
           {/* コメントリスト */}
-          <CommentList comments={comments} path={`/public-diaries/${id}`} />
+          <CommentList
+            comments={comments}
+            path={`/public-diaries/${id}`}
+            loginUser={loginUser}
+          />
         </section>
       </div>
     </div>
