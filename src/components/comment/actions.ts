@@ -4,13 +4,20 @@ import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
-export async function createComment(formData: FormData, diaryId: string, path: string) {
+export async function createComment(
+  formData: FormData,
+  diaryId: string,
+  path: string,
+  isReply: boolean
+) {
   const token = (await cookies()).get("token")?.value;
   if (!token) {
     redirect("/login");
   }
   const res = await fetch(
-    `${process.env.LARAVEL_API_URL}/api/diaries/${diaryId}/comments`,
+    !isReply
+      ? `${process.env.LARAVEL_API_URL}/api/diaries/${diaryId}/comments`
+      : `${process.env.LARAVEL_API_URL}/api/diaries/${diaryId}/comments/reply`,
     {
       method: "POST",
       headers: {

@@ -7,11 +7,18 @@ import dayjs from "dayjs";
 import "dayjs/locale/ja";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { useState } from "react";
+import CommentFormDrawer from "./comment-form-drawer";
 
 dayjs.extend(relativeTime);
 dayjs.locale("ja");
 
-const CommentList = ({ comments }: { comments: Comment[] }) => {
+const CommentList = ({
+  comments,
+  path, // pathはpublic-diariesの詳細ページかdiariesの詳細ページか
+}: {
+  comments: Comment[];
+  path: string;
+}) => {
   const [openReplyIds, setOpenReplyIds] = useState<Set<number>>(new Set());
 
   const toggleReply = (id: number) => {
@@ -44,9 +51,14 @@ const CommentList = ({ comments }: { comments: Comment[] }) => {
               </div>
               {/* コメント本文の表示 */}
               <CommentBodyText text={comment.body} />
-              <button type="button">
-                -返信-
-              </button>
+              {/* コメント返信用のフォーム */}
+              <CommentFormDrawer
+                diaryId={String(comment.diary_id)}
+                path={path}
+                isReply={true}
+                parentId={comment.id}
+                commentUserName={comment.user.name}
+              />
               {comment.replies_count > 0 && (
                 <button
                   type="button"

@@ -18,13 +18,27 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { createComment } from "./actions";
 import { Field, FieldError, FieldGroup } from "../ui/field";
 import { useState } from "react";
+import { Input } from "../ui/input";
 
-const CommentFormDrawer = ({ diaryId, path }: { diaryId: string, path: string }) => {
+const CommentFormDrawer = ({
+  diaryId,
+  path,
+  isReply,
+  parentId,
+  commentUserName,
+}: {
+  diaryId: string;
+  path: string;
+  isReply: boolean;
+  parentId?: number;
+  commentUserName?: string;
+}) => {
   const form = useForm<CommentFormValues>({
     resolver: zodResolver(CommentFormSchema),
     mode: "onSubmit",
     defaultValues: {
       body: "",
+      parent_id: parentId,
     },
   });
 
@@ -33,8 +47,11 @@ const CommentFormDrawer = ({ diaryId, path }: { diaryId: string, path: string })
   const onSubmit = async (data: CommentFormValues) => {
     const formData = new FormData();
     formData.append("body", data.body);
+    if (data.parent_id !== undefined) {
+      formData.append("parent_id", String(data.parent_id));
+    }
 
-    const result = await createComment(formData, diaryId, path);
+    const result = await createComment(formData, diaryId, path, isReply);
     if (result && !result.success) {
       form.setError("root", { message: result.message });
     } else {
@@ -46,18 +63,30 @@ const CommentFormDrawer = ({ diaryId, path }: { diaryId: string, path: string })
   return (
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
-        <Button
-          variant="ghost"
-          className="p-0"
-          onClick={(e) => e.currentTarget.blur()}
-          title="コメント作成"
-        >
-          <MessageCirclePlus size={14} className="text-accent/80" />
-        </Button>
+        {!isReply ? (
+          <Button
+            variant="ghost"
+            className="p-0"
+            onClick={(e) => e.currentTarget.blur()}
+            title="コメント作成"
+          >
+            <MessageCirclePlus size={14} className="text-accent/80" />
+          </Button>
+        ) : (
+          <button
+            type="button"
+            onClick={(e) => e.currentTarget.blur()}
+            className="cursor-pointer"
+          >
+            -返信-
+          </button>
+        )}
       </DrawerTrigger>
       <DrawerContent className="w-72 mx-auto px-6" aria-describedby={undefined}>
         <DrawerHeader>
-          <DrawerTitle className="text-sm">コメントを入力</DrawerTitle>
+          <DrawerTitle className="text-sm font-semibold">
+            {!isReply ? "コメント" : "コメント返信"}
+          </DrawerTitle>
         </DrawerHeader>
         <form id="form-comment" onSubmit={form.handleSubmit(onSubmit)}>
           {form.formState.errors.root && (
@@ -75,6 +104,11 @@ const CommentFormDrawer = ({ diaryId, path }: { diaryId: string, path: string })
                     {...field}
                     aria-invalid={fieldState.invalid}
                     className="text-xs"
+                    placeholder={
+                      !isReply
+                        ? "コメントを入力..."
+                        : `${commentUserName} への返信を入力...`
+                    }
                   />
                   {fieldState.invalid && (
                     <FieldError
@@ -85,12 +119,35 @@ const CommentFormDrawer = ({ diaryId, path }: { diaryId: string, path: string })
                 </Field>
               )}
             />
+            {/* コメント返信の時、親コメントのid(parent_id)を渡す必要 */}
+            {isReply && (
+              <Controller
+                name="parent_id"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <Input
+                      {...field}
+                      type="hidden"
+                      aria-invalid={fieldState.invalid}
+                      autoComplete="off"
+                    />
+                    {fieldState.invalid && (
+                      <FieldError
+                        errors={[fieldState.error]}
+                        className="text-xs"
+                      />
+                    )}
+                  </Field>
+                )}
+              />
+            )}
           </FieldGroup>
         </form>
 
         <DrawerFooter>
           <Button type="submit" form="form-comment">
-            投稿
+            {!isReply ? "コメントする" : "返信する"}
           </Button>
           <DrawerClose asChild>
             <Button variant="outline">キャンセル</Button>

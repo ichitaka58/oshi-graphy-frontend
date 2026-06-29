@@ -8,7 +8,7 @@ import { Image } from "@/types/image";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import "dayjs/locale/ja";
-import { Heart, MessageCirclePlus } from "lucide-react";
+import { Heart } from "lucide-react";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { Comment } from "@/types/comment";
@@ -74,10 +74,10 @@ const PublicDiaryDetail = async({ params }: { params: Promise<{ id: string }> })
             <h3>コメント</h3>
             <span className="text-accent/80">({diary.comments_count})</span>
             {/* <MessageCirclePlus size={14} className="text-accent/80" /> */}
-            <CommentFormDrawer diaryId={id} path={`/public-diaries/${id}`} />
+            <CommentFormDrawer diaryId={id} path={`/public-diaries/${id}`} isReply={false} />
           </div>
           {/* コメントリスト */}
-          <CommentList comments={comments} />
+          <CommentList comments={comments} path={`/public-diaries/${id}`} />
         </section>
       </div>
     </div>

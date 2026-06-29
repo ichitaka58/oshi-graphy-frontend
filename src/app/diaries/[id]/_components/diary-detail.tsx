@@ -6,7 +6,7 @@ import BackToListButton from "./back-to-list-button";
 import { DateFormatForHappenedOn, DateFormatForUpdatedAt } from "@/lib/date";
 import DiaryActionsMenu from "./diary-actions-menu";
 import { DiaryCarousel } from "./diary-carousel";
-import { Heart, MessageCirclePlus } from "lucide-react";
+import { Heart } from "lucide-react";
 import CommentList from "@/components/comment/comment-list";
 import { Comment } from "@/types/comment";
 import dayjs from "dayjs";
@@ -79,10 +79,10 @@ const DiaryDetail = async ({params}: {params: Promise<{id: string}>}) => {
             <h3>コメント</h3>
             <span className="text-accent/80">({diary.comments_count})</span>
             {/* <MessageCirclePlus size={14} className="text-accent/80" /> */}
-            <CommentFormDrawer diaryId={id} path={`/diaries/${id}`} />
+            <CommentFormDrawer diaryId={id} path={`/diaries/${id}`} isReply={false} />
           </div>
           {/* コメントリスト */}
-          <CommentList comments={comments} />
+          <CommentList comments={comments} path={`/diaries/${id}`} />
         </section>
       </div>
     </div>
