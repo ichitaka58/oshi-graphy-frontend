@@ -12,6 +12,7 @@ import { Heart, MessageCirclePlus } from "lucide-react";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { Comment } from "@/types/comment";
+import CommentFormDrawer from "@/components/comment/comment-form-drawer";
 
 dayjs.extend(relativeTime);
 dayjs.locale("ja");
@@ -72,7 +73,8 @@ const PublicDiaryDetail = async({ params }: { params: Promise<{ id: string }> })
           <div className="flex gap-1 items-center">
             <h3>コメント</h3>
             <span className="text-accent/80">({diary.comments_count})</span>
-            <MessageCirclePlus size={14} className="text-accent/80" />
+            {/* <MessageCirclePlus size={14} className="text-accent/80" /> */}
+            <CommentFormDrawer diaryId={id} path={`/public-diaries/${id}`} />
           </div>
           {/* コメントリスト */}
           <CommentList comments={comments} />
