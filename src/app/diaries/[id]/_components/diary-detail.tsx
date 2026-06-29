@@ -13,6 +13,7 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import "dayjs/locale/ja";
 import { Badge } from "@/components/ui/badge";
+import CommentFormDrawer from "@/components/comment/comment-form-drawer";
 
 dayjs.extend(relativeTime);
 dayjs.locale("ja");
@@ -77,7 +78,8 @@ const DiaryDetail = async ({params}: {params: Promise<{id: string}>}) => {
           <div className="flex gap-1 items-center">
             <h3>コメント</h3>
             <span className="text-accent/80">({diary.comments_count})</span>
-            <MessageCirclePlus size={14} className="text-accent/80" />
+            {/* <MessageCirclePlus size={14} className="text-accent/80" /> */}
+            <CommentFormDrawer diaryId={id} path={`/diaries/${id}`} />
           </div>
           {/* コメントリスト */}
           <CommentList comments={comments} />
