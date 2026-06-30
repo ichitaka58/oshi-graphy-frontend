@@ -8,6 +8,8 @@ import "dayjs/locale/ja";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { useState } from "react";
 import CommentFormDrawer from "./comment-form-drawer";
+import { User } from "@/types/user";
+import CommentDeleteMenu from "./comment-delete-menu";
 
 dayjs.extend(relativeTime);
 dayjs.locale("ja");
@@ -15,9 +17,11 @@ dayjs.locale("ja");
 const CommentList = ({
   comments,
   path, // pathはpublic-diariesの詳細ページかdiariesの詳細ページか
+  loginUser,
 }: {
   comments: Comment[];
   path: string;
+  loginUser: User;
 }) => {
   const [openReplyIds, setOpenReplyIds] = useState<Set<number>>(new Set());
 
@@ -40,15 +44,22 @@ const CommentList = ({
           return (
             <div
               key={comment.id}
-              className={`${!isReply && "mt-2"} text-[10px]`}
+              className={`${!isReply && "mt-2"} text-[10px] group hover:bg-secondary`}
               style={{ marginLeft: `${comment.depth * 8}px` }}
             >
-              <div className="flex items-center gap-1">
-                <div>{comment.user.name ?? "退会ユーザー"}</div>
-                <div>{dayjs(comment.created_at).fromNow()}</div>
-                <Heart className="size-4 text-accent/80" />
-                <div className="text-accent/80">{comment.likes_count}</div>
+              <div className="flex justify-between">
+                <div className="flex items-center gap-1">
+                  <div>{comment.user.name ?? "退会ユーザー"}</div>
+                  <div>{dayjs(comment.created_at).fromNow()}</div>
+                  <Heart className="size-4 text-accent/80" />
+                  <div className="text-accent/80">{comment.likes_count}</div>
+                </div>
+                {comment.user_id === loginUser.id && (
+                  // 削除ボタン AlertDialog起動
+                  <CommentDeleteMenu commentId={comment.id} path={path} />
+                )}
               </div>
+
               {/* コメント本文の表示 */}
               <CommentBodyText text={comment.body} />
               {/* コメント返信用のフォーム */}
