@@ -84,7 +84,7 @@ const PublicDiaryDetail = async ({
           <div className="flex gap-1 items-center">
             <h3>コメント</h3>
             <span className="text-accent/80">({diary.comments_count})</span>
-            {/* <MessageCirclePlus size={14} className="text-accent/80" /> */}
+            {/* コメントフォーム */}
             <CommentFormDrawer
               diaryId={id}
               path={`/public-diaries/${id}`}
