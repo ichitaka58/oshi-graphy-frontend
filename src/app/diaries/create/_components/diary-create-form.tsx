@@ -74,8 +74,6 @@ const DiaryCreateForm = () => {
     return () => clearTimeout(timer);
   }, [query])
 
-  console.log(artists);
-
   const onSubmit = async (data: DiaryCreateFormValues) => {
     // ファイルを含むため JSON ではなく FormData で送信する
     const formData = new FormData();
