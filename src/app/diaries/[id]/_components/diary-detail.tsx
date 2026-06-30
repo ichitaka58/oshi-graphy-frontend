@@ -82,7 +82,7 @@ const DiaryDetail = async ({ params }: { params: Promise<{ id: string }> }) => {
           <div className="flex gap-1 items-center">
             <h3>コメント</h3>
             <span className="text-accent/80">({diary.comments_count})</span>
-            {/* <MessageCirclePlus size={14} className="text-accent/80" /> */}
+            {/* コメントフォーム */}
             <CommentFormDrawer
               diaryId={id}
               path={`/diaries/${id}`}
