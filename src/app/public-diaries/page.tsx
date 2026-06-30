@@ -1,6 +1,5 @@
 import { Suspense } from "react";
 import PublicDiariesList from "./_components/public-diaries-list";
-import DiarySkeleton from "@/components/diary-skeleton";
 import PublicDiarySkeleton from "./_components/public-diary-skeleton";
 
 const PublicDiariesPage = ({
