@@ -40,3 +40,25 @@ export async function createComment(
   // キャッシュを無効化→Next.jsが自動で再レンダリング→画面更新
   revalidatePath(path);
 }
+
+// コメントの削除処理
+export async function deleteComment(commentId: number, path: string) {
+  const token = (await cookies()).get("token")?.value;
+  if (!token) {
+    redirect("/login");
+  }
+  const res = await fetch(`${process.env.LARAVEL_API_URL}/api/comments/${commentId}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  if (res.status === 401) redirect("/login");
+  if (!res.ok) {
+    return {
+      success: false,
+      message: `コメントの削除に失敗しました(${res.status})`,
+    };
+  }
+  revalidatePath(path);
+}
