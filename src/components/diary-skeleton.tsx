@@ -19,7 +19,7 @@ const DiarySkeleton = () => {
               <Skeleton className="mb-2 h-4 w-3/4" /> {/* 本文2行目 */}
             </div>
             <div className="flex justify-between items-center">
-              <Skeleton className="h-4 w-10" /> {/* 公開設定 */}
+              <Skeleton className="h-4 w-10" /> {/* 公開設定 or ユーザー名 */}
               <div className="flex items-center gap-1">
                 <Skeleton className="h-4 w-6" /> {/* いいね */}
                 <Skeleton className="h-4 w-6" /> {/* コメント */}
