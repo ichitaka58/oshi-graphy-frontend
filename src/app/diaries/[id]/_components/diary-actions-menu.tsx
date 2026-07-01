@@ -21,14 +21,21 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 const DiaryActionsMenu = ({ id }: { id: string }) => {
+  const router = useRouter();
   const [alertOpen, setAlertOpen] = useState<boolean>(false);
 
   const handleDelete = async () => {
     const result = await deleteDiary(id);
     if (result && !result.success) {
-      alert(result.message);
+      toast.error(result.message, { position: "top-center" });
+    }
+    if (result && result.success) {
+      toast.success(result.message, { position: "top-center" });
+      router.push("/diaries");
     }
   };
   return (
@@ -62,9 +69,9 @@ const DiaryActionsMenu = ({ id }: { id: string }) => {
       <AlertDialog open={alertOpen} onOpenChange={setAlertOpen}>
         <AlertDialogContent size="sm">
           <AlertDialogHeader>
-            <AlertDialogTitle>削除確認</AlertDialogTitle>
+            <AlertDialogTitle>✅削除確認</AlertDialogTitle>
             <AlertDialogDescription>
-              本当に削除しますか？
+              この日記を削除してよろしいですか？
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
