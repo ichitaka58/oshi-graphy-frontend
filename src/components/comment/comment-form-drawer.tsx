@@ -19,6 +19,7 @@ import { createComment } from "./actions";
 import { Field, FieldError, FieldGroup } from "../ui/field";
 import { useState } from "react";
 import { Input } from "../ui/input";
+import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 
 const CommentFormDrawer = ({
   diaryId,
@@ -62,17 +63,25 @@ const CommentFormDrawer = ({
 
   return (
     <Drawer open={open} onOpenChange={setOpen}>
-      <DrawerTrigger asChild>
-        {!isReply ? (
-          <Button
-            variant="ghost"
-            className="p-0"
-            onClick={(e) => e.currentTarget.blur()}
-            title="コメント作成"
-          >
-            <MessageCirclePlus size={14} className="text-accent/80" />
-          </Button>
-        ) : (
+      {!isReply ? (
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <DrawerTrigger asChild>
+              <Button
+                variant="ghost"
+                className="p-0"
+                onClick={(e) => e.currentTarget.blur()}
+              >
+                <MessageCirclePlus size={14} className="text-accent/80" />
+              </Button>
+            </DrawerTrigger>
+          </TooltipTrigger>
+          <TooltipContent className="text-[10px]">
+            <p>コメント作成</p>
+          </TooltipContent>
+        </Tooltip>
+      ) : (
+        <DrawerTrigger asChild>
           <button
             type="button"
             onClick={(e) => e.currentTarget.blur()}
@@ -80,8 +89,8 @@ const CommentFormDrawer = ({
           >
             -返信-
           </button>
-        )}
-      </DrawerTrigger>
+        </DrawerTrigger>
+      )}
       <DrawerContent className="w-72 mx-auto px-6" aria-describedby={undefined}>
         <DrawerHeader>
           <DrawerTitle className="text-sm font-semibold">
