@@ -1,0 +1,13 @@
+import DiarySkeleton from "@/components/diary-skeleton";
+import { Skeleton } from "@/components/ui/skeleton";
+
+const UserPublicDiarySkeleton = () => {
+  return (
+    <>
+      <Skeleton className="mb-4 h-8 w-72 justify-self-center" />
+      <DiarySkeleton />
+    </>
+  );
+}
+
+export default UserPublicDiarySkeleton;

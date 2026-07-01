@@ -64,11 +64,6 @@ const PublicDiariesList = async ({
       <DiaryCardList
         diaries={diaries}
         pathName="public-diaries"
-        renderStatus={(diary) => (
-          <span className="text-[11px] px-2 py-0.5 rounded bg-secondary text-secondary-foreground">
-            {diary.user.name}
-          </span>
-        )}
       />
       <DiaryPagination currentPage={currentPage} lastPage={lastPage} />
     </>
