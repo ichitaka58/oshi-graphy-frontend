@@ -1,22 +1,26 @@
 import DiaryCardList from "@/components/diary-card-list";
 import DiaryPagination from "@/components/diary-pagination";
-import type { DiaryListItem } from "@/types/diary";
+import { PublicDiaryListItem } from "@/types/diary";
+import { User } from "@/types/user";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
-const DiariesList = async ({
+const UserPublicDiariesList = async ({
+  params,
   searchParams,
 }: {
+  params: Promise<{id: string}>
   searchParams: Promise<{ page?: string }>;
 }) => {
+  const { id } = await params;
   const { page = "1" } = await searchParams;
+
   const token = (await cookies()).get("token")?.value;
   if (!token) {
     redirect("/login");
   }
-
   const res = await fetch(
-    `${process.env.LARAVEL_API_URL}/api/diaries?page=${page}`,
+    `${process.env.LARAVEL_API_URL}/api/public-diaries/users/${id}?page=${page}`,
     {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -30,22 +34,25 @@ const DiariesList = async ({
   if (!res.ok) {
     throw new Error("データの取得に失敗しました");
   }
-
   const fetchData = await res.json();
-  const diaries: DiaryListItem[] = fetchData.diaries.data;
+  const diaries: PublicDiaryListItem[] = fetchData.diaries.data;
   const lastPage: number = fetchData.diaries.last_page;
   const currentPage: number = fetchData.diaries.current_page;
+  const user: User = fetchData.user;
 
   return (
     <>
+      <h1 className="text-center mb-4 text-2xl text-foreground font-extrabold">
+        {user.name} さんの日記
+      </h1>
       {/* 日記一覧を表示する共通コンポーネント */}
       <DiaryCardList
         diaries={diaries}
-        pathName="diaries"
+        pathName="public-diaries"
       />
       <DiaryPagination currentPage={currentPage} lastPage={lastPage} />
     </>
   );
 };
 
-export default DiariesList;
+export default UserPublicDiariesList;
