@@ -28,7 +28,16 @@ import { Switch } from "@/components/ui/switch";
 import { useEffect, useRef, useState } from "react";
 import { Artist } from "@/types/artist";
 import { searchArtists } from "@/app/artists/actions";
-import { Combobox, ComboboxContent, ComboboxEmpty, ComboboxInput, ComboboxItem, ComboboxList } from "@/components/ui/combobox";
+import {
+  Combobox,
+  ComboboxContent,
+  ComboboxEmpty,
+  ComboboxInput,
+  ComboboxItem,
+  ComboboxList,
+} from "@/components/ui/combobox";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 const DiaryCreateForm = () => {
   const form = useForm<DiaryCreateFormValues>({
@@ -42,6 +51,10 @@ const DiaryCreateForm = () => {
       is_public: false,
     },
   });
+
+  // トースト表示を使うため、createDiaryは成功時にredirect()せず、router.pushで遷移する
+  // push/replace/back/refreshなどのメソッドを持つオブジェクトを変数routerに代入
+  const router = useRouter();
 
   // ファイル入力は value を React state で制御できないため、
   // リセット時に imperatively クリアするために ref を保持する
@@ -66,13 +79,13 @@ const DiaryCreateForm = () => {
 
   // 入力のたびに API を叩かないよう 300ms デバウンスする
   useEffect(() => {
-    if(query.length < 1) return;
-    const timer = setTimeout(async() => {
+    if (query.length < 1) return;
+    const timer = setTimeout(async () => {
       const results = await searchArtists(query);
-      setArtists(results)
+      setArtists(results);
     }, 300);
     return () => clearTimeout(timer);
-  }, [query])
+  }, [query]);
 
   const onSubmit = async (data: DiaryCreateFormValues) => {
     // ファイルを含むため JSON ではなく FormData で送信する
@@ -85,10 +98,15 @@ const DiaryCreateForm = () => {
     // Laravel の配列フィールドは "images[]" というキー名で受け取る
     data.images?.forEach((file) => formData.append("images[]", file));
 
-    // 成功時は createDiary 内で redirect() が例外をスローして終了するため戻り値がなく、result は undefined になる
+    
     const result = await createDiary(formData);
     if (result && !result.success) {
       form.setError("root", { message: result.message });
+      return;
+    }
+    if (result && result.success) {
+      toast.success(result.message, { position: "top-center" });
+      router.push("/diaries");
     }
   };
 
@@ -316,10 +334,7 @@ const DiaryCreateForm = () => {
       </CardContent>
       <CardFooter>
         <Field orientation="horizontal" className="justify-center">
-          <Button
-            type="submit"
-            form="form-create-diary"
-          >
+          <Button type="submit" form="form-create-diary">
             保存
           </Button>
           <Button

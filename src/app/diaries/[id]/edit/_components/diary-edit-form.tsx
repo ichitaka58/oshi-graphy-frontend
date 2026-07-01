@@ -42,6 +42,8 @@ import { updateDiary } from "@/app/diaries/actions";
 import { DiaryEditItem } from "@/types/diary";
 import { Checkbox } from "@/components/ui/checkbox";
 import { toDateInputValue } from "@/lib/date";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 type Props = {
   id: string;
@@ -61,6 +63,8 @@ const DiaryEditForm = ({ id, diary }: Props) => {
       delete_images: [],
     },
   });
+
+  const router = useRouter();
 
   // ファイル入力は value を React state で制御できないため、
   // リセット時に imperatively クリアするために ref を保持する
@@ -110,11 +114,17 @@ const DiaryEditForm = ({ id, diary }: Props) => {
       formData.append("delete_images[]", String(imageId)),
     );
 
-    // 成功時は createDiary 内で redirect() が例外をスローして終了するため戻り値がなく、result は undefined になる
+    /// 成功時は トースト表示＆/diariesへ遷移、失敗時はフォームにエラー表示
     const result = await updateDiary(id, formData);
     if (result && !result.success) {
       form.setError("root", { message: result.message });
       return;
+    }
+    if (result && result.success) {
+      toast.success(result.message, {
+        position: "top-center",
+      });
+      router.push("/diaries");
     }
   };
 
@@ -399,10 +409,7 @@ const DiaryEditForm = ({ id, diary }: Props) => {
       </CardContent>
       <CardFooter>
         <Field orientation="horizontal" className="justify-center">
-          <Button
-            type="submit"
-            form="form-update-diary"
-          >
+          <Button type="submit" form="form-update-diary">
             保存
           </Button>
           <Button

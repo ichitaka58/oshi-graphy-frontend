@@ -30,7 +30,10 @@ export async function createDiary(formData: FormData) {
       message: `日記の作成に失敗しました(${res.status})`,
     };
   }
-  redirect("/diaries");
+  return {
+    success: true,
+    message: "日記を保存しました",
+  };
 }
 
 // 日記の更新処理
@@ -55,9 +58,10 @@ export async function updateDiary(id: string, formData: FormData) {
     };
   }
   revalidatePath("/diaries");
-  redirect("/diaries");
-  // return { success: true };
-
+  return {
+    success: true,
+    message: "日記を更新しました",
+  };
 }
 
 // 日記の削除処理
@@ -79,5 +83,8 @@ export async function deleteDiary(id: string) {
       message: `日記の削除に失敗しました(${res.status})`,
     };
   }
-  redirect("/diaries");
+  return {
+    success: true,
+    message: "日記を削除しました",
+  }
 }
