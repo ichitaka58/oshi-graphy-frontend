@@ -25,7 +25,7 @@ const DiaryCardList = ({ diaries, pathName }: DiaryCardListProps) => {
             key={diary.id}
             onClick={() => router.push(`/${pathName}/${diary.id}`)}
           >
-            <article className="w-72 bg-card text-card-foreground border border-border rounded-2xl shadow-md overflow-hidden transform transition-transform duration-200 hover:scale-105 hover:shadow-xl">
+            <article className="w-72 bg-card text-card-foreground border border-border rounded-2xl shadow-md overflow-hidden transform transition-transform duration-200 hover:scale-102 hover:shadow-xl">
               <div className="relative w-full h-48">
                 <Image
                   src={
