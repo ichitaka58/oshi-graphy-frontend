@@ -23,7 +23,6 @@ import {
 } from "@/lib/schemas/user-profile";
 import { User } from "@/types/user";
 import { zodResolver } from "@hookform/resolvers/zod";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";

@@ -20,6 +20,7 @@ import { Field, FieldError, FieldGroup } from "../ui/field";
 import { useState } from "react";
 import { Input } from "../ui/input";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
+import { toast } from "sonner";
 
 const CommentFormDrawer = ({
   diaryId,
@@ -55,9 +56,12 @@ const CommentFormDrawer = ({
     const result = await createComment(formData, diaryId, path, isReply);
     if (result && !result.success) {
       form.setError("root", { message: result.message });
-    } else {
+      return;
+    }
+    if (result && result.success) {
       form.reset();
       setOpen(false);
+      toast.success(result.message, { position: "top-center" });
     }
   };
 

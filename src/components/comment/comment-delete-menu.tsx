@@ -13,6 +13,7 @@ import {
   AlertDialogTrigger,
 } from "../ui/alert-dialog";
 import { deleteComment } from "./actions";
+import { toast } from "sonner";
 
 const CommentDeleteMenu = ({
   commentId,
@@ -24,7 +25,11 @@ const CommentDeleteMenu = ({
   const handleDelete = async () => {
     const result = await deleteComment(commentId, path);
     if (result && !result.success) {
-      alert(result.message);
+      toast.error(result.message, { position: "top-center" });
+      return;
+    }
+    if (result && result.success) {
+      toast.success(result.message, { position: "top-center" });
     }
   };
 
