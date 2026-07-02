@@ -8,7 +8,7 @@ export async function createComment(
   formData: FormData,
   diaryId: string,
   path: string,
-  isReply: boolean
+  isReply: boolean,
 ) {
   const token = (await cookies()).get("token")?.value;
   if (!token) {
@@ -39,6 +39,10 @@ export async function createComment(
   }
   // キャッシュを無効化→Next.jsが自動で再レンダリング→画面更新
   revalidatePath(path);
+  return {
+    success: true,
+    message: !isReply ? "コメントを投稿しました" : "返信を投稿しました",
+  };
 }
 
 // コメントの削除処理
@@ -47,12 +51,15 @@ export async function deleteComment(commentId: number, path: string) {
   if (!token) {
     redirect("/login");
   }
-  const res = await fetch(`${process.env.LARAVEL_API_URL}/api/comments/${commentId}`, {
-    method: "DELETE",
-    headers: {
-      Authorization: `Bearer ${token}`,
+  const res = await fetch(
+    `${process.env.LARAVEL_API_URL}/api/comments/${commentId}`,
+    {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     },
-  });
+  );
   if (res.status === 401) redirect("/login");
   if (!res.ok) {
     return {
@@ -61,4 +68,8 @@ export async function deleteComment(commentId: number, path: string) {
     };
   }
   revalidatePath(path);
+  return {
+    success: true,
+    message: "コメントを削除しました",
+  };
 }
