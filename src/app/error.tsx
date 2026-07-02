@@ -15,9 +15,9 @@ export default function Error({
   }, [error]);
   
   return (
-    <div>
-      <p>予期しないエラーが発生しました</p>
-      <button onClick={() => reset}>再試行</button>
+    <div className="flex flex-col items-center justify-center flex-1">
+      <p className="text-destructive">予期しないエラーが発生しました</p>
+      <button onClick={() => reset()} className="underline">再試行</button>
     </div>
   );
 }
