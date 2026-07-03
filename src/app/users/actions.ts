@@ -23,7 +23,5 @@ export async function updateUserProfile(id: string, formData: FormData) {
       message: `プロフィールの更新に失敗しました(${res.status})`,
     };
   }
-  // redirect(`/users/${id}`);
   return { success:true};
-
 }
