@@ -36,8 +36,9 @@ import {
   ComboboxItem,
   ComboboxList,
 } from "@/components/ui/combobox";
-import { useRouter } from "next/navigation";
+import { unstable_rethrow, useRouter } from "next/navigation";
 import { toast } from "sonner";
+import DiaryAiAssistForm from "./diary-ai-assist-form";
 
 const DiaryCreateForm = () => {
   const form = useForm<DiaryCreateFormValues>({
@@ -87,26 +88,33 @@ const DiaryCreateForm = () => {
     return () => clearTimeout(timer);
   }, [query]);
 
-  const onSubmit = async (data: DiaryCreateFormValues) => {
-    // ファイルを含むため JSON ではなく FormData で送信する
-    const formData = new FormData();
-    formData.append("happened_on", data.happened_on);
-    formData.append("artist_id", String(data.artist_id));
-    formData.append("body", data.body);
-    // FormData は文字列しか扱えないため boolean を "1"/"0" に変換する
-    formData.append("is_public", data.is_public ? "1" : "0");
-    // Laravel の配列フィールドは "images[]" というキー名で受け取る
-    data.images?.forEach((file) => formData.append("images[]", file));
+  // AIからの文案を本文(body)にセットする
+  const handleCopyReplyToBody = (text: string) => {
+    form.setValue("body", text);
+  };
 
-    
-    const result = await createDiary(formData);
-    if (result && !result.success) {
-      form.setError("root", { message: result.message });
-      return;
-    }
-    if (result && result.success) {
+  const onSubmit = async (data: DiaryCreateFormValues) => {
+    try {
+      // ファイルを含むため JSON ではなく FormData で送信する
+      const formData = new FormData();
+      formData.append("happened_on", data.happened_on);
+      formData.append("artist_id", String(data.artist_id));
+      formData.append("body", data.body);
+      // FormData は文字列しか扱えないため boolean を "1"/"0" に変換する
+      formData.append("is_public", data.is_public ? "1" : "0");
+      // Laravel の配列フィールドは "images[]" というキー名で受け取る
+      data.images?.forEach((file) => formData.append("images[]", file));
+
+      const result = await createDiary(formData);
+      if (!result.success) {
+        form.setError("root", { message: result.message });
+        return;
+      }
       toast.success(result.message, { position: "top-center" });
       router.push("/diaries");
+    } catch (error) {
+      unstable_rethrow(error);
+      form.setError("root", { message: "通信エラーが発生しました" });
     }
   };
 
@@ -240,6 +248,7 @@ const DiaryCreateForm = () => {
                     id="form-create-diary-body"
                     aria-invalid={fieldState.invalid}
                     rows={6}
+                    className="text-xs"
                   />
                   {fieldState.invalid && (
                     <FieldError
@@ -250,6 +259,8 @@ const DiaryCreateForm = () => {
                 </Field>
               )}
             />
+            {/* AIアシスト機能 */}
+            <DiaryAiAssistForm onCopyReplyToBody={handleCopyReplyToBody} />
             {/* 写真 */}
             <Controller
               name="images"
@@ -278,6 +289,7 @@ const DiaryCreateForm = () => {
                       const files = e.target.files;
                       field.onChange(files ? Array.from(files) : []);
                     }}
+                    className="text-sm text-muted-foreground/70 file:text-muted-foreground/70"
                   />
                   {fieldState.invalid && (
                     <FieldError errors={[fieldState.error]} />

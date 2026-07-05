@@ -86,5 +86,35 @@ export async function deleteDiary(id: string) {
   return {
     success: true,
     message: "日記を削除しました",
+  };
+}
+
+// GeminiによるAI日記文案の作成
+export async function suggestDiaryDraft(formData: FormData) {
+  const token = (await cookies()).get("token")?.value;
+  if (!token) {
+    redirect("/login");
   }
+  const res = await fetch(
+    `${process.env.LARAVEL_API_URL}/api/ai/diary-suggest`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: formData,
+    },
+  );
+  if (!res.ok) {
+    return {
+      success: false,
+      message: `AIの文案作成に削除に失敗しました(${res.status})。短い入力で試してください`,
+    };
+  }
+  const result = await res.json();
+  return {
+    success: true,
+    reply: result.reply,
+    interactionId: result.interaction_id,
+  };
 }
