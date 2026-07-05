@@ -67,3 +67,13 @@ export const DiaryUpdateFormSchema = z.object({
 });
 
 export type DiaryUpdateFormValues = z.infer<typeof DiaryUpdateFormSchema>;
+
+export const DiaryAiAssistFormSchema = z.object({
+  interaction_id: z.string().nullable(),
+  prompt: z
+    .string()
+    .min(10, "文案作成に必要な情報を入力してください（10文字以上）")
+    .max(2000, "2000文字以下で入力してください"),
+});
+
+export type DiaryAiAssistFormValues = z.infer<typeof DiaryAiAssistFormSchema>;
