@@ -23,7 +23,7 @@ import {
 } from "@/lib/schemas/user-profile";
 import { User } from "@/types/user";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
+import { useRouter, unstable_rethrow } from "next/navigation";
 import { useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 
@@ -79,23 +79,32 @@ const UserProfileEditForm = ({ id, user }: Props) => {
 
 
   const onSubmit = async (data: UserProfileValues) => {
-    const formData = new FormData();
-    formData.append("name", data.name);
-    formData.append("profile", data.profile ?? "");
-    if (iconFile) {
-      formData.append("icon", iconFile);
-    } else if (deleteIcon) {
-      // 「新しいファイルを選ばなかった」と「アイコンを削除した」を区別するためフラグを送る
-      formData.append("delete_icon", "1");
-    }
+    try {
+      const formData = new FormData();
+      formData.append("name", data.name);
+      formData.append("profile", data.profile ?? "");
+      if (iconFile) {
+        formData.append("icon", iconFile);
+      } else if (deleteIcon) {
+        // 「新しいファイルを選ばなかった」と「アイコンを削除した」を区別するためフラグを送る
+        formData.append("delete_icon", "1");
+      }
 
-    const result = await updateUserProfile(id, formData);
-    if(!result)return;
-    if (!result.success) {
-      form.setError("root", { message: result.message });
-      return;
+      const result = await updateUserProfile(id, formData);
+      if (!result.success) {
+        form.setError("root", { message: result.message });
+        return;
+      }
+      router.replace(`/users/${id}`);
+    } catch (error) {
+      // updateUserProfile内のredirect("/login")はNext.jsがNEXT_REDIRECT例外を
+      // throwすることで実現されている。ここで無条件にcatchすると
+      // そのリダイレクト用の例外まで握りつぶしてしまうため、
+      // redirect/notFound等の例外だけはunstable_rethrowで再送出しNext.jsに処理を戻す。
+      unstable_rethrow(error);
+      // ここに到達するのは本当の通信エラー等のみ
+      form.setError("root", { message: "通信エラーが発生しました" });
     }
-    router.replace(`/users/${id}`);
   };
 
   return (
