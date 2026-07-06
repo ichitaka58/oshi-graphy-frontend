@@ -42,7 +42,7 @@ import { updateDiary } from "@/app/diaries/actions";
 import { DiaryEditItem } from "@/types/diary";
 import { Checkbox } from "@/components/ui/checkbox";
 import { toDateInputValue } from "@/lib/date";
-import { useRouter } from "next/navigation";
+import { useRouter, unstable_rethrow } from "next/navigation";
 import { toast } from "sonner";
 
 type Props = {
@@ -100,31 +100,39 @@ const DiaryEditForm = ({ id, diary }: Props) => {
   }, [query]);
 
   const onSubmit = async (data: DiaryUpdateFormValues) => {
-    // ファイルを含むため JSON ではなく FormData で送信する
-    const formData = new FormData();
-    formData.append("happened_on", data.happened_on);
-    formData.append("artist_id", String(data.artist_id));
-    formData.append("body", data.body);
-    // FormData は文字列しか扱えないため boolean を "1"/"0" に変換する
-    formData.append("is_public", data.is_public ? "1" : "0");
-    // Laravel の配列フィールドは "images[]" というキー名で受け取る
-    data.images?.forEach((file) => formData.append("images[]", file));
-    // 既存画像を削除する場合のフィールド
-    data.delete_images?.forEach((imageId) =>
-      formData.append("delete_images[]", String(imageId)),
-    );
+    try {
+      // ファイルを含むため JSON ではなく FormData で送信する
+      const formData = new FormData();
+      formData.append("happened_on", data.happened_on);
+      formData.append("artist_id", String(data.artist_id));
+      formData.append("body", data.body);
+      // FormData は文字列しか扱えないため boolean を "1"/"0" に変換する
+      formData.append("is_public", data.is_public ? "1" : "0");
+      // Laravel の配列フィールドは "images[]" というキー名で受け取る
+      data.images?.forEach((file) => formData.append("images[]", file));
+      // 既存画像を削除する場合のフィールド
+      data.delete_images?.forEach((imageId) =>
+        formData.append("delete_images[]", String(imageId)),
+      );
 
-    /// 成功時は トースト表示＆/diariesへ遷移、失敗時はフォームにエラー表示
-    const result = await updateDiary(id, formData);
-    if (result && !result.success) {
-      form.setError("root", { message: result.message });
-      return;
-    }
-    if (result && result.success) {
+      /// 成功時は トースト表示＆/diariesへ遷移、失敗時はフォームにエラー表示
+      const result = await updateDiary(id, formData);
+      if (!result.success) {
+        form.setError("root", { message: result.message });
+        return;
+      }
       toast.success(result.message, {
         position: "top-center",
       });
       router.push("/diaries");
+    } catch (error) {
+      // updateDiary内のredirect("/login")はNext.jsがNEXT_REDIRECT例外を
+      // throwすることで実現されている。ここで無条件にcatchすると
+      // そのリダイレクト用の例外まで握りつぶしてしまうため、
+      // redirect/notFound等の例外だけはunstable_rethrowで再送出しNext.jsに処理を戻す。
+      unstable_rethrow(error);
+      // ここに到達するのは本当の通信エラー等のみ
+      form.setError("root", { message: "通信エラーが発生しました" });
     }
   };
 
