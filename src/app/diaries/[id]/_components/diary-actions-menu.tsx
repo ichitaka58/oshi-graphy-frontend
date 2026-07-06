@@ -21,7 +21,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, unstable_rethrow } from "next/navigation";
 import { toast } from "sonner";
 
 const DiaryActionsMenu = ({ id }: { id: string }) => {
@@ -29,13 +29,22 @@ const DiaryActionsMenu = ({ id }: { id: string }) => {
   const [alertOpen, setAlertOpen] = useState<boolean>(false);
 
   const handleDelete = async () => {
-    const result = await deleteDiary(id);
-    if (result && !result.success) {
-      toast.error(result.message, { position: "top-center" });
-    }
-    if (result && result.success) {
+    try {
+      const result = await deleteDiary(id);
+      if (!result.success) {
+        toast.error(result.message, { position: "top-center" });
+        return;
+      }
       toast.success(result.message, { position: "top-center" });
       router.push("/diaries");
+    } catch (error) {
+      // deleteDiary内のredirect("/login")はNext.jsがNEXT_REDIRECT例外を
+      // throwすることで実現されている。ここで無条件にcatchすると
+      // そのリダイレクト用の例外まで握りつぶしてしまうため、
+      // redirect/notFound等の例外だけはunstable_rethrowで再送出しNext.jsに処理を戻す。
+      unstable_rethrow(error);
+      // ここに到達するのは本当の通信エラー等のみ
+      toast.error("通信エラーが発生しました", { position: "top-center" });
     }
   };
   return (
