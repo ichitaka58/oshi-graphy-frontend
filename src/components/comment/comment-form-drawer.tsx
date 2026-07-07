@@ -16,6 +16,7 @@ import { CommentFormSchema, CommentFormValues } from "@/lib/schemas/comment";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { createComment } from "./actions";
+import { unstable_rethrow } from "next/navigation";
 import { Field, FieldError, FieldGroup } from "../ui/field";
 import { useState } from "react";
 import { Input } from "../ui/input";
@@ -47,21 +48,29 @@ const CommentFormDrawer = ({
   const [open, setOpen] = useState<boolean>(false);
 
   const onSubmit = async (data: CommentFormValues) => {
-    const formData = new FormData();
-    formData.append("body", data.body);
-    if (data.parent_id !== undefined) {
-      formData.append("parent_id", String(data.parent_id));
-    }
+    try {
+      const formData = new FormData();
+      formData.append("body", data.body);
+      if (data.parent_id !== undefined) {
+        formData.append("parent_id", String(data.parent_id));
+      }
 
-    const result = await createComment(formData, diaryId, path, isReply);
-    if (result && !result.success) {
-      form.setError("root", { message: result.message });
-      return;
-    }
-    if (result && result.success) {
+      const result = await createComment(formData, diaryId, path, isReply);
+      if (!result.success) {
+        form.setError("root", { message: result.message });
+        return;
+      }
       form.reset();
       setOpen(false);
       toast.success(result.message, { position: "top-center" });
+    } catch (error) {
+      // createComment内のredirect("/login")はNext.jsがNEXT_REDIRECT例外を
+      // throwすることで実現されている。ここで無条件にcatchすると
+      // そのリダイレクト用の例外まで握りつぶしてしまうため、
+      // redirect/notFound等の例外だけはunstable_rethrowで再送出しNext.jsに処理を戻す。
+      unstable_rethrow(error);
+      // ここに到達するのは本当の通信エラー等のみ
+      form.setError("root", { message: "通信エラーが発生しました" });
     }
   };
 
