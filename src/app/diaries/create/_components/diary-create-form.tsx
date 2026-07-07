@@ -20,6 +20,7 @@ import {
   FieldError,
   FieldGroup,
   FieldLabel,
+  FieldTitle,
 } from "@/components/ui/field";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -260,7 +261,10 @@ const DiaryCreateForm = () => {
               )}
             />
             {/* AIアシスト機能 */}
-            <DiaryAiAssistForm onCopyReplyToBody={handleCopyReplyToBody} />
+            <div className="border rounded-lg p-4 bg-muted/30">
+            <FieldTitle className="font-semibold">⭐️AIアシスト機能</FieldTitle>
+              <DiaryAiAssistForm onCopyReplyToBody={handleCopyReplyToBody} />
+            </div>
             {/* 写真 */}
             <Controller
               name="images"
