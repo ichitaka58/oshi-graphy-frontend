@@ -12,6 +12,7 @@ import {
   FieldError,
   FieldGroup,
   FieldLabel,
+  FieldTitle,
 } from "@/components/ui/field";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
@@ -29,6 +30,7 @@ const DiaryAiAssistForm = ({ onCopyReplyToBody }: DiaryAiAssistFormProps) => {
   const form = useForm<DiaryAiAssistFormValues>({
     resolver: zodResolver(DiaryAiAssistFormSchema),
     mode: "onSubmit",
+    reValidateMode: "onSubmit",
     defaultValues: {
       interaction_id: "",
       prompt: "",
@@ -103,7 +105,7 @@ const DiaryAiAssistForm = ({ onCopyReplyToBody }: DiaryAiAssistFormProps) => {
             <Field data-invalid={fieldState.invalid}>
               <FieldLabel
                 htmlFor="form-ai-assist-prompt"
-                className="font-semibold"
+                className="font-semibold text-foreground/70 pl-2"
               >
                 AIへの相談を入力
               </FieldLabel>
@@ -113,7 +115,7 @@ const DiaryAiAssistForm = ({ onCopyReplyToBody }: DiaryAiAssistFormProps) => {
                 aria-invalid={fieldState.invalid}
                 rows={6}
                 placeholder="文案作成に必要な情報（日時、場所、アーティスト、感想など）を入力してください"
-                className="text-xs placeholder:text-muted-foreground/50 placeholder:text-xs"
+                className="text-xs placeholder:text-muted-foreground/50 placeholder:text-xs bg-card"
               />
               {fieldState.invalid && (
                 <FieldError errors={[fieldState.error]} className="text-xs" />
@@ -122,11 +124,12 @@ const DiaryAiAssistForm = ({ onCopyReplyToBody }: DiaryAiAssistFormProps) => {
           )}
         />
       </FieldGroup>
-      <Field orientation="horizontal" className="justify-center">
+      <Field orientation="horizontal" className="justify-center my-2.5">
         <Button
           type="button"
           onClick={form.handleSubmit(onSubmit)}
           disabled={isSubmitting}
+          size="sm"
         >
           {isSubmitting ? (
             <>
@@ -145,12 +148,13 @@ const DiaryAiAssistForm = ({ onCopyReplyToBody }: DiaryAiAssistFormProps) => {
             setReply("");
           }}
           disabled={isSubmitting}
+          size="sm"
         >
           会話リセット
         </Button>
       </Field>
-      <Field>
-        <FieldLabel className="font-semibold">AIの回答</FieldLabel>
+      <Field className="mt-4">
+        <FieldTitle className="font-semibold text-foreground/70 pl-2">AIの回答</FieldTitle>
         <Card className="py-2 px-2 min-h-16">
           <CardContent className="px-0">
             <p className="text-xs">{reply}</p>
@@ -164,6 +168,7 @@ const DiaryAiAssistForm = ({ onCopyReplyToBody }: DiaryAiAssistFormProps) => {
               onCopyReplyToBody(reply);
               setReply("");
             }}
+            size="sm"
           >
             本文にコピー
           </Button>
