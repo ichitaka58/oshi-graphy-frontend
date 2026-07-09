@@ -93,6 +93,7 @@ const EmailEditForm = () => {
                     type="email"
                     aria-invalid={fieldState.invalid}
                     placeholder="example@example.com"
+                    autoComplete="email"
                   />
                   {fieldState.invalid && (
                     <FieldError
