@@ -2,8 +2,10 @@ import BackButton from "@/components/back-button";
 import EmailEditForm from "./_components/email-edit-form";
 import PasswordUpdateForm from "./_components/password-update-form";
 import AccountDeleteForm from "./_components/account-delete-form";
+import { getCurrentUser } from "@/lib/auth";
 
-const SettingsPage = () => {
+const SettingsPage = async () => {
+  await getCurrentUser(); // ログインチェック
   return (
     <>
       <div className="text-muted-foreground py-3 flex items-center text-sm">
@@ -17,6 +19,6 @@ const SettingsPage = () => {
       </div>
     </>
   );
-}
+};
 
 export default SettingsPage;

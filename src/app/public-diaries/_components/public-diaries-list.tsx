@@ -22,9 +22,7 @@ const PublicDiariesList = async ({
   if (artist_id) params.set("artist_id", artist_id);
 
   const token = (await cookies()).get("token")?.value;
-  if (!token) {
-    redirect("/login");
-  }
+  
   const res = await fetch(
     `${process.env.LARAVEL_API_URL}/api/public-diaries?${params}`,
     {
