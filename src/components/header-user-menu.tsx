@@ -23,6 +23,7 @@ import {
 } from "./ui/alert-dialog";
 import { User } from "@/types/user";
 import Link from "next/link";
+import { toast } from "sonner";
 import {
   BookHeart,
   LogOutIcon,
@@ -40,9 +41,17 @@ const HeaderUserMenu = ({ user }: { user: User }) => {
       const res = await fetch("/api/auth/logout", {
         method: "POST",
       });
-      if (res.ok) {
-        window.location.href = "/";
+      if (!res.ok) {
+        const result = await res.json();
+        console.error(result.error);
+        if (res.status === 401) {
+          window.location.href = "/login";
+          return;
+        }
+        toast.error(`ログアウトに失敗しました(${res.status})`, {position: "top-center"});
+        return;
       }
+      window.location.href = "/";
     } catch (error) {
       console.error("Logout error:", error);
       alert("ログアウトに失敗しました");
@@ -87,10 +96,12 @@ const HeaderUserMenu = ({ user }: { user: User }) => {
                 プロフィール
               </DropdownMenuItem>
             </Link>
-            <DropdownMenuItem>
-              <SettingsIcon />
-              設定
-            </DropdownMenuItem>
+            <Link href="/settings">
+              <DropdownMenuItem>
+                <SettingsIcon />
+                設定
+              </DropdownMenuItem>
+            </Link>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
