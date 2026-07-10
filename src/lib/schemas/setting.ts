@@ -22,3 +22,9 @@ export const PasswordUpdateSchema = z.object({
 
 export type PasswordUpdateValues = z.infer<typeof PasswordUpdateSchema>;
 
+export const AccountDeleteSchema = z.object({
+  password: z.string().min(1, "パスワードを入力してください"),
+});
+
+export type AccountDeleteValues = z.infer<typeof AccountDeleteSchema>;
+
