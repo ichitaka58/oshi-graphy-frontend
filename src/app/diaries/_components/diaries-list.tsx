@@ -11,9 +11,6 @@ const DiariesList = async ({
 }) => {
   const { page = "1" } = await searchParams;
   const token = (await cookies()).get("token")?.value;
-  if (!token) {
-    redirect("/login");
-  }
 
   const res = await fetch(
     `${process.env.LARAVEL_API_URL}/api/diaries?page=${page}`,

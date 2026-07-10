@@ -1,7 +1,9 @@
 import BackButton from "@/components/back-button";
 import DiaryCreateForm from "./_components/diary-create-form";
+import { getCurrentUser } from "@/lib/auth";
 
-const DiaryCreatePage = () => {
+const DiaryCreatePage = async () => {
+  await getCurrentUser(); // ログインチェック
   return (
     <div>
       <div className="text-muted-foreground py-3 flex items-center text-sm">
