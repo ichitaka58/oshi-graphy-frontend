@@ -8,12 +8,12 @@ import { Image } from "@/types/image";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import "dayjs/locale/ja";
-import { Heart } from "lucide-react";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { Comment } from "@/types/comment";
 import CommentFormDrawer from "@/components/comment/comment-form-drawer";
 import { getCurrentUser } from "@/lib/auth";
+import Like from "./like";
 
 dayjs.extend(relativeTime);
 dayjs.locale("ja");
@@ -74,10 +74,12 @@ const PublicDiaryDetail = async ({
             <div className="text-xs text-muted-foreground">
               更新日時: {DateFormatForUpdatedAt(diary.updated_at)}
             </div>
-            <div className="flex items-center gap-1 pr-4 text-accent">
-              <Heart className="size-5" />
-              <div>{diary.likes_count}</div>
-            </div>
+            {/* いいねボタン、いいね数のコンポーネント */}
+            <Like
+              likesCount={diary.likes_count}
+              likedByMe={diary.liked_by_me}
+              id={id}
+            />
           </div>
         </section>
         <section className="px-2 text-sm my-4 py-4 bg-muted text-muted-foreground">
