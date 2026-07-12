@@ -19,12 +19,17 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Field, FieldError, FieldGroup } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupInput,
+} from "@/components/ui/input-group";
 import {
   AccountDeleteSchema,
   AccountDeleteValues,
 } from "@/lib/schemas/setting";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 
@@ -36,8 +41,10 @@ const AccountDeleteForm = () => {
       password: "",
     },
   });
-  
+
   const [alertOpen, setAlertOpen] = useState<boolean>(false);
+  // パスワード表示、非表示の切り替え
+  const [showPassword, setShowPassword] = useState<boolean>(false);
 
   const onSubmit = async (data: AccountDeleteValues) => {
     try {
@@ -58,7 +65,9 @@ const AccountDeleteForm = () => {
         if (result.errors) {
           form.setError("password", { message: result.errors.password[0] });
         } else {
-          form.setError("root", {message: `アカウントの削除に失敗しました${res.status}`});
+          form.setError("root", {
+            message: `アカウントの削除に失敗しました${res.status}`,
+          });
         }
         return;
       }
@@ -108,13 +117,24 @@ const AccountDeleteForm = () => {
                 control={form.control}
                 render={({ field, fieldState }) => (
                   <Field data-invalid={fieldState.invalid}>
-                    <Input
-                      {...field}
-                      type="password"
-                      aria-invalid={fieldState.invalid}
-                      placeholder="パスワード..."
-                      autoComplete="current-password"
-                    />
+                    <InputGroup>
+                      <InputGroupInput
+                        {...field}
+                        type={showPassword ? "text" : "password"}
+                        aria-invalid={fieldState.invalid}
+                        placeholder="パスワード..."
+                        autoComplete="current-password"
+                      />
+                      <InputGroupAddon align="inline-end">
+                        <button
+                          type="button"
+                          onClick={() => setShowPassword(!showPassword)}
+                          className="text-muted-foreground/80"
+                        >
+                          {showPassword ? <Eye /> : <EyeOff />}
+                        </button>
+                      </InputGroupAddon>
+                    </InputGroup>
                     {fieldState.invalid && (
                       <FieldError
                         errors={[fieldState.error]}
