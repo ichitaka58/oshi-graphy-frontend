@@ -15,13 +15,14 @@ import {
 import { deleteComment } from "./actions";
 import { toast } from "sonner";
 import { unstable_rethrow } from "next/navigation";
+import { DiaryDetailPath } from "@/types/like";
 
 const CommentDeleteMenu = ({
   commentId,
   path,
 }: {
   commentId: number;
-  path: string;
+  path: DiaryDetailPath;
 }) => {
   const handleDelete = async () => {
     try {

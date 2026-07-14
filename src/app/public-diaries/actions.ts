@@ -1,14 +1,16 @@
 "use server";
 
+import { LikePath, LikeResult } from "@/types/like";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
-type LikeResult =
-  | { success: true; liked: boolean; count: number }
-  | { success: false; message: string };
 
-export async function likeDiary(id: string, liked: boolean, path: string): Promise<LikeResult> {
+export async function likeDiary(
+  id: string,
+  liked: boolean,
+  path: LikePath,
+): Promise<LikeResult> {
   const token = (await cookies()).get("token")?.value;
   const res = await fetch(
     `${process.env.LARAVEL_API_URL}/api/diaries/${id}/like`,
