@@ -24,7 +24,7 @@ const DiaryDetailSkeleton = () => {
           </div>
         </div>
         {/* 日記本文、日時等 */}
-        <div className="p-4 bg-card">
+        <div className="p-4 bg-secondary">
           <div className="mb-2">
             <Skeleton className="w-full h-4 mb-2" /> {/* 本文1行目 */}
             <Skeleton className="w-full h-4 mb-2" /> {/* 本文2行目 */}
@@ -37,7 +37,7 @@ const DiaryDetailSkeleton = () => {
           </div>
         </div>
         {/* コメント部分 */}
-        <div className="px-2 my-4 py-4 bg-card">
+        <div className="px-2 my-4 py-4 bg-muted/30">
           <div className="flex gap-1 items-center">
             <Skeleton className="w-14 h-4" />
             <Skeleton className="w-6 h-4" />
