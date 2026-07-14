@@ -7,6 +7,7 @@ import { Badge } from "./ui/badge";
 import { Heart, MessageCircle } from "lucide-react";
 import { DiaryListItem, PublicDiaryListItem } from "@/types/diary";
 import { useRouter } from "next/navigation";
+import Like from "@/app/public-diaries/_components/like";
 
 type DiaryCardListProps = {
   diaries: DiaryListItem[];
@@ -74,8 +75,14 @@ const DiaryCardList = ({ diaries, pathName }: DiaryCardListProps) => {
                   )}
 
                   <div className="flex items-center gap-1 text-accent">
-                    <Heart className="size-5" />
-                    <span>{diary.likes_count}</span>
+                    {/* いいねアイコン、いいね数 */}
+                    <Like
+                      likesCount={diary.likes_count}
+                      likedByMe={diary.liked_by_me}
+                      id={String(diary.id)}
+                      path={`/${pathName}`}
+                    />
+                    {/* コメントアイコン、コメント数 */}
                     <MessageCircle className="size-5" />
                     <span>{diary.comments_count}</span>
                   </div>

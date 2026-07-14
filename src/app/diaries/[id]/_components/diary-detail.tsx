@@ -6,7 +6,6 @@ import BackToListButton from "@/components/back-to-list-button";
 import { DateFormatForHappenedOn, DateFormatForUpdatedAt } from "@/lib/date";
 import DiaryActionsMenu from "./diary-actions-menu";
 import { DiaryCarousel } from "./diary-carousel";
-import { Heart } from "lucide-react";
 import CommentList from "@/components/comment/comment-list";
 import { Comment } from "@/types/comment";
 import dayjs from "dayjs";
@@ -15,6 +14,7 @@ import "dayjs/locale/ja";
 import { Badge } from "@/components/ui/badge";
 import CommentFormDrawer from "@/components/comment/comment-form-drawer";
 import { getCurrentUser } from "@/lib/auth";
+import Like from "@/app/public-diaries/_components/like";
 
 dayjs.extend(relativeTime);
 dayjs.locale("ja");
@@ -72,10 +72,8 @@ const DiaryDetail = async ({ params }: { params: Promise<{ id: string }> }) => {
             <div className="text-xs text-muted-foreground">
               更新日時: {DateFormatForUpdatedAt(diary.updated_at)}
             </div>
-            <div className="flex items-center gap-1 pr-4 text-accent">
-              <Heart className="size-5" />
-              <div>{diary.likes_count}</div>
-            </div>
+            {/* いいねアイコン、いいね数 */}
+            <Like likesCount={diary.likes_count} likedByMe={diary.liked_by_me} id={id} path={`/diaries/${id}`} />
           </div>
         </section>
         <section className="px-2 text-sm my-4 py-4 bg-muted text-muted-foreground">
