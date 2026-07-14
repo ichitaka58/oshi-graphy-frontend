@@ -79,6 +79,7 @@ const PublicDiaryDetail = async ({
               likesCount={diary.likes_count}
               likedByMe={diary.liked_by_me}
               id={id}
+              path={`/public-diaries/${id}`}
             />
           </div>
         </section>

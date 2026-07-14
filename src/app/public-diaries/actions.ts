@@ -8,7 +8,7 @@ type LikeResult =
   | { success: true; liked: boolean; count: number }
   | { success: false; message: string };
 
-export async function likeDiary(id: string, liked: boolean): Promise<LikeResult> {
+export async function likeDiary(id: string, liked: boolean, path: string): Promise<LikeResult> {
   const token = (await cookies()).get("token")?.value;
   const res = await fetch(
     `${process.env.LARAVEL_API_URL}/api/diaries/${id}/like`,
@@ -30,7 +30,8 @@ export async function likeDiary(id: string, liked: boolean): Promise<LikeResult>
     };
   }
   const result: { liked: boolean; count: number } = await res.json();
-  revalidatePath(`/public-diaries/${id}`);
+  // revalidatePath(`/public-diaries/${id}`);
+  revalidatePath(path);
   return {
     success: true,
     liked: result.liked,
