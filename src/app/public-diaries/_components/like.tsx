@@ -5,12 +5,13 @@ import { Heart } from "lucide-react";
 import { useState } from "react";
 import { likeDiary } from "../actions";
 import { toast } from "sonner";
+import { LikePath } from "@/types/like";
 
 type Props = {
   likesCount: number;
   likedByMe: boolean;
   id: string;
-  path: string; // revalidatePathに渡すpath
+  path: LikePath; // revalidatePathに渡すpath
 };
 
 const Like = ({ likesCount, likedByMe, id, path }: Props) => {

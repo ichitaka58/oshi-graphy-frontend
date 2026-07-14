@@ -22,6 +22,7 @@ import { useState } from "react";
 import { Input } from "../ui/input";
 import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
 import { toast } from "sonner";
+import { DiaryDetailPath } from "@/types/like";
 
 const CommentFormDrawer = ({
   diaryId,
@@ -31,7 +32,7 @@ const CommentFormDrawer = ({
   commentUserName,
 }: {
   diaryId: string;
-  path: string;
+  path: DiaryDetailPath;
   isReply: boolean;
   parentId?: number;
   commentUserName?: string;
