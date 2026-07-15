@@ -84,6 +84,7 @@ const CommentFormDrawer = ({
               <Button
                 variant="ghost"
                 className="p-0"
+                // ボタンクリック後にフォーカスを外す
                 onClick={(e) => e.currentTarget.blur()}
               >
                 <MessageCirclePlus size={14} className="text-accent/80" />
