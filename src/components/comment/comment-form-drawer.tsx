@@ -106,6 +106,7 @@ const CommentFormDrawer = ({
           </button>
         </DrawerTrigger>
       )}
+      {/* aria-describedby={undefined}: 意図的に説明DrawerDescriptionをつけない */}
       <DrawerContent className="w-72 mx-auto px-6" aria-describedby={undefined}>
         <DrawerHeader>
           <DrawerTitle className="text-sm font-semibold">
