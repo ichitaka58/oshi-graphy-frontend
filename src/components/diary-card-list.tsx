@@ -4,7 +4,7 @@ import { DateFormatForHappenedOn } from "@/lib/date";
 import Image from "next/image";
 import Link from "next/link";
 import { Badge } from "./ui/badge";
-import { Heart, MessageCircle } from "lucide-react";
+import { MessageCircle } from "lucide-react";
 import { DiaryListItem, PublicDiaryListItem } from "@/types/diary";
 import { useRouter } from "next/navigation";
 import Like from "@/app/public-diaries/_components/like";

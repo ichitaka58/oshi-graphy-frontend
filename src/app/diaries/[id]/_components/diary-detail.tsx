@@ -73,7 +73,12 @@ const DiaryDetail = async ({ params }: { params: Promise<{ id: string }> }) => {
               更新日時: {DateFormatForUpdatedAt(diary.updated_at)}
             </div>
             {/* いいねアイコン、いいね数 */}
-            <Like likesCount={diary.likes_count} likedByMe={diary.liked_by_me} id={id} path={`/diaries/${id}`} />
+            <Like
+              likesCount={diary.likes_count}
+              likedByMe={diary.liked_by_me}
+              id={id}
+              path={`/diaries/${id}`}
+            />
           </div>
         </section>
         <section className="px-2 text-sm my-4 py-4 bg-muted text-muted-foreground">
@@ -88,7 +93,11 @@ const DiaryDetail = async ({ params }: { params: Promise<{ id: string }> }) => {
             />
           </div>
           {/* コメントリスト */}
-          <CommentList comments={comments} path={`/diaries/${id}`} loginUser={loginUser} />
+          <CommentList
+            comments={comments}
+            path={`/diaries/${id}`}
+            loginUser={loginUser}
+          />
         </section>
       </div>
     </div>
