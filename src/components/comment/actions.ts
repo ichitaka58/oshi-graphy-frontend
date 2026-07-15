@@ -1,5 +1,6 @@
 "use server";
 
+import { DiaryDetailPath, LikeResult } from "@/types/like";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
@@ -7,7 +8,7 @@ import { redirect } from "next/navigation";
 export async function createComment(
   formData: FormData,
   diaryId: string,
-  path: string,
+  path: DiaryDetailPath,
   isReply: boolean,
 ) {
   const token = (await cookies()).get("token")?.value;
@@ -46,7 +47,7 @@ export async function createComment(
 }
 
 // コメントの削除処理
-export async function deleteComment(commentId: number, path: string) {
+export async function deleteComment(commentId: number, path: DiaryDetailPath) {
   const token = (await cookies()).get("token")?.value;
   if (!token) {
     redirect("/login");
@@ -71,5 +72,40 @@ export async function deleteComment(commentId: number, path: string) {
   return {
     success: true,
     message: "コメントを削除しました",
+  };
+}
+
+// コメントへのいいね機能の処理
+export async function likeComment(
+  commentId: number,
+  liked: boolean,
+  path: DiaryDetailPath,
+): Promise<LikeResult> {
+  const token = (await cookies()).get("token")?.value;
+  const res = await fetch(
+    `${process.env.LARAVEL_API_URL}/api/comments/${commentId}/like`,
+    {
+      method: liked ? "DELETE" : "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    },
+  );
+  // 401: cookieのトークンが期限切れまたは無効。再ログインさせる。
+  if (res.status === 401) redirect("/login");
+  if (!res.ok) {
+    return {
+      success: false,
+      message: `コメントへのいいねの処理に失敗しました(${res.status})`,
+    };
+  }
+  const result: { liked: boolean; count: number } = await res.json();
+  revalidatePath(path);
+  return {
+    success: true,
+    liked: result.liked,
+    count: result.count,
   };
 }
