@@ -1,6 +1,5 @@
 "use client";
 
-import { Heart } from "lucide-react";
 import CommentBodyText from "./comment-body-text";
 import type { Comment } from "@/types/comment";
 import dayjs from "dayjs";
@@ -10,6 +9,8 @@ import { useState } from "react";
 import CommentFormDrawer from "./comment-form-drawer";
 import { User } from "@/types/user";
 import CommentDeleteMenu from "./comment-delete-menu";
+import CommentLike from "./comment-like";
+import { DiaryDetailPath } from "@/types/like";
 
 dayjs.extend(relativeTime);
 dayjs.locale("ja");
@@ -20,7 +21,7 @@ const CommentList = ({
   loginUser,
 }: {
   comments: Comment[];
-  path: string;
+  path: DiaryDetailPath;
   loginUser: User;
 }) => {
   const [openReplyIds, setOpenReplyIds] = useState<Set<number>>(new Set());
@@ -51,8 +52,14 @@ const CommentList = ({
                 <div className="flex items-center gap-1">
                   <div>{comment.user.name ?? "退会ユーザー"}</div>
                   <div>{dayjs(comment.created_at).fromNow()}</div>
-                  <Heart className="size-4 text-accent/80" />
-                  <div className="text-accent/80">{comment.likes_count}</div>
+                  {/* <Heart className="size-4 text-accent/80" />
+                  <div className="text-accent/80">{comment.likes_count}</div> */}
+                  <CommentLike
+                    likedByMe={comment.liked_by_me}
+                    likesCount={comment.likes_count}
+                    commentId={comment.id}
+                    path={path}
+                  />
                 </div>
                 {comment.user_id === loginUser.id && (
                   // 削除ボタン AlertDialog起動
