@@ -3,18 +3,20 @@
 import { cn } from "@/lib/utils";
 import { Heart } from "lucide-react";
 import { useState } from "react";
-import { likeDiary } from "../actions";
+import { likeDiary } from "./diary-like-actions";
 import { toast } from "sonner";
 import { LikePath } from "@/types/like";
+import DiaryLikersDrawer from "./diary-likers-drawer";
 
 type Props = {
   likesCount: number;
   likedByMe: boolean;
   id: string;
   path: LikePath; // revalidatePathに渡すpath
+  variant: "list" | "detail"; // Drawerを出すか出さないか分岐に使用
 };
 
-const Like = ({ likesCount, likedByMe, id, path }: Props) => {
+const DiaryLike = ({ likesCount, likedByMe, id, path, variant }: Props) => {
   const [liked, setLiked] = useState<boolean>(likedByMe);
   const [count, setCount] = useState<number>(likesCount);
   const [busy, setBusy] = useState<boolean>(false);
@@ -41,7 +43,12 @@ const Like = ({ likesCount, likedByMe, id, path }: Props) => {
 
   return (
     <div className="flex items-center gap-1 text-accent">
-      <button type="button" onClick={handleLike} disabled={busy} className="disabled:cursor-not-allowed">
+      <button
+        type="button"
+        onClick={handleLike}
+        disabled={busy}
+        className="disabled:cursor-not-allowed"
+      >
         <Heart
           className={cn(
             "size-5 transition-colors",
@@ -49,9 +56,14 @@ const Like = ({ likesCount, likedByMe, id, path }: Props) => {
           )}
         />
       </button>
-      <div>{count}</div>
+      {/* いいね数をクリックしたらいいねしたユーザー一覧が表示 */}
+      {variant === "detail" ? (
+        <DiaryLikersDrawer id={id} count={count} />
+      ) : (
+        <div>{count}</div>
+      )}
     </div>
   );
 };
 
-export default Like;
+export default DiaryLike;
