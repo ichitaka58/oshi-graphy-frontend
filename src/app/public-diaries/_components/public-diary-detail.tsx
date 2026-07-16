@@ -13,7 +13,7 @@ import { redirect } from "next/navigation";
 import { Comment } from "@/types/comment";
 import CommentFormDrawer from "@/components/comment/comment-form-drawer";
 import { getCurrentUser } from "@/lib/auth";
-import Like from "./like";
+import DiaryLike from "@/components/diary-like";
 
 dayjs.extend(relativeTime);
 dayjs.locale("ja");
@@ -75,11 +75,12 @@ const PublicDiaryDetail = async ({
               更新日時: {DateFormatForUpdatedAt(diary.updated_at)}
             </div>
             {/* いいねボタン、いいね数のコンポーネント */}
-            <Like
+            <DiaryLike
               likesCount={diary.likes_count}
               likedByMe={diary.liked_by_me}
               id={id}
               path={`/public-diaries/${id}`}
+              variant="detail"
             />
           </div>
         </section>
