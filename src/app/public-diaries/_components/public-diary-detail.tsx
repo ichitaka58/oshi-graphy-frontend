@@ -81,6 +81,8 @@ const PublicDiaryDetail = async ({
               id={id}
               path={`/public-diaries/${id}`}
               variant="detail"
+              ownerId={diary.user_id}
+              loginUserId={loginUser.id}
             />
           </div>
         </section>
