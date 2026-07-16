@@ -79,6 +79,8 @@ const DiaryDetail = async ({ params }: { params: Promise<{ id: string }> }) => {
               id={id}
               path={`/diaries/${id}`}
               variant="detail"
+              ownerId={diary.user_id}
+              loginUserId={loginUser.id}
             />
           </div>
         </section>

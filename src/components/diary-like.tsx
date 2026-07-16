@@ -14,9 +14,19 @@ type Props = {
   id: string;
   path: LikePath; // revalidatePathに渡すpath
   variant: "list" | "detail"; // Drawerを出すか出さないか分岐に使用
+  ownerId?: number;
+  loginUserId?: number;
 };
 
-const DiaryLike = ({ likesCount, likedByMe, id, path, variant }: Props) => {
+const DiaryLike = ({
+  likesCount,
+  likedByMe,
+  id,
+  path,
+  variant,
+  ownerId,
+  loginUserId,
+}: Props) => {
   const [liked, setLiked] = useState<boolean>(likedByMe);
   const [count, setCount] = useState<number>(likesCount);
   const [busy, setBusy] = useState<boolean>(false);
@@ -57,7 +67,7 @@ const DiaryLike = ({ likesCount, likedByMe, id, path, variant }: Props) => {
         />
       </button>
       {/* いいね数をクリックしたらいいねしたユーザー一覧が表示 */}
-      {variant === "detail" ? (
+      {variant === "detail" && ownerId === loginUserId ? (
         <DiaryLikersDrawer id={id} count={count} />
       ) : (
         <div>{count}</div>
