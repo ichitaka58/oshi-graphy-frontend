@@ -14,7 +14,7 @@ import "dayjs/locale/ja";
 import { Badge } from "@/components/ui/badge";
 import CommentFormDrawer from "@/components/comment/comment-form-drawer";
 import { getCurrentUser } from "@/lib/auth";
-import Like from "@/app/public-diaries/_components/like";
+import DiaryLike from "@/components/diary-like";
 
 dayjs.extend(relativeTime);
 dayjs.locale("ja");
@@ -73,11 +73,12 @@ const DiaryDetail = async ({ params }: { params: Promise<{ id: string }> }) => {
               更新日時: {DateFormatForUpdatedAt(diary.updated_at)}
             </div>
             {/* いいねアイコン、いいね数 */}
-            <Like
+            <DiaryLike
               likesCount={diary.likes_count}
               likedByMe={diary.liked_by_me}
               id={id}
               path={`/diaries/${id}`}
+              variant="detail"
             />
           </div>
         </section>
