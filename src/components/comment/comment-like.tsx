@@ -6,15 +6,25 @@ import { likeComment } from "./actions";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { DiaryDetailPath } from "@/types/like";
+import CommentLikersDrawer from "./comment-likers-drawer";
 
 type Props = {
   likedByMe: boolean;
   likesCount: number;
   commentId: number;
   path: DiaryDetailPath;
+  ownerId: number;
+  loginUserId: number;
 };
 
-const CommentLike = ({ likedByMe, likesCount, commentId, path }: Props) => {
+const CommentLike = ({
+  likedByMe,
+  likesCount,
+  commentId,
+  path,
+  ownerId,
+  loginUserId,
+}: Props) => {
   const [liked, setLiked] = useState<boolean>(likedByMe);
   const [count, setCount] = useState<number>(likesCount);
   const [busy, setBusy] = useState<boolean>(false);
@@ -52,7 +62,12 @@ const CommentLike = ({ likedByMe, likesCount, commentId, path }: Props) => {
           )}
         />
       </button>
-      <div className="text-accent/80">{count}</div>
+      {/* <div className="text-accent/80">{count}</div> */}
+      {ownerId === loginUserId ? (
+        <CommentLikersDrawer commentId={commentId} count={count} />
+      ) : (
+        <div className="text-accent/80">{count}</div>
+      )}
     </>
   );
 };
