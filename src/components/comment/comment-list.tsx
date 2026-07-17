@@ -59,6 +59,8 @@ const CommentList = ({
                     likesCount={comment.likes_count}
                     commentId={comment.id}
                     path={path}
+                    ownerId={comment.user_id}
+                    loginUserId={loginUser.id}
                   />
                 </div>
                 {comment.user_id === loginUser.id && (
