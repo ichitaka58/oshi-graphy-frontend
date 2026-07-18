@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { getLikers } from "./diary-like-actions";
 import { Button } from "./ui/button";
 import {
@@ -21,24 +21,21 @@ import Link from "next/link";
 const DiaryLikersDrawer = ({ id, count }: { id: string; count: number }) => {
   const [likers, setLikers] = useState<User[]>([]);
 
-  useEffect(() => {
-    const fetchLikers = async () => {
-      const result = await getLikers(id);
-      if (!result.success) {
-        toast.error(result.message, { position: "top-center" });
-        return;
-      }
-      setLikers(result.likers);
-    };
-    fetchLikers();
-  }, []);
+  const handleOpenChange = async (open: boolean) => {
+    if(!open) return;
+    const result = await getLikers(id);
+    if (!result.success) {
+      toast.error(result.message, { position: "top-center" });
+      return;
+    }
+    setLikers(result.likers);
+  }
 
   return (
-    <Drawer direction="bottom" autoFocus>
+    <Drawer direction="bottom" autoFocus onOpenChange={handleOpenChange}>
       <DrawerTrigger asChild>
         <button type="button" className="cursor-pointer">{count}</button>
       </DrawerTrigger>
-      {/*  */}
       <DrawerContent className="min-w-72 max-w-92 mx-auto px-6">
         <DrawerHeader>
           <DrawerTitle>いいねユーザー一覧 : {count}人</DrawerTitle>
