@@ -1,4 +1,3 @@
-// import { cookies } from "next/headers";
 import HeaderUserMenu from "./header-user-menu";
 import { getCurrentUserOrNull } from "@/lib/auth";
 
