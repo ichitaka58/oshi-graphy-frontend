@@ -1,10 +1,10 @@
 import { UserProfile } from "@/types/user";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
-import Image from "next/image";
 import BackButton from "@/components/back-button";
 import UserProfileActionsMenu from "./edit/_components/user-profile-actions-menu";
 import { getCurrentUser } from "@/lib/auth";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 
 const UserProfilePage = async ({ params }: { params: Promise<{ id: string }> }) => {
@@ -42,14 +42,13 @@ const UserProfilePage = async ({ params }: { params: Promise<{ id: string }> }) 
           <h1 className="font-semibold text-lg">
             Profile
           </h1>
-          <Image
-            src={new URL(user.icon_url).pathname}
-            alt={`${user.name}のアイコン`}
-            width={160}
-            height={160}
-            priority
-            className="rounded-full object-cover shadow-md shadow-black/40 dark:shadow-primary/10"
-          />
+          <Avatar className="size-40 shadow-md shadow-black/40 dark:shadow-primary/10">
+            <AvatarImage
+              src={user.icon_url}
+              alt={`${user.name}のアイコン`}
+            />
+            <AvatarFallback>OG</AvatarFallback>
+          </Avatar>
           <p className="text-lg text-shadow-2xs">
             {user.name}
           </p>
