@@ -52,8 +52,7 @@ const CommentList = ({
                 <div className="flex items-center gap-1">
                   <div>{comment.user.name ?? "退会ユーザー"}</div>
                   <div>{dayjs(comment.created_at).fromNow()}</div>
-                  {/* <Heart className="size-4 text-accent/80" />
-                  <div className="text-accent/80">{comment.likes_count}</div> */}
+                  {/* いいねといいね数 */}
                   <CommentLike
                     likedByMe={comment.liked_by_me}
                     likesCount={comment.likes_count}
