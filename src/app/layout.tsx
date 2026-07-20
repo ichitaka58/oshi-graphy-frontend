@@ -10,6 +10,7 @@ const poppins = Poppins({
   variable: "--font-heading",
   subsets: ["latin"],
   weight: ["400", "600", "700"],
+  preload: false,
 });
 
 const mPlusRounded = M_PLUS_Rounded_1c({
