@@ -6,7 +6,7 @@ export type Notification = {
   data: {
     type: "like" | "comment" | "reply" | "follow";
     target?: "diary" | "comment";
-    dairy_id?: number;
+    diary_id?: number;
     comment_id?: number;
     actor_user_id: number;
     actor_name: string;
