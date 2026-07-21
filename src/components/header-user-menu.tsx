@@ -25,6 +25,7 @@ import { User } from "@/types/user";
 import Link from "next/link";
 import { toast } from "sonner";
 import {
+  Bell,
   BookHeart,
   LogOutIcon,
   Notebook,
@@ -48,7 +49,9 @@ const HeaderUserMenu = ({ user }: { user: User }) => {
           window.location.href = "/login";
           return;
         }
-        toast.error(`ログアウトに失敗しました(${res.status})`, {position: "top-center"});
+        toast.error(`ログアウトに失敗しました(${res.status})`, {
+          position: "top-center",
+        });
         return;
       }
       window.location.href = "/";
@@ -90,6 +93,12 @@ const HeaderUserMenu = ({ user }: { user: User }) => {
           </Link>
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
+            <Link href={"/notifications"}>
+              <DropdownMenuItem>
+                <Bell />
+                通知
+              </DropdownMenuItem>
+            </Link>
             <Link href={`/users/${user.id}`}>
               <DropdownMenuItem>
                 <UserIcon />
