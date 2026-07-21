@@ -1,13 +1,16 @@
 import { UserProfile } from "@/types/user";
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import BackButton from "@/components/back-button";
 import UserProfileActionsMenu from "./edit/_components/user-profile-actions-menu";
 import { getCurrentUser } from "@/lib/auth";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
-
-const UserProfilePage = async ({ params }: { params: Promise<{ id: string }> }) => {
+const UserProfilePage = async ({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) => {
   const { id } = await params;
   const token = (await cookies()).get("token")?.value;
   const res = await fetch(`${process.env.LARAVEL_API_URL}/api/users/${id}`, {
@@ -18,6 +21,9 @@ const UserProfilePage = async ({ params }: { params: Promise<{ id: string }> }) 
   });
   if (res.status === 401) {
     redirect("/login");
+  }
+  if (res.status === 404) {
+    notFound();
   }
   if (!res.ok) {
     throw new Error("ユーザーデータの取得に失敗しました");
@@ -39,19 +45,12 @@ const UserProfilePage = async ({ params }: { params: Promise<{ id: string }> }) 
           </div>
         )}
         <div className="flex flex-col items-center justify-center gap-4 px-6">
-          <h1 className="font-semibold text-lg">
-            Profile
-          </h1>
+          <h1 className="font-semibold text-lg">Profile</h1>
           <Avatar className="size-40 shadow-md shadow-black/40 dark:shadow-primary/10">
-            <AvatarImage
-              src={user.icon_url}
-              alt={`${user.name}のアイコン`}
-            />
+            <AvatarImage src={user.icon_url} alt={`${user.name}のアイコン`} />
             <AvatarFallback>OG</AvatarFallback>
           </Avatar>
-          <p className="text-lg text-shadow-2xs">
-            {user.name}
-          </p>
+          <p className="text-lg text-shadow-2xs">{user.name}</p>
           <p className="text-sm text-muted-foreground">{user.profile}</p>
           <p className="text-accent text-shadow-2xs">
             公開日記数:{" "}
