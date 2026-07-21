@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 import DiaryEditForm from "./_components/diary-edit-form";
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { DiaryEditItem } from "@/types/diary";
 import BackButton from "@/components/back-button";
 
@@ -19,6 +19,9 @@ const DiaryEditPage = async ({
   });
   if (res.status === 401) {
     redirect("/login");
+  }
+  if (res.status === 404) {
+    notFound();
   }
   if (!res.ok) {
     throw new Error("データの取得に失敗しました");

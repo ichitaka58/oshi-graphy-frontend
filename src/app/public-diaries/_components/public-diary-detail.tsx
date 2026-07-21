@@ -9,7 +9,7 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import "dayjs/locale/ja";
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { Comment } from "@/types/comment";
 import CommentFormDrawer from "@/components/comment/comment-form-drawer";
 import { getCurrentUser } from "@/lib/auth";
@@ -36,6 +36,9 @@ const PublicDiaryDetail = async ({
   );
   if (res.status === 401) {
     redirect("/login");
+  }
+  if (res.status === 404) {
+    notFound();
   }
   if (!res.ok) {
     throw new Error("データの取得に失敗しました");
