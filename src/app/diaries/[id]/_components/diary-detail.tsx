@@ -1,7 +1,7 @@
 import { DiaryDetailItem } from "@/types/diary";
 import { Image } from "@/types/image";
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import BackToListButton from "@/components/back-to-list-button";
 import { DateFormatForHappenedOn, DateFormatForUpdatedAt } from "@/lib/date";
 import DiaryActionsMenu from "./diary-actions-menu";
@@ -30,6 +30,9 @@ const DiaryDetail = async ({ params }: { params: Promise<{ id: string }> }) => {
   });
   if (res.status === 401) {
     redirect("/login");
+  }
+  if (res.status === 404) {
+    notFound();
   }
   if (!res.ok) {
     throw new Error("データの取得に失敗しました");
