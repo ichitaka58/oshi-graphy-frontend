@@ -9,6 +9,7 @@ import { markRead } from "../actions";
 import { unstable_rethrow, useRouter } from "next/navigation";
 import Link from "next/link";
 import { toast } from "sonner";
+import NotificationDeleteDialog from "./notification-delete-dialog";
 
 dayjs.extend(relativeTime);
 dayjs.locale("ja");
@@ -48,8 +49,12 @@ const NotificationItem = ({ n }: { n: Notification }) => {
     }
   };
 
+
   return (
-    <li key={n.id} className="flex gap-2 items-center pb-2">
+    <li
+      key={n.id}
+      className="flex gap-2 items-center pb-2 hover:bg-muted group"
+    >
       {n.data.type === "like" ? (
         <Heart
           className={`size-6 ${n.read_at === null ? "text-accent" : "text-accent/50"}`}
@@ -76,6 +81,10 @@ const NotificationItem = ({ n }: { n: Notification }) => {
         >
           {dayjs(n.created_at).fromNow()}
         </p>
+      </div>
+      <div className="text-xs text-muted-foreground/50 opacity-0 group-hover:opacity-80">
+        {/* 削除ボタン＆ダイアログ */}
+        <NotificationDeleteDialog id={n.id} />
       </div>
     </li>
   );
