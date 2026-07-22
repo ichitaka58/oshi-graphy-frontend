@@ -32,32 +32,32 @@ export async function markRead(
 }
 
 // 全ての通知を一括で既読にする
-// export async function markAllRead(): Promise<
-//   { success: true } | { success: false; message: string }
-// > {
-//   const token = (await cookies()).get("token")?.value;
-//   const res = await fetch(
-//     `${process.env.LARAVEL_API_URL}/api/notifications/mark-all-read`,
-//     {
-//       method: "POST",
-//       headers: {
-//         Authorization: `Bearer ${token}`,
-//         Accept: "application/json",
-//       },
-//     },
-//   );
-//   if (res.status === 401) {
-//     redirect("/login");
-//   }
-//   if (!res.ok) {
-//     return {
-//       success: false,
-//       message: `通知を既読にすることができませんでした(${res.status})`,
-//     };
-//   }
-//   revalidatePath("/notifications");
-//   return { success: true };
-// }
+export async function markAllRead(): Promise<
+  { success: true } | { success: false; message: string }
+> {
+  const token = (await cookies()).get("token")?.value;
+  const res = await fetch(
+    `${process.env.LARAVEL_API_URL}/api/notifications/mark-all-read`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: "application/json",
+      },
+    },
+  );
+  if (res.status === 401) {
+    redirect("/login");
+  }
+  if (!res.ok) {
+    return {
+      success: false,
+      message: `通知を既読にすることができませんでした(${res.status})`,
+    };
+  }
+  revalidatePath("/notifications");
+  return { success: true };
+}
 
 // 通知の削除
 export async function deleteNotification(
