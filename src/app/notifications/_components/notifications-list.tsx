@@ -40,7 +40,7 @@ const NotificationsList = async ({
 
   return (
     <>
-      <ul className="divide-y mt-4 py-4 px-6 space-y-4">
+      <ul className="divide-y py-4 space-y-4">
         {notifications.length === 0 ? (
           <li>通知はありません</li>
         ) : (
