@@ -4,12 +4,16 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { markAllRead } from "../actions";
 import { toast } from "sonner";
-import { unstable_rethrow } from "next/navigation";
+import { unstable_rethrow, useRouter } from "next/navigation";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
+import { useUnreadCount } from "@/contexts/unread-count-context";
 
 const MarkAllReadButton = () => {
   const [busy, setBusy] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
+  const router = useRouter();
+  // 未読件数を再取得するための関数をContextから取り出す
+  const { refetch } = useUnreadCount();
 
   const handleClick = async () => {
     if (busy) return;
@@ -21,6 +25,8 @@ const MarkAllReadButton = () => {
         setError(result.message);
         return;
       }
+      router.refresh(); // このページ内の通知一覧の見た目(既読スタイル)を更新
+      await refetch(); // Headerの未読件数バッジを更新
       toast.success("全ての通知を既読にしました", { position: "top-center" });
     } catch (error) {
       unstable_rethrow(error);

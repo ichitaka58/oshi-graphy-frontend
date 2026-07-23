@@ -9,7 +9,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { Avatar, AvatarBadge, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { useState } from "react";
 import {
   AlertDialog,
@@ -33,9 +33,13 @@ import {
   SettingsIcon,
   UserIcon,
 } from "lucide-react";
+import { useUnreadCount } from "@/contexts/unread-count-context";
 
 const HeaderUserMenu = ({ user }: { user: User }) => {
   const [alertOpen, setAlertOpen] = useState<boolean>(false);
+  // propsではなくContextから未読件数を取得する。
+  // どこかでrefetch()が呼ばれるとunreadCountが更新され、このコンポーネントも自動的に再描画される。
+  const { unreadCount } = useUnreadCount();
 
   const handleLogout = async () => {
     try {
@@ -69,6 +73,7 @@ const HeaderUserMenu = ({ user }: { user: User }) => {
             <Avatar>
               <AvatarImage src={user.icon_url} alt={`${user.name}icon`} />
               <AvatarFallback>OG</AvatarFallback>
+              {unreadCount > 0 && <AvatarBadge className="bg-rose-600" />}
             </Avatar>
           </Button>
         </DropdownMenuTrigger>
@@ -95,8 +100,15 @@ const HeaderUserMenu = ({ user }: { user: User }) => {
           <DropdownMenuGroup>
             <Link href={"/notifications"}>
               <DropdownMenuItem>
-                <Bell />
-                通知
+                <Bell
+                  className={`${unreadCount > 0 ? "text-rose-600" : ""}`}
+                />
+                <span>通知</span>
+                {unreadCount > 0 && (
+                  <span className="bg-rose-600 text-white text-[10px] font-semibold w-5 h-5 rounded-full text-center leading-5">
+                    {unreadCount}
+                  </span>
+                )}
               </DropdownMenuItem>
             </Link>
             <Link href={`/users/${user.id}`}>
