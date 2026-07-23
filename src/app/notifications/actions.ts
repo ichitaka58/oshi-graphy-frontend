@@ -86,3 +86,30 @@ export async function deleteNotification(
   revalidatePath("/notifications");
   return { success: true };
 }
+
+// 未読件数の取得
+export async function getUnreadCount(): Promise<
+  { success: true, unreadCount: number } | { success: false; message: string }
+> {
+  const token = (await cookies()).get("token")?.value;
+  const res = await fetch(
+    `${process.env.LARAVEL_API_URL}/api/notifications/unread-count`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: "application/json",
+      },
+    },
+  );
+  if (res.status === 401) {
+    redirect("/login");
+  }
+  if (!res.ok) {
+    return {
+      success: false,
+      message: `未読件数を取得することができませんでした(${res.status})`,
+    };
+  }
+  const result = await res.json();
+  return { success: true, unreadCount: result.count };
+}
