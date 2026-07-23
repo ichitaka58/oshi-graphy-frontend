@@ -1,8 +1,9 @@
 import HeaderUserMenu from "./header-user-menu";
-import { getCurrentUserOrNull } from "@/lib/auth";
+import { User } from "@/types/user";
 
-const Header = async () => {
-  const user = await getCurrentUserOrNull();
+// user取得や未読件数取得は行わず、layout.tsxから渡されたuserを表示するだけの
+// シンプルなコンポーネントになった(未読件数はUnreadCountProvider経由でHeaderUserMenuが直接読む)
+const Header = ({ user }: { user: User | null }) => {
   return (
     <div className="h-12 bg-primary">
       <div className="flex items-center justify-between h-12 max-w-4xl mx-auto px-4">

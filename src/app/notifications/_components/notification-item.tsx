@@ -10,12 +10,15 @@ import { unstable_rethrow, useRouter } from "next/navigation";
 import Link from "next/link";
 import { toast } from "sonner";
 import NotificationDeleteDialog from "./notification-delete-dialog";
+import { useUnreadCount } from "@/contexts/unread-count-context";
 
 dayjs.extend(relativeTime);
 dayjs.locale("ja");
 
 const NotificationItem = ({ n }: { n: Notification }) => {
   const router = useRouter();
+  // 未読件数を再取得するための関数をContextから取り出す
+  const { refetch } = useUnreadCount();
   const generateUrl = () => {
     if (n.data.type === "like") {
       if (n.data.target === "comment") {
@@ -40,6 +43,10 @@ const NotificationItem = ({ n }: { n: Notification }) => {
           toast.error(result.message, { position: "top-center" });
           return;
         }
+        // 既読化に成功したのでHeaderの未読件数バッジを最新化する。
+        // router.pushで別ページに移動する前に呼んでおく(router.refreshとは違い
+        // ルーティング/キャッシュに触れないただのstate更新なので、遷移と競合しない)
+        await refetch();
       }
       router.push(url);
     } catch (error) {
