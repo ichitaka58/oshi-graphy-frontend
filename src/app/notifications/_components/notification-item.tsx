@@ -11,6 +11,7 @@ import Link from "next/link";
 import { toast } from "sonner";
 import NotificationDeleteDialog from "./notification-delete-dialog";
 import { useUnreadCount } from "@/contexts/unread-count-context";
+import MarkUnreadButton from "./mark-unread-button";
 
 dayjs.extend(relativeTime);
 dayjs.locale("ja");
@@ -34,6 +35,7 @@ const NotificationItem = ({ n }: { n: Notification }) => {
   };
   const url = generateUrl();
 
+  // 通知をクリックして既読にし、アクション元に遷移する
   const handleClick = async (e: React.MouseEvent) => {
     e.preventDefault();
     try {
@@ -55,7 +57,6 @@ const NotificationItem = ({ n }: { n: Notification }) => {
       toast.error("通信エラーが発生しました", { position: "top-center" });
     }
   };
-
 
   return (
     <li
@@ -89,9 +90,13 @@ const NotificationItem = ({ n }: { n: Notification }) => {
           {dayjs(n.created_at).fromNow()}
         </p>
       </div>
-      <div className="text-xs text-muted-foreground/50 opacity-0 group-hover:opacity-80">
+      <div className="flex flex-col gap-1 text-xs text-muted-foreground/50 opacity-0 group-hover:opacity-80">
         {/* 削除ボタン＆ダイアログ */}
         <NotificationDeleteDialog id={n.id} />
+        {/* 未読にするボタン */}
+        {n.read_at !== null && (
+          <MarkUnreadButton id={n.id} readAt={n.read_at} />
+        )}
       </div>
     </li>
   );
