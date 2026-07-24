@@ -36,7 +36,7 @@ const LoginForm = () => {
         });
         return;
       }
-      window.location.href = "/diaries";
+      window.location.href = "/public-diaries";
     } catch (error) {
       console.error("Error:", error);
       form.setError("root", { message: "通信エラーが発生しました" });
