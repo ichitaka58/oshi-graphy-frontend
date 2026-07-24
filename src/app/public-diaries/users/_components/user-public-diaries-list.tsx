@@ -3,6 +3,7 @@ import DiaryPagination from "@/components/diary-pagination";
 import { PublicDiaryListItem } from "@/types/diary";
 import { User } from "@/types/user";
 import { cookies } from "next/headers";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 
 const UserPublicDiariesList = async ({
@@ -40,14 +41,14 @@ const UserPublicDiariesList = async ({
 
   return (
     <>
-      <h1 className="text-center mb-4 text-2xl text-foreground font-extrabold">
+      <h1 className="text-center text-2xl text-foreground font-extrabold">
         {user.name} さんの日記
       </h1>
+      <p className="mb-4 text-center text-muted-foreground text-sm">
+        <Link href={`/users/${id}`} className="underline">プロフィール</Link>を見る
+      </p>
       {/* 日記一覧を表示する共通コンポーネント */}
-      <DiaryCardList
-        diaries={diaries}
-        pathName="public-diaries"
-      />
+      <DiaryCardList diaries={diaries} pathName="public-diaries" />
       <DiaryPagination currentPage={currentPage} lastPage={lastPage} />
     </>
   );
