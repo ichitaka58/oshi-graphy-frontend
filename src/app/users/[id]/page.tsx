@@ -5,6 +5,7 @@ import BackButton from "@/components/back-button";
 import UserProfileActionsMenu from "./edit/_components/user-profile-actions-menu";
 import { getCurrentUser } from "@/lib/auth";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import UserFollowSection from "./_components/user-follow-section";
 
 const UserProfilePage = async ({
   params,
@@ -31,6 +32,7 @@ const UserProfilePage = async ({
 
   const data = await res.json();
   const user: UserProfile = data.user;
+  const isFollowing: boolean = data.is_following; // ログインユーザーがこのユーザーをフォローしているか？
   const loginUser = await getCurrentUser();
 
   return (
@@ -51,6 +53,15 @@ const UserProfilePage = async ({
             <AvatarFallback>OG</AvatarFallback>
           </Avatar>
           <p className="text-lg text-shadow-2xs">{user.name}</p>
+          {/* ユーザーフォローボタン、フォロー・フォロワー数 */}
+          <UserFollowSection
+            key={id}
+            id={id}
+            initialFollowingsCount={user.followings_count}
+            initialFollowersCount={user.followers_count}
+            initialIsFollowing={isFollowing}
+            showFollowButton={Number(id) !== loginUser.id}
+          />
           <p className="text-sm text-muted-foreground">{user.profile}</p>
           <p className="text-accent text-shadow-2xs">
             公開日記数:{" "}
