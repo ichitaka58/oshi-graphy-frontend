@@ -12,4 +12,6 @@ export type User = {
 
 export type UserProfile = User & {
   public_diaries_count: number;
+  followings_count: number;
+  followers_count: number;
 };
