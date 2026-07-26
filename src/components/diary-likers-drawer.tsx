@@ -20,21 +20,40 @@ import Link from "next/link";
 
 const DiaryLikersDrawer = ({ id, count }: { id: string; count: number }) => {
   const [likers, setLikers] = useState<User[]>([]);
+  const [page, setPage] = useState<number>(1);
+  const [lastPage, setLastPage] = useState<number>(1);
 
   const handleOpenChange = async (open: boolean) => {
-    if(!open) return;
-    const result = await getLikers(id);
+    if (!open) return;
+    const result = await getLikers(id, 1);
     if (!result.success) {
       toast.error(result.message, { position: "top-center" });
       return;
     }
     setLikers(result.likers);
-  }
+    setPage(1);
+    setLastPage(result.lastPage);
+  };
+
+  const handleLoadMore = async () => {
+    const nextPage = page + 1;
+    const result = await getLikers(id, nextPage);
+    if (!result.success) {
+      toast.error(result.message, { position: "top-center" });
+      return;
+    }
+    setLikers((prev) => [...prev, ...result.likers]);
+    setPage(nextPage);
+    setLastPage(result.lastPage);
+  };
 
   return (
+    // autoFocus 開いた時にフォーカスをdrawer内に移す アクセシビリティ目的
     <Drawer direction="bottom" autoFocus onOpenChange={handleOpenChange}>
       <DrawerTrigger asChild>
-        <button type="button" className="cursor-pointer">{count}</button>
+        <button type="button" className="cursor-pointer">
+          {count}
+        </button>
       </DrawerTrigger>
       <DrawerContent className="min-w-72 max-w-92 mx-auto px-6">
         <DrawerHeader>
@@ -58,6 +77,9 @@ const DiaryLikersDrawer = ({ id, count }: { id: string; count: number }) => {
             </Link>
           </div>
         ))}
+        {page < lastPage && (
+          <button type="button" onClick={handleLoadMore} className="text-sm text-muted-foreground cursor-pointer">- 続きを見る-</button>
+        )}
         <DrawerFooter>
           <DrawerClose asChild>
             <Button variant="outline">Cancel</Button>

@@ -32,8 +32,8 @@ export async function likeDiary(
     };
   }
   const result: { liked: boolean; count: number } = await res.json();
-  // revalidatePath(`/public-diaries/${id}`);
   revalidatePath(path);
+
   return {
     success: true,
     liked: result.liked,
@@ -42,9 +42,9 @@ export async function likeDiary(
 }
 
 // いいねユーザー一覧を取得
-export async function getLikers(id: string): Promise<LikersResult> {
+export async function getLikers(id: string, page: number): Promise<LikersResult> {
   const token = (await cookies()).get("token")?.value;
-  const res = await fetch(`${process.env.LARAVEL_API_URL}/api/diaries/${id}/likes`, {
+  const res = await fetch(`${process.env.LARAVEL_API_URL}/api/diaries/${id}/likes?page=${page}`, {
     headers: {
       Authorization: `Bearer ${token}`,
       Accept: "application/json",
@@ -54,7 +54,6 @@ export async function getLikers(id: string): Promise<LikersResult> {
     redirect("/login");
   }
   if (!res.ok) {
-    // throw new Error("データの取得に失敗しました");
     return {
       success: false,
       message: `いいねしたユーザーの取得に失敗しました(${res.status})`,
@@ -62,8 +61,10 @@ export async function getLikers(id: string): Promise<LikersResult> {
   }
   const fetchData = await res.json();
   const likers: User[] = fetchData.likers.data;
+  const lastPage: number = fetchData.likers.last_page;
   return {
     success: true,
     likers: likers,
+    lastPage: lastPage,
   };
 }
