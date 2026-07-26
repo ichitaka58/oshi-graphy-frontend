@@ -17,11 +17,13 @@ import { User } from "@/types/user";
 import { toast } from "sonner";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import Link from "next/link";
+import { unstable_rethrow } from "next/navigation";
 
 const DiaryLikersDrawer = ({ id, count }: { id: string; count: number }) => {
   const [likers, setLikers] = useState<User[]>([]);
   const [page, setPage] = useState<number>(1);
   const [lastPage, setLastPage] = useState<number>(1);
+  const [busy, setBusy] = useState<boolean>(false)
 
   const handleOpenChange = async (open: boolean) => {
     if (!open) return;
@@ -36,15 +38,24 @@ const DiaryLikersDrawer = ({ id, count }: { id: string; count: number }) => {
   };
 
   const handleLoadMore = async () => {
-    const nextPage = page + 1;
-    const result = await getLikers(id, nextPage);
-    if (!result.success) {
-      toast.error(result.message, { position: "top-center" });
-      return;
+    if (busy) return;
+    setBusy(true);
+    try {
+      const nextPage = page + 1;
+      const result = await getLikers(id, nextPage);
+      if (!result.success) {
+        toast.error(result.message, { position: "top-center" });
+        return;
+      }
+      setLikers((prev) => [...prev, ...result.likers]);
+      setPage(nextPage);
+      setLastPage(result.lastPage);
+    } catch (error) {
+      unstable_rethrow(error);
+      toast.error("通信エラーが発生しました", { position: "top-center" });
+    } finally {
+      setBusy(false);
     }
-    setLikers((prev) => [...prev, ...result.likers]);
-    setPage(nextPage);
-    setLastPage(result.lastPage);
   };
 
   return (
@@ -78,7 +89,7 @@ const DiaryLikersDrawer = ({ id, count }: { id: string; count: number }) => {
           </div>
         ))}
         {page < lastPage && (
-          <button type="button" onClick={handleLoadMore} className="text-sm text-muted-foreground cursor-pointer">- 続きを見る-</button>
+          <button type="button" onClick={handleLoadMore} disabled={busy} className="text-sm text-muted-foreground cursor-pointer">- 続きを見る-</button>
         )}
         <DrawerFooter>
           <DrawerClose asChild>
