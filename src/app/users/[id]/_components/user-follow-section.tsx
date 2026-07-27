@@ -5,6 +5,8 @@ import { toggleUserFollow } from "../../actions";
 import { toast } from "sonner";
 import { unstable_rethrow } from "next/navigation";
 import { useState } from "react";
+import FollowersListDrawer from "./followers-list-drawer";
+import FollowingsListDrawer from "./followings-list-drawer";
 
 type Props = {
   id: string;
@@ -65,8 +67,10 @@ const UserFollowSection = ({
       )}
 
       <div className="flex gap-2 text-xs">
-        <span>フォロー: {followingsCount}人</span>
-        <span>フォロワー: {followersCount}人</span>
+        {/* <span>フォロー: {followingsCount}人</span> */}
+        <FollowingsListDrawer userId={id} followingsCount={followingsCount} />
+        {/* <span>フォロワー: {followersCount}人</span> */}
+        <FollowersListDrawer userId={id} followersCount={followersCount} />
       </div>
     </>
   );
