@@ -112,9 +112,9 @@ export async function likeComment(
 }
 
 // コメントいいねユーザー一覧を取得
-export async function getLikersForComment(commentId: number): Promise<LikersResult> {
+export async function getLikersForComment(commentId: number, page: number): Promise<LikersResult> {
   const token = (await cookies()).get("token")?.value;
-  const res = await fetch(`${process.env.LARAVEL_API_URL}/api/comments/${commentId}/likes`, {
+  const res = await fetch(`${process.env.LARAVEL_API_URL}/api/comments/${commentId}/likes?page=${page}`, {
     headers: {
       Authorization: `Bearer ${token}`,
       Accept: "application/json",
@@ -132,8 +132,10 @@ export async function getLikersForComment(commentId: number): Promise<LikersResu
   }
   const fetchData = await res.json();
   const likers: User[] = fetchData.likers.data;
+  const lastPage: number = fetchData.likers.last_page;
   return {
     success: true,
     likers: likers,
+    lastPage: lastPage,
   };
 }
