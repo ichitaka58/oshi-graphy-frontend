@@ -1,4 +1,4 @@
-import DiaryPagination from "@/components/diary-pagination";
+import AppPagination from "@/components/app-pagination";
 import DiaryCardList from "@/components/diary-card-list";
 import { PublicDiaryListItem } from "@/types/diary";
 import { cookies } from "next/headers";
@@ -63,7 +63,7 @@ const PublicDiariesList = async ({
         diaries={diaries}
         pathName="public-diaries"
       />
-      <DiaryPagination currentPage={currentPage} lastPage={lastPage} />
+      <AppPagination currentPage={currentPage} lastPage={lastPage} />
     </>
   );
 };

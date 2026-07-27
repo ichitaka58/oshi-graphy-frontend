@@ -1,5 +1,5 @@
 import DiaryCardList from "@/components/diary-card-list";
-import DiaryPagination from "@/components/diary-pagination";
+import AppPagination from "@/components/app-pagination";
 import { PublicDiaryListItem } from "@/types/diary";
 import { User } from "@/types/user";
 import { cookies } from "next/headers";
@@ -49,7 +49,7 @@ const UserPublicDiariesList = async ({
       </p>
       {/* 日記一覧を表示する共通コンポーネント */}
       <DiaryCardList diaries={diaries} pathName="public-diaries" />
-      <DiaryPagination currentPage={currentPage} lastPage={lastPage} />
+      <AppPagination currentPage={currentPage} lastPage={lastPage} />
     </>
   );
 };
