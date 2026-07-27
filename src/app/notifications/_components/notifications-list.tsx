@@ -1,4 +1,4 @@
-import DiaryPagination from "@/components/diary-pagination";
+import AppPagination from "@/components/app-pagination";
 import { Notification } from "@/types/notification";
 import dayjs from "dayjs";
 import "dayjs/locale/ja";
@@ -49,7 +49,7 @@ const NotificationsList = async ({
           ))
         )}
       </ul>
-      <DiaryPagination currentPage={currentPage} lastPage={lastPage} />
+      <AppPagination currentPage={currentPage} lastPage={lastPage} />
     </>
   );
 };

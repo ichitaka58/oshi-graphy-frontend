@@ -14,12 +14,12 @@ import {
 // ページネーションコンポーネントに渡すプロパティの型定義
 // currentPage: 現在表示中のページ番号
 // lastPage: 最後のページ番号（総ページ数）
-type DiaryPaginationProps = {
+type AppPaginationProps = {
   currentPage: number;
   lastPage: number;
 };
 
-const DiaryPagination = ({ currentPage, lastPage }: DiaryPaginationProps) => {
+const AppPagination = ({ currentPage, lastPage }: AppPaginationProps) => {
   // 画面に表示するページ番号のリスト（最大3件）
   // 初期値は [1, 2, 3]
   const [displayPages, setDisplayPages] = useState<number[]>(
@@ -102,4 +102,4 @@ const DiaryPagination = ({ currentPage, lastPage }: DiaryPaginationProps) => {
   );
 };
 
-export default DiaryPagination;
+export default AppPagination;
