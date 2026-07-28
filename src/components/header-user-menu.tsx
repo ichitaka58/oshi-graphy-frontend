@@ -32,6 +32,7 @@ import {
   NotebookPen,
   SettingsIcon,
   UserIcon,
+  UserRoundX,
 } from "lucide-react";
 import { useUnreadCount } from "@/contexts/unread-count-context";
 
@@ -100,9 +101,7 @@ const HeaderUserMenu = ({ user }: { user: User }) => {
           <DropdownMenuGroup>
             <Link href={"/notifications"}>
               <DropdownMenuItem>
-                <Bell
-                  className={`${unreadCount > 0 ? "text-rose-600" : ""}`}
-                />
+                <Bell className={`${unreadCount > 0 ? "text-rose-600" : ""}`} />
                 <span>通知</span>
                 {unreadCount > 0 && (
                   <span className="bg-rose-600 text-white text-[10px] font-semibold w-5 h-5 rounded-full text-center leading-5">
@@ -115,6 +114,12 @@ const HeaderUserMenu = ({ user }: { user: User }) => {
               <DropdownMenuItem>
                 <UserIcon />
                 プロフィール
+              </DropdownMenuItem>
+            </Link>
+            <Link href={`/users/${user.id}/blocks`}>
+              <DropdownMenuItem>
+                <UserRoundX />
+                ブロック一覧
               </DropdownMenuItem>
             </Link>
             <Link href="/settings">
