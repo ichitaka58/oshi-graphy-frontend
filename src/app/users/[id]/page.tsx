@@ -33,6 +33,7 @@ const UserProfilePage = async ({
   const data = await res.json();
   const user: UserProfile = data.user;
   const isFollowing: boolean = data.is_following; // ログインユーザーがこのユーザーをフォローしているか？
+  const isBlocking: boolean = data.is_blocking; // ログインユーザーがこのユーザーをブロックしているか？
   const loginUser = await getCurrentUser();
 
   return (
@@ -41,11 +42,14 @@ const UserProfilePage = async ({
         <BackButton />
       </div>
       <div className="max-w-md w-full mx-auto px-4 pt-4 pb-8 bg-card text-card-foreground">
-        {Number(id) === loginUser.id && (
+        <div className="flex justify-end pb-2">
+          <UserProfileActionsMenu userId={id} loginUserId={loginUser.id} initialIsBlocking={isBlocking} />
+        </div>
+        {/* {Number(id) === loginUser.id && (
           <div className="flex justify-end pb-2">
-            <UserProfileActionsMenu id={id} />
+            <UserProfileActionsMenu id={id} loginUserId={loginUser.id} />
           </div>
-        )}
+        )} */}
         <div className="flex flex-col items-center justify-center gap-4 px-6">
           <h1 className="font-semibold text-lg">Profile</h1>
           <Avatar className="size-40 shadow-md shadow-black/40 dark:shadow-primary/10">
@@ -60,7 +64,7 @@ const UserProfilePage = async ({
             initialFollowingsCount={user.followings_count}
             initialFollowersCount={user.followers_count}
             initialIsFollowing={isFollowing}
-            showFollowButton={Number(id) !== loginUser.id}
+            showFollowButton={Number(id) !== loginUser.id && !isBlocking}
           />
           <p className="text-sm text-muted-foreground">{user.profile}</p>
           <p className="text-accent text-shadow-2xs">
