@@ -1,6 +1,7 @@
 "use server";
 
 import { User } from "@/types/user";
+import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
@@ -131,5 +132,37 @@ export async function getFollowings(
     success: true,
     followings: followings,
     lastPage: lastPage,
+  };
+}
+
+export async function toggleUserBlock(
+  userId: string,
+  currentlyBlocking: boolean,
+): Promise<
+  { success: true; blocking: boolean } | { success: false; message: string }
+> {
+  const token = (await cookies()).get("token")?.value;
+  const res = await fetch(
+    `${process.env.LARAVEL_API_URL}/api/users/${userId}/block`,
+    {
+      method: currentlyBlocking ? "DELETE" : "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: "application/json",
+      },
+    },
+  );
+  if (res.status === 401) redirect("/login");
+  if (!res.ok) {
+    return {
+      success: false,
+      message: `ブロック／ブロック解除に失敗しました(${res.status})`,
+    };
+  }
+  const result = await res.json();
+  revalidatePath(`/users/${userId}`);
+  return {
+    success: true,
+    blocking: result.blocking,
   };
 }
