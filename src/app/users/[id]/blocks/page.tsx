@@ -1,7 +1,7 @@
 import BackButton from "@/components/back-button";
 import { getCurrentUser } from "@/lib/auth";
 import { notFound } from "next/navigation";
-import BlockUserList from "./_components/block-user-list";
+import BlockUsersList from "./_components/block-users-list";
 
 const UserBlocksPage = async ({
   params,
@@ -11,7 +11,6 @@ const UserBlocksPage = async ({
   searchParams: Promise<{ page?: string }>;
 }) => {
   const { id } = await params;
-  // const { page = 1 } = await searchParams;
   const user = await getCurrentUser();
   if (Number(id) !== user.id) {
     notFound();
@@ -24,14 +23,10 @@ const UserBlocksPage = async ({
       </div>
       <div className="px-6">
         <div className="max-w-md w-full mx-auto px-4 pt-4 pb-8 bg-card text-card-foreground">
-          <h1 className="font-semibold text-lg text-center">
+          <h1 className="font-semibold text-lg text-center mb-4">
             ブロックユーザー一覧
           </h1>
-          <div className="flex justify-end pb-2">
-            {/* <Button type="button" variant="outline">選択</Button> */}
-            <span>選択</span>
-          </div>
-          <BlockUserList searchParams={searchParams} />
+          <BlockUsersList searchParams={searchParams} />
         </div>
       </div>
     </div>

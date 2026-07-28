@@ -1,10 +1,10 @@
 import AppPagination from "@/components/app-pagination";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { User } from "@/types/user";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import BlockUsersListItem from "./block-users-list-item";
 
-const BlockUserList = async ({
+const BlockUsersList = async ({
   searchParams,
 }: {
   searchParams: Promise<{ page?: string }>;
@@ -35,19 +35,11 @@ const BlockUserList = async ({
   return (
     <>
       <ul className="pl-4">
-        {blocks.map((user) => (
-          <li key={user.id} className="flex gap-2 items-center py-2 hover:bg-muted">
-            <Avatar>
-              <AvatarImage src={user.icon_url} alt={`${user.name}icon`} />
-              <AvatarFallback>OG</AvatarFallback>
-            </Avatar>
-            <p>{user.name}</p>
-          </li>
-        ))}
+        <BlockUsersListItem key={currentPage} initialBlocks={blocks} />
       </ul>
       <AppPagination currentPage={currentPage} lastPage={lastPage} />
     </>
   );
 };
 
-export default BlockUserList;
+export default BlockUsersList;
