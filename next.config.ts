@@ -2,6 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   experimental: {
+    authInterrupts: true, // forbiddenを使用するための設定
     serverActions: {
       bodySizeLimit: "10mb",
     },
