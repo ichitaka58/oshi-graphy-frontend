@@ -44,7 +44,7 @@ export default async function RootLayout({
             両者が同じ未読件数の箱を共有できるようにする */}
         <UnreadCountProvider enabled={!!user}>
           <Header user={user} />
-          <main className="flex flex-col flex-1">
+          <main className="flex flex-col flex-1 min-w-0">
             <TooltipProvider>{children}</TooltipProvider>
           </main>
         </UnreadCountProvider>
