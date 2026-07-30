@@ -74,63 +74,67 @@ const ArtistCreateForm = () => {
         </CardTitle>
       </CardHeader>
       <CardContent className="mb-4">
-        <form
-          id="form-create-artist"
-          onSubmit={form.handleSubmit(onSubmit)}
-        ></form>
-        {form.formState.errors.root && (
-          <p className="mb-4 rounded-md bg-red-50 px-4 py-2 text-sm text-red-600">
-            {form.formState.errors.root.message}
-          </p>
-        )}
-        <FieldGroup>
-          {/* アーティスト名 */}
-          <Controller
-            name="name"
-            control={form.control}
-            render={({ field, fieldState }) => (
-              <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor="form-create-artist-name">
-                  アーティスト名
-                </FieldLabel>
-                <Input
-                  {...field}
-                  id="form-create-artist-name"
-                  type="text"
-                  aria-invalid={fieldState.invalid}
-                  placeholder="アーティスト名を入力..."
-                  autoComplete="off"
-                />
-                {fieldState.invalid && (
-                  <FieldError errors={[fieldState.error]} className="text-xs" />
-                )}
-              </Field>
-            )}
-          />
-          {/* よみがな */}
-          <Controller
-            name="kana"
-            control={form.control}
-            render={({ field, fieldState }) => (
-              <Field data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor="form-create-artist-kana">
-                  よみがな
-                </FieldLabel>
-                <Input
-                  {...field}
-                  id="form-create-artist-kana"
-                  type="text"
-                  aria-invalid={fieldState.invalid}
-                  placeholder="ひらがなで入力してください"
-                  autoComplete="off"
-                />
-                {fieldState.invalid && (
-                  <FieldError errors={[fieldState.error]} className="text-xs" />
-                )}
-              </Field>
-            )}
-          />
-        </FieldGroup>
+        <form id="form-create-artist" onSubmit={form.handleSubmit(onSubmit)}>
+          {form.formState.errors.root && (
+            <p className="mb-4 rounded-md bg-red-50 px-4 py-2 text-sm text-red-600">
+              {form.formState.errors.root.message}
+            </p>
+          )}
+          <FieldGroup>
+            {/* アーティスト名 */}
+            <Controller
+              name="name"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="form-create-artist-name">
+                    アーティスト名
+                  </FieldLabel>
+                  <Input
+                    {...field}
+                    id="form-create-artist-name"
+                    type="text"
+                    aria-invalid={fieldState.invalid}
+                    placeholder="アーティスト名を入力..."
+                    autoComplete="off"
+                  />
+                  {fieldState.invalid && (
+                    <FieldError
+                      errors={[fieldState.error]}
+                      className="text-xs"
+                    />
+                  )}
+                </Field>
+              )}
+            />
+            {/* よみがな */}
+            <Controller
+              name="kana"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="form-create-artist-kana">
+                    よみがな
+                  </FieldLabel>
+                  <Input
+                    {...field}
+                    id="form-create-artist-kana"
+                    type="text"
+                    aria-invalid={fieldState.invalid}
+                    placeholder="ひらがなで入力してください"
+                    autoComplete="off"
+                  />
+                  {fieldState.invalid && (
+                    <FieldError
+                      errors={[fieldState.error]}
+                      className="text-xs"
+                    />
+                  )}
+                </Field>
+              )}
+            />
+          </FieldGroup>
+        </form>
       </CardContent>
       <CardFooter>
         <Field orientation="horizontal" className="justify-center">
