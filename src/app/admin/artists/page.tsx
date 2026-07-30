@@ -4,14 +4,15 @@ import { cookies } from "next/headers";
 import { forbidden, redirect } from "next/navigation";
 import ArtistsList from "./_components/artists-list";
 import { Artist } from "@/types/artist";
+import BackButton from "@/components/back-button";
 
-const AdminPage = async ({
+const AdminArtistsPage = async ({
   searchParams,
 }: {
   searchParams: Promise<{ page?: string }>;
 }) => {
   const loginUser = await getCurrentUser();
-  if(!loginUser.is_admin) {
+  if (!loginUser.is_admin) {
     forbidden();
   }
   const { page = "1" } = await searchParams;
@@ -38,19 +39,24 @@ const AdminPage = async ({
   const from: number = fetchData.artists.from; // そのページの先頭要素が全体の何番目か
 
   return (
-    <div className="max-w-4xl mx-auto pt-6 px-2">
-      <h1 className="text-center mb-4 text-2xl text-foreground font-extrabold">
-        登録済みアーティスト一覧
-      </h1>
-      <div className="w-full p-4 bg-card text-card-foreground">
-        <ArtistsList artists={artists} from={from} />
-        {/* <Suspense fallback={<PublicDiarySkeleton />}>
+    <>
+      <div className="text-muted-foreground py-3 flex items-center text-sm">
+        <BackButton />
+      </div>
+      <div className="max-w-4xl mx-auto pt-6 px-2">
+        <h1 className="text-center mb-4 text-2xl text-foreground font-extrabold">
+          登録済みアーティスト一覧
+        </h1>
+        <div className="w-full p-4 bg-card text-card-foreground">
+          <ArtistsList artists={artists} from={from} />
+          {/* <Suspense fallback={<PublicDiarySkeleton />}>
         <PublicDiariesList searchParams={searchParams} />
       </Suspense> */}
-        <AppPagination currentPage={currentPage} lastPage={lastPage} />
+          <AppPagination currentPage={currentPage} lastPage={lastPage} />
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
-export default AdminPage;
+export default AdminArtistsPage;
