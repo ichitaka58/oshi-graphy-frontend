@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/table";
 import { Artist } from "@/types/artist";
 import { SquarePen, Trash2 } from "lucide-react";
+import Link from "next/link";
 
 const ArtistsList = ({
   artists,
@@ -42,7 +43,9 @@ const ArtistsList = ({
               {a.kana}
             </TableCell>
             <TableCell className="text-muted-foreground/70 cursor-pointer">
-              <SquarePen size={16} className="mx-auto" />
+              <Link href={`/admin/artists/${a.id}/edit`}>
+                <SquarePen size={16} className="mx-auto" />
+              </Link>
             </TableCell>
             <TableCell className="text-muted-foreground/70 cursor-pointer">
               <Trash2 size={16} className="mx-auto" />
@@ -50,7 +53,6 @@ const ArtistsList = ({
           </TableRow>
         ))}
       </TableBody>
-      <TableFooter></TableFooter>
     </Table>
   );
 };
