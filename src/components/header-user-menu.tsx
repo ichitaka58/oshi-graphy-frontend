@@ -6,6 +6,7 @@ import {
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
+  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
@@ -31,6 +32,7 @@ import {
   Notebook,
   NotebookPen,
   SettingsIcon,
+  ShieldUser,
   UserIcon,
   UserRoundX,
 } from "lucide-react";
@@ -130,6 +132,27 @@ const HeaderUserMenu = ({ user }: { user: User }) => {
             </Link>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
+          {user.is_admin && (
+            <>
+              <DropdownMenuGroup>
+                <DropdownMenuLabel>管理画面</DropdownMenuLabel>
+                <Link href="/admin/artists">
+                  <DropdownMenuItem>
+                    <ShieldUser />
+                    アーティスト一覧
+                  </DropdownMenuItem>
+                </Link>
+                <Link href="/admin/artists/create">
+                  <DropdownMenuItem>
+                    <ShieldUser />
+                    アーティスト登録
+                  </DropdownMenuItem>
+                </Link>
+              </DropdownMenuGroup>
+
+              <DropdownMenuSeparator />
+            </>
+          )}
           <DropdownMenuGroup>
             <DropdownMenuItem
               variant="destructive"
