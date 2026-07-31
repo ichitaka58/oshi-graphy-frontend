@@ -24,6 +24,7 @@ export async function createComment(
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
+        Accept: "application/json",
         // Content-Type は指定しない。
         // FormData に画像ファイルが含まれる場合、fetch が自動で
         // "multipart/form-data; boundary=..." を付与する。
@@ -34,9 +35,11 @@ export async function createComment(
   );
   if (res.status === 401) redirect("/login");
   if (!res.ok) {
+    const errorData = await res.json();
     return {
       success: false,
       message: `コメントの作成に失敗しました(${res.status})`,
+      errors: errorData.errors as Record<string, string[]> | undefined,
     };
   }
   // キャッシュを無効化→Next.jsが自動で再レンダリング→画面更新
@@ -112,14 +115,20 @@ export async function likeComment(
 }
 
 // コメントいいねユーザー一覧を取得
-export async function getLikersForComment(commentId: number, page: number): Promise<LikersResult> {
+export async function getLikersForComment(
+  commentId: number,
+  page: number,
+): Promise<LikersResult> {
   const token = (await cookies()).get("token")?.value;
-  const res = await fetch(`${process.env.LARAVEL_API_URL}/api/comments/${commentId}/likes?page=${page}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-      Accept: "application/json",
+  const res = await fetch(
+    `${process.env.LARAVEL_API_URL}/api/comments/${commentId}/likes?page=${page}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: "application/json",
+      },
     },
-  });
+  );
   if (res.status === 401) {
     redirect("/login");
   }

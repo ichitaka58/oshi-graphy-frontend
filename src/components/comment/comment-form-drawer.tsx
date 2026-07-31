@@ -58,7 +58,15 @@ const CommentFormDrawer = ({
 
       const result = await createComment(formData, diaryId, path, isReply);
       if (!result.success) {
-        form.setError("root", { message: result.message });
+        if (result.errors) {
+          for (const [field, messages] of Object.entries(result.errors)) {
+            form.setError(field as keyof CommentFormValues, {
+              message: messages[0],
+            });
+          }
+        } else {
+          form.setError("root", { message: result.message });
+        }
         return;
       }
       form.reset();
