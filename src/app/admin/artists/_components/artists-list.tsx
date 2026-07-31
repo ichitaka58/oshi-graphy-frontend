@@ -1,4 +1,5 @@
 "use client";
+
 import {
   Table,
   TableBody,
@@ -9,8 +10,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Artist } from "@/types/artist";
-import { SquarePen, Trash2 } from "lucide-react";
+import { SquarePen } from "lucide-react";
 import Link from "next/link";
+import DeleteArtistConfirmDialog from "./delete-artist-confirm-dialog";
 
 const ArtistsList = ({
   artists,
@@ -48,7 +50,7 @@ const ArtistsList = ({
               </Link>
             </TableCell>
             <TableCell className="text-muted-foreground/70 cursor-pointer">
-              <Trash2 size={16} className="mx-auto" />
+              <DeleteArtistConfirmDialog artistId={a.id} artistName={a.name} />
             </TableCell>
           </TableRow>
         ))}

@@ -64,3 +64,31 @@ export async function updateArtist(id: string, formData: FormData) {
     message: "アーティスト情報を更新しました",
   };
 }
+
+export async function deleteArtist(id: string) {
+  const token = (await cookies()).get("token")?.value;
+  if (!token) {
+    redirect("/login");
+  }
+  const res = await fetch(
+    `${process.env.LARAVEL_API_URL}/api/admin/artists/${id}`,
+    {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: "application/json",
+      },
+    },
+  );
+  if (res.status === 401) redirect("/login");
+  if (!res.ok) {
+    return {
+      success: false,
+      message: `アーティストの削除に失敗しました(${res.status})`,
+    };
+  }
+  return {
+    success: true,
+    message: "アーティストを削除しました",
+  };
+}
