@@ -1,16 +1,18 @@
 "use server";
 
+import { getCurrentUser } from "@/lib/auth";
 import { ActionResult } from "@/types/action-result";
 import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
+import { forbidden, redirect } from "next/navigation";
 
 export async function createArtist(
   formData: FormData,
 ): Promise<ActionResult<{ message: string }>> {
-  const token = (await cookies()).get("token")?.value;
-  if (!token) {
-    redirect("/login");
+  const loginUser = await getCurrentUser();
+  if (!loginUser.is_admin) {
+    forbidden();
   }
+  const token = (await cookies()).get("token")?.value;
   const res = await fetch(`${process.env.LARAVEL_API_URL}/api/admin/artists`, {
     method: "POST",
     headers: {
@@ -39,10 +41,11 @@ export async function updateArtist(
   id: string,
   formData: FormData,
 ): Promise<ActionResult<{ message: string }>> {
-  const token = (await cookies()).get("token")?.value;
-  if (!token) {
-    redirect("/login");
+  const loginUser = await getCurrentUser();
+  if (!loginUser.is_admin) {
+    forbidden();
   }
+  const token = (await cookies()).get("token")?.value;
   formData.append("_method", "PUT");
   const res = await fetch(
     `${process.env.LARAVEL_API_URL}/api/admin/artists/${id}`,
@@ -74,10 +77,11 @@ export async function updateArtist(
 export async function deleteArtist(
   id: string,
 ): Promise<ActionResult<{ message: string }>> {
-  const token = (await cookies()).get("token")?.value;
-  if (!token) {
-    redirect("/login");
+  const loginUser = await getCurrentUser();
+  if (!loginUser.is_admin) {
+    forbidden();
   }
+  const token = (await cookies()).get("token")?.value;
   const res = await fetch(
     `${process.env.LARAVEL_API_URL}/api/admin/artists/${id}`,
     {
