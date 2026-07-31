@@ -13,8 +13,12 @@ export async function POST() {
     },
   });
   if (!res.ok) {
+    // Laravel側のログアウトが失敗しても（トークンが既に無効等）、
+    // クライアント側は確実にログアウト状態にするためcookieは削除する
     const error = await res.json();
-    return NextResponse.json(error, { status: res.status });
+    const response = NextResponse.json(error, { status: res.status });
+    response.cookies.delete("token");
+    return response;
   }
 
   const response = NextResponse.json({ ok: true });
