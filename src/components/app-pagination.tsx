@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import {
   Pagination,
   PaginationContent,
@@ -20,32 +19,18 @@ type AppPaginationProps = {
 };
 
 const AppPagination = ({ currentPage, lastPage }: AppPaginationProps) => {
-  // 画面に表示するページ番号のリスト（最大3件）
-  // 初期値は [1, 2, 3]
-  const [displayPages, setDisplayPages] = useState<number[]>(
-    Array.from({ length: 3 }, (_, i) => i + 1),
+  // 画面に表示するページ番号のリスト（最大3件）を currentPage/lastPage から毎回計算する。
+  // stateで持ってボタン操作のたびに手動で更新する方式だと、直接URL遷移やブラウザの
+  // 戻る/進むでcurrentPageが外部から変化したときに追従できず表示がズレるため、
+  // 派生値として算出する方式に統一する。
+  const windowSize = Math.min(3, lastPage);
+  let windowStart = currentPage - windowSize + 1;
+  windowStart = Math.max(1, windowStart);
+  windowStart = Math.min(windowStart, lastPage - windowSize + 1);
+  const displayPages = Array.from(
+    { length: windowSize },
+    (_, i) => windowStart + i,
   );
-
-  // 「次へ」ボタンを押したとき、表示ページ番号を1つ繰り上げる
-  // 例: [1, 2, 3] → [2, 3, 4]
-  // ただし、現在地が表示リストの末尾でない場合や、すでに最終ページの場合は何もしない
-  const handleDisplayPagesUp = () => {
-    const lastPagination = displayPages.at(-1);
-    if (currentPage !== lastPagination) return;
-    if (lastPagination! >= lastPage) return;
-    const newDisplayPages = displayPages.map((dp) => dp + 1);
-    setDisplayPages(newDisplayPages);
-  };
-
-  // 「前へ」ボタンを押したとき、表示ページ番号を1つ繰り下げる
-  // 例: [2, 3, 4] → [1, 2, 3]
-  // ただし、すでに先頭（1ページ目）が表示されている場合は何もしない
-  const handleDisplayPagesDown = () => {
-    const firstPagination = displayPages.at(0);
-    if (firstPagination === 1) return;
-    const newDisplayPages = displayPages.map((dp) => dp - 1);
-    setDisplayPages(newDisplayPages);
-  };
 
   return (
     <Pagination className="mt-8">
@@ -54,7 +39,6 @@ const AppPagination = ({ currentPage, lastPage }: AppPaginationProps) => {
         <PaginationItem>
           <PaginationPrevious
             href={currentPage === 1 ? "#" : `?page=${currentPage - 1}`}
-            onClick={handleDisplayPagesDown}
             aria-disabled={currentPage === 1}
             className={currentPage === 1 ? "pointer-events-none opacity-50" : ""}
           />
@@ -92,7 +76,6 @@ const AppPagination = ({ currentPage, lastPage }: AppPaginationProps) => {
         <PaginationItem>
           <PaginationNext
             href={currentPage === lastPage ? "#" : `?page=${currentPage + 1}`}
-            onClick={handleDisplayPagesUp}
             aria-disabled={currentPage === lastPage}
             className={currentPage === lastPage ? "pointer-events-none opacity-50" : ""}
           />
