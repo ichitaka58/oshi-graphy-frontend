@@ -1,5 +1,6 @@
 "use server";
 
+import { ActionResult } from "@/types/action-result";
 import { DiaryDetailPath, LikeResult, LikersResult } from "@/types/like";
 import { User } from "@/types/user";
 import { revalidatePath } from "next/cache";
@@ -11,7 +12,7 @@ export async function createComment(
   diaryId: string,
   path: DiaryDetailPath,
   isReply: boolean,
-) {
+): Promise<ActionResult<{ message: string }>> {
   const token = (await cookies()).get("token")?.value;
   if (!token) {
     redirect("/login");
@@ -51,7 +52,10 @@ export async function createComment(
 }
 
 // コメントの削除処理
-export async function deleteComment(commentId: number, path: DiaryDetailPath) {
+export async function deleteComment(
+  commentId: number,
+  path: DiaryDetailPath,
+): Promise<ActionResult<{ message: string }>> {
   const token = (await cookies()).get("token")?.value;
   if (!token) {
     redirect("/login");

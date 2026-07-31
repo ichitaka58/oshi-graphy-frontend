@@ -1,11 +1,14 @@
 "use server";
 
+import { ActionResult } from "@/types/action-result";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 // 日記の登録処理
-export async function createDiary(formData: FormData) {
+export async function createDiary(
+  formData: FormData,
+): Promise<ActionResult<{ message: string }>> {
   const token = (await cookies()).get("token")?.value;
   if (!token) {
     redirect("/login");
@@ -41,7 +44,10 @@ export async function createDiary(formData: FormData) {
 }
 
 // 日記の更新処理
-export async function updateDiary(id: string, formData: FormData) {
+export async function updateDiary(
+  id: string,
+  formData: FormData,
+): Promise<ActionResult<{ message: string }>> {
   const token = (await cookies()).get("token")?.value;
   if (!token) {
     redirect("/login");
@@ -72,7 +78,9 @@ export async function updateDiary(id: string, formData: FormData) {
 }
 
 // 日記の削除処理
-export async function deleteDiary(id: string) {
+export async function deleteDiary(
+  id: string,
+): Promise<ActionResult<{ message: string }>> {
   const token = (await cookies()).get("token")?.value;
   if (!token) {
     redirect("/login");
@@ -98,7 +106,9 @@ export async function deleteDiary(id: string) {
 }
 
 // GeminiによるAI日記文案の作成
-export async function suggestDiaryDraft(formData: FormData) {
+export async function suggestDiaryDraft(
+  formData: FormData,
+): Promise<ActionResult<{ reply: string; interactionId: string }>> {
   const token = (await cookies()).get("token")?.value;
   if (!token) {
     redirect("/login");

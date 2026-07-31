@@ -1,9 +1,12 @@
 "use server";
 
+import { ActionResult } from "@/types/action-result";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
-export async function createArtist(formData: FormData) {
+export async function createArtist(
+  formData: FormData,
+): Promise<ActionResult<{ message: string }>> {
   const token = (await cookies()).get("token")?.value;
   if (!token) {
     redirect("/login");
@@ -32,7 +35,10 @@ export async function createArtist(formData: FormData) {
   };
 }
 
-export async function updateArtist(id: string, formData: FormData) {
+export async function updateArtist(
+  id: string,
+  formData: FormData,
+): Promise<ActionResult<{ message: string }>> {
   const token = (await cookies()).get("token")?.value;
   if (!token) {
     redirect("/login");
@@ -65,7 +71,9 @@ export async function updateArtist(id: string, formData: FormData) {
   };
 }
 
-export async function deleteArtist(id: string) {
+export async function deleteArtist(
+  id: string,
+): Promise<ActionResult<{ message: string }>> {
   const token = (await cookies()).get("token")?.value;
   if (!token) {
     redirect("/login");
