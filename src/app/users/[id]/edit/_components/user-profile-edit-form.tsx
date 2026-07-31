@@ -77,7 +77,6 @@ const UserProfileEditForm = ({ id, user }: Props) => {
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
-
   const onSubmit = async (data: UserProfileValues) => {
     try {
       const formData = new FormData();
@@ -92,7 +91,15 @@ const UserProfileEditForm = ({ id, user }: Props) => {
 
       const result = await updateUserProfile(id, formData);
       if (!result.success) {
-        form.setError("root", { message: result.message });
+        if (result.errors) {
+          for (const [field, messages] of Object.entries(result.errors)) {
+            form.setError(field as keyof UserProfileValues, {
+              message: messages[0],
+            });
+          }
+        } else {
+          form.setError("root", { message: result.message });
+        }
         return;
       }
       router.replace(`/users/${id}`);

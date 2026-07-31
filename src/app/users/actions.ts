@@ -15,14 +15,17 @@ export async function updateUserProfile(id: string, formData: FormData) {
     method: "POST",
     headers: {
       Authorization: `Bearer ${token}`,
+      Accept: "application/json",
     },
     body: formData,
   });
   if (res.status === 401) redirect("/login");
   if (!res.ok) {
+    const errorData = await res.json();
     return {
       success: false,
       message: `プロフィールの更新に失敗しました(${res.status})`,
+      errors: errorData.errors as Record<string, string[]> | undefined,
     };
   }
   return { success: true };
