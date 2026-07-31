@@ -1,8 +1,7 @@
+import { ActionResult } from "./action-result";
 import { User } from "./user";
 
-export type LikeResult =
-  | { success: true; liked: boolean; count: number }
-  | { success: false; message: string };
+export type LikeResult = ActionResult<{ liked: boolean; count: number }>;
 
 export type DiaryDetailPath =
   | `/public-diaries/${string}`
@@ -10,6 +9,4 @@ export type DiaryDetailPath =
 
 export type LikePath = DiaryDetailPath | "/public-diaries" | "/diaries";
 
-export type LikersResult =
-  | { success: true; likers: User[]; lastPage: number }
-  | { success: false; message: string };
+export type LikersResult = ActionResult<{ likers: User[]; lastPage: number }>;

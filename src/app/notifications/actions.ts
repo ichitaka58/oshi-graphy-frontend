@@ -1,13 +1,12 @@
 "use server";
 
+import { ActionResult } from "@/types/action-result";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 // ひとつの通知を既読にする
-export async function markRead(
-  id: string,
-): Promise<{ success: true } | { success: false; message: string }> {
+export async function markRead(id: string): Promise<ActionResult> {
   const token = (await cookies()).get("token")?.value;
   const res = await fetch(
     `${process.env.LARAVEL_API_URL}/api/notifications/${id}/read`,
@@ -32,9 +31,7 @@ export async function markRead(
 }
 
 // 全ての通知を一括で既読にする
-export async function markAllRead(): Promise<
-  { success: true } | { success: false; message: string }
-> {
+export async function markAllRead(): Promise<ActionResult> {
   const token = (await cookies()).get("token")?.value;
   const res = await fetch(
     `${process.env.LARAVEL_API_URL}/api/notifications/mark-all-read`,
@@ -60,9 +57,7 @@ export async function markAllRead(): Promise<
 }
 
 // 通知の削除
-export async function deleteNotification(
-  id: string,
-): Promise<{ success: true } | { success: false; message: string }> {
+export async function deleteNotification(id: string): Promise<ActionResult> {
   const token = (await cookies()).get("token")?.value;
   const res = await fetch(
     `${process.env.LARAVEL_API_URL}/api/notifications/${id}`,
@@ -89,7 +84,7 @@ export async function deleteNotification(
 
 // 未読件数の取得
 export async function getUnreadCount(): Promise<
-  { success: true; unreadCount: number } | { success: false; message: string }
+  ActionResult<{ unreadCount: number }>
 > {
   const token = (await cookies()).get("token")?.value;
   const res = await fetch(
@@ -115,9 +110,7 @@ export async function getUnreadCount(): Promise<
 }
 
 // 既読通知を未読にする
-export async function markUnread(
-  id: string,
-): Promise<{ success: true } | { success: false; message: string }> {
+export async function markUnread(id: string): Promise<ActionResult> {
   const token = (await cookies()).get("token")?.value;
   const res = await fetch(
     `${process.env.LARAVEL_API_URL}/api/notifications/${id}/mark-unread`,

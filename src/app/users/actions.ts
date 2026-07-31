@@ -1,11 +1,15 @@
 "use server";
 
+import { ActionResult } from "@/types/action-result";
 import { User } from "@/types/user";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
-export async function updateUserProfile(id: string, formData: FormData) {
+export async function updateUserProfile(
+  id: string,
+  formData: FormData,
+): Promise<ActionResult> {
   const token = (await cookies()).get("token")?.value;
   if (!token) {
     redirect("/login");
@@ -35,13 +39,11 @@ export async function toggleUserFollow(
   id: string,
   currentlyFollowing: boolean,
 ): Promise<
-  | {
-      success: true;
-      following: boolean;
-      followingsCount: number;
-      followersCount: number;
-    }
-  | { success: false; message: string }
+  ActionResult<{
+    following: boolean;
+    followingsCount: number;
+    followersCount: number;
+  }>
 > {
   const token = (await cookies()).get("token")?.value;
   const res = await fetch(
@@ -73,10 +75,7 @@ export async function toggleUserFollow(
 export async function getFollowers(
   id: string,
   page: number,
-): Promise<
-  | { success: true; followers: User[]; lastPage: number }
-  | { success: false; message: string }
-> {
+): Promise<ActionResult<{ followers: User[]; lastPage: number }>> {
   const token = (await cookies()).get("token")?.value;
   const res = await fetch(
     `${process.env.LARAVEL_API_URL}/api/users/${id}/followers?page=${page}`,
@@ -107,10 +106,7 @@ export async function getFollowers(
 export async function getFollowings(
   id: string,
   page: number,
-): Promise<
-  | { success: true; followings: User[]; lastPage: number }
-  | { success: false; message: string }
-> {
+): Promise<ActionResult<{ followings: User[]; lastPage: number }>> {
   const token = (await cookies()).get("token")?.value;
   const res = await fetch(
     `${process.env.LARAVEL_API_URL}/api/users/${id}/followings?page=${page}`,
@@ -141,9 +137,7 @@ export async function getFollowings(
 export async function toggleUserBlock(
   userId: string,
   currentlyBlocking: boolean,
-): Promise<
-  { success: true; blocking: boolean } | { success: false; message: string }
-> {
+): Promise<ActionResult<{ blocking: boolean }>> {
   const token = (await cookies()).get("token")?.value;
   const res = await fetch(
     `${process.env.LARAVEL_API_URL}/api/users/${userId}/block`,

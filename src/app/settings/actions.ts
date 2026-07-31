@@ -1,10 +1,13 @@
 "use server";
 
+import { ActionResult } from "@/types/action-result";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 // メースアドレスの変更
-export async function updateEmail(formData: FormData) {
+export async function updateEmail(
+  formData: FormData,
+): Promise<ActionResult<{ message: string }>> {
   const token = (await cookies()).get("token")?.value;
   if (!token) {
     redirect("/login");
@@ -24,14 +27,16 @@ export async function updateEmail(formData: FormData) {
     return {
       success: false,
       message: `メールアドレスの更新に失敗しました(${res.status})`,
-      errors: errorData.errors,
+      errors: errorData.errors as Record<string, string[]> | undefined,
     };
   }
   return { success: true, message: "メールアドレスを変更しました" };
 }
 
 // パスワードの変更
-export async function updatePassword(formData: FormData) {
+export async function updatePassword(
+  formData: FormData,
+): Promise<ActionResult<{ message: string }>> {
   const token = (await cookies()).get("token")?.value;
   if (!token) {
     redirect("/login");
@@ -51,7 +56,7 @@ export async function updatePassword(formData: FormData) {
     return {
       success: false,
       message: `パスワードの変更に失敗しました(${res.status})`,
-      errors: errorData.errors,
+      errors: errorData.errors as Record<string, string[]> | undefined,
     };
   }
   return { success: true, message: "パスワードを変更しました" };
