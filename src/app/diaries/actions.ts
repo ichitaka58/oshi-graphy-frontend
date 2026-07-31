@@ -37,6 +37,7 @@ export async function createDiary(
       errors: errorData.errors as Record<string, string[]> | undefined,
     };
   }
+  revalidatePath("/diaries");
   return {
     success: true,
     message: "日記を保存しました",
@@ -99,6 +100,7 @@ export async function deleteDiary(
       message: `日記の削除に失敗しました(${res.status})`,
     };
   }
+  revalidatePath("/diaries");
   return {
     success: true,
     message: "日記を削除しました",

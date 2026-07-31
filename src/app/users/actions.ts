@@ -32,6 +32,7 @@ export async function updateUserProfile(
       errors: errorData.errors as Record<string, string[]> | undefined,
     };
   }
+  revalidatePath(`/users/${id}`);
   return { success: true };
 }
 
@@ -64,6 +65,7 @@ export async function toggleUserFollow(
     };
   }
   const result = await res.json();
+  revalidatePath(`/users/${id}`);
   return {
     success: true,
     following: result.following,
