@@ -1,6 +1,6 @@
 import z from "zod";
 
-export const ArtistCreateFormSchema = z.object({
+export const ArtistFormSchema = z.object({
   name: z
     .string()
     .min(1, "アーティスト名は必須入力です")
@@ -11,4 +11,4 @@ export const ArtistCreateFormSchema = z.object({
     .max(100, "100文字以内で入力してください"),
 });
 
-export type ArtistCreateFormValues = z.infer<typeof ArtistCreateFormSchema>;
+export type ArtistFormValues = z.infer<typeof ArtistFormSchema>;
