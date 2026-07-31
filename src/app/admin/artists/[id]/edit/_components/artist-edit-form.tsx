@@ -1,8 +1,8 @@
 "use client";
 
 import {
-  ArtistCreateFormSchema,
-  ArtistCreateFormValues,
+  ArtistFormSchema,
+  ArtistFormValues,
 } from "@/lib/schemas/artist";
 import { Artist } from "@/types/artist";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -28,8 +28,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 const ArtistEditForm = ({ id, artist }: { id: string; artist: Artist }) => {
-  const form = useForm<ArtistCreateFormValues>({
-    resolver: zodResolver(ArtistCreateFormSchema),
+  const form = useForm<ArtistFormValues>({
+    resolver: zodResolver(ArtistFormSchema),
     mode: "onSubmit",
     defaultValues: {
       name: artist.name,
@@ -39,7 +39,7 @@ const ArtistEditForm = ({ id, artist }: { id: string; artist: Artist }) => {
 
   const router = useRouter();
 
-  const onSubmit = async (data: ArtistCreateFormValues) => {
+  const onSubmit = async (data: ArtistFormValues) => {
     try {
       const formData = new FormData();
       formData.append("name", data.name);
@@ -49,7 +49,7 @@ const ArtistEditForm = ({ id, artist }: { id: string; artist: Artist }) => {
       if (!result.success) {
         if (result.errors) {
           for (const [field, messages] of Object.entries(result.errors)) {
-            form.setError(field as keyof ArtistCreateFormValues, {
+            form.setError(field as keyof ArtistFormValues, {
               message: messages[0],
             });
           }
