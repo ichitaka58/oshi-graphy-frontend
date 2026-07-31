@@ -118,7 +118,15 @@ const DiaryEditForm = ({ id, diary }: Props) => {
       /// 成功時は トースト表示＆/diariesへ遷移、失敗時はフォームにエラー表示
       const result = await updateDiary(id, formData);
       if (!result.success) {
-        form.setError("root", { message: result.message });
+        if (result.errors) {
+          for (const [field, messages] of Object.entries(result.errors)) {
+            form.setError(field as keyof DiaryUpdateFormValues, {
+              message: messages[0],
+            });
+          }
+        } else {
+          form.setError("root", { message: result.message });
+        }
         return;
       }
       toast.success(result.message, {

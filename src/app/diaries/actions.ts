@@ -14,6 +14,7 @@ export async function createDiary(formData: FormData) {
     method: "POST",
     headers: {
       Authorization: `Bearer ${token}`,
+      Accept: "application/json",
       // Content-Type は指定しない。
       // FormData に画像ファイルが含まれる場合、fetch が自動で
       // "multipart/form-data; boundary=..." を付与する。
@@ -25,9 +26,12 @@ export async function createDiary(formData: FormData) {
   // 401: cookieのトークンが期限切れまたは無効。再ログインさせる。
   if (res.status === 401) redirect("/login");
   if (!res.ok) {
+    const errorData = await res.json();
     return {
       success: false,
       message: `日記の作成に失敗しました(${res.status})`,
+      // TypeScriptに組み込まれているユーティリティ型 Record<キーの型, 値の型>
+      errors: errorData.errors as Record<string, string[]> | undefined,
     };
   }
   return {
@@ -47,14 +51,17 @@ export async function updateDiary(id: string, formData: FormData) {
     method: "POST",
     headers: {
       Authorization: `Bearer ${token}`,
+      Accept: "application/json",
     },
     body: formData,
   });
   if (res.status === 401) redirect("/login");
   if (!res.ok) {
+    const errorData = await res.json();
     return {
       success: false,
       message: `日記の更新に失敗しました(${res.status})`,
+      errors: errorData.errors as Record<string, string[]> | undefined,
     };
   }
   revalidatePath("/diaries");
@@ -74,6 +81,7 @@ export async function deleteDiary(id: string) {
     method: "DELETE",
     headers: {
       Authorization: `Bearer ${token}`,
+      Accept: "application/json",
     },
   });
   if (res.status === 401) redirect("/login");
@@ -101,6 +109,7 @@ export async function suggestDiaryDraft(formData: FormData) {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
+        Accept: "application/json",
       },
       body: formData,
     },

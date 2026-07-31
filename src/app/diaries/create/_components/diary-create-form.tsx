@@ -108,7 +108,15 @@ const DiaryCreateForm = () => {
 
       const result = await createDiary(formData);
       if (!result.success) {
-        form.setError("root", { message: result.message });
+        if (result.errors) {
+          for (const [field, messages] of Object.entries(result.errors)) {
+            form.setError(field as keyof DiaryCreateFormValues, {
+              message: messages[0],
+            });
+          }
+        } else {
+          form.setError("root", { message: result.message });
+        }
         return;
       }
       toast.success(result.message, { position: "top-center" });
@@ -262,7 +270,9 @@ const DiaryCreateForm = () => {
             />
             {/* AIアシスト機能 */}
             <div className="border rounded-lg p-4 bg-muted/30">
-            <FieldTitle className="font-semibold">⭐️AIアシスト機能</FieldTitle>
+              <FieldTitle className="font-semibold">
+                ⭐️AIアシスト機能
+              </FieldTitle>
               <DiaryAiAssistForm onCopyReplyToBody={handleCopyReplyToBody} />
             </div>
             {/* 写真 */}
