@@ -3,12 +3,14 @@ import DiaryEditForm from "./_components/diary-edit-form";
 import { notFound, redirect } from "next/navigation";
 import { DiaryEditItem } from "@/types/diary";
 import BackButton from "@/components/back-button";
+import { getCurrentUser } from "@/lib/auth";
 
 const DiaryEditPage = async ({
   params,
 }: {
   params: Promise<{ id: string }>;
 }) => {
+  await getCurrentUser(); // ログインチェック
   const { id } = await params;
   const token = (await cookies()).get("token")?.value;
   const res = await fetch(`${process.env.LARAVEL_API_URL}/api/diaries/${id}`, {
