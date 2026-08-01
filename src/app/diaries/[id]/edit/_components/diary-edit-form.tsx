@@ -371,7 +371,7 @@ const DiaryEditForm = ({ id, diary }: Props) => {
                             htmlFor={`form-update-diary-delete_images-${image.id}`}
                           >
                             <img
-                              src={`${process.env.NEXT_PUBLIC_STORAGE_URL}/${image.path}`}
+                              src={`/storage/${image.path}`}
                               alt={`existing image-${image.id}`}
                               className="h-24 object-cover"
                             />
