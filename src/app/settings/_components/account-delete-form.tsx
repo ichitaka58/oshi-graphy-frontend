@@ -30,8 +30,10 @@ import {
 } from "@/lib/schemas/setting";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff } from "lucide-react";
+import { unstable_rethrow } from "next/navigation";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
+import { deleteAccount } from "../actions";
 
 const AccountDeleteForm = () => {
   const form = useForm<AccountDeleteValues>({
@@ -48,33 +50,28 @@ const AccountDeleteForm = () => {
 
   const onSubmit = async (data: AccountDeleteValues) => {
     try {
-      const res = await fetch("/api/auth/delete-account", {
-        method: "DELETE",
-        headers: {
-          "Content-type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify({ password: data.password }),
-      });
-      if (!res.ok) {
-        const result = await res.json();
-        if (res.status === 401) {
-          window.location.href = "/login";
-          return;
-        }
+      const result = await deleteAccount(data.password);
+      if (!result.success) {
         if (result.errors) {
-          form.setError("password", { message: result.errors.password[0] });
+          for (const [field, messages] of Object.entries(result.errors)) {
+            form.setError(field as keyof AccountDeleteValues, {
+              message: messages[0],
+            });
+          }
         } else {
-          form.setError("root", {
-            message: `アカウントの削除に失敗しました${res.status}`,
-          });
+          form.setError("root", { message: result.message });
         }
         return;
       }
       window.location.href = "/";
     } catch (error) {
-      console.error("Delete account Error;", error);
-      alert("アカウントの削除に失敗しました");
+      // deleteAccount内のredirect("/login")はNext.jsがNEXT_REDIRECT例外を
+      // throwすることで実現されている。ここで無条件にcatchすると
+      // そのリダイレクト用の例外まで握りつぶしてしまうため、
+      // redirect/notFound等の例外だけはunstable_rethrowで再送出しNext.jsに処理を戻す。
+      unstable_rethrow(error);
+      // ここに到達するのは本当の通信エラー等のみ
+      form.setError("root", { message: "通信エラーが発生しました" });
     }
   };
 
