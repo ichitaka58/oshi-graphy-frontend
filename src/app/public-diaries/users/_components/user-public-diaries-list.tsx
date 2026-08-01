@@ -4,7 +4,7 @@ import { PublicDiaryListItem } from "@/types/diary";
 import { User } from "@/types/user";
 import { cookies } from "next/headers";
 import Link from "next/link";
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 const UserPublicDiariesList = async ({
   params,
@@ -29,6 +29,9 @@ const UserPublicDiariesList = async ({
   );
   if (res.status === 401) {
     redirect("/login");
+  }
+  if (res.status === 404) {
+    notFound();
   }
   if (!res.ok) {
     throw new Error("データの取得に失敗しました");
