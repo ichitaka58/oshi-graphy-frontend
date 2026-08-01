@@ -3,10 +3,10 @@
 import { cn } from "@/lib/utils";
 import { Heart } from "lucide-react";
 import { useState } from "react";
-import { likeDiary } from "./diary-like-actions";
+import { getLikers, likeDiary } from "./diary-like-actions";
 import { toast } from "sonner";
 import { LikePath } from "@/types/like";
-import DiaryLikersDrawer from "./diary-likers-drawer";
+import LikersDrawer from "./likers-drawer";
 
 type Props = {
   likesCount: number;
@@ -68,7 +68,11 @@ const DiaryLike = ({
       </button>
       {/* いいね数をクリックしたらいいねしたユーザー一覧が表示 */}
       {variant === "detail" && ownerId === loginUserId ? (
-        <DiaryLikersDrawer id={id} count={count} />
+        <LikersDrawer
+          count={count}
+          description="この投稿にいいねしたユーザーの一覧です。"
+          fetchLikers={(page) => getLikers(id, page)}
+        />
       ) : (
         <div>{count}</div>
       )}

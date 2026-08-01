@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { getLikers } from "./diary-like-actions";
 import { Button } from "./ui/button";
 import {
   Drawer,
@@ -18,23 +17,45 @@ import { toast } from "sonner";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import Link from "next/link";
 import { unstable_rethrow } from "next/navigation";
+import { LikersResult } from "@/types/like";
+import { cn } from "@/lib/utils";
 
-const DiaryLikersDrawer = ({ id, count }: { id: string; count: number }) => {
+type Props = {
+  count: number;
+  description: string;
+  fetchLikers: (page: number) => Promise<LikersResult>;
+  triggerClassName?: string;
+};
+
+const LikersDrawer = ({
+  count,
+  description,
+  fetchLikers,
+  triggerClassName,
+}: Props) => {
   const [likers, setLikers] = useState<User[]>([]);
   const [page, setPage] = useState<number>(1);
   const [lastPage, setLastPage] = useState<number>(1);
-  const [busy, setBusy] = useState<boolean>(false)
+  const [busy, setBusy] = useState<boolean>(false);
 
   const handleOpenChange = async (open: boolean) => {
-    if (!open) return;
-    const result = await getLikers(id, 1);
-    if (!result.success) {
-      toast.error(result.message, { position: "top-center" });
-      return;
+    if (!open || busy) return;
+    setBusy(true);
+    try {
+      const result = await fetchLikers(1);
+      if (!result.success) {
+        toast.error(result.message, { position: "top-center" });
+        return;
+      }
+      setLikers(result.likers);
+      setPage(1);
+      setLastPage(result.lastPage);
+    } catch (error) {
+      unstable_rethrow(error);
+      toast.error("通信エラーが発生しました", { position: "top-center" });
+    } finally {
+      setBusy(false);
     }
-    setLikers(result.likers);
-    setPage(1);
-    setLastPage(result.lastPage);
   };
 
   const handleLoadMore = async () => {
@@ -42,7 +63,7 @@ const DiaryLikersDrawer = ({ id, count }: { id: string; count: number }) => {
     setBusy(true);
     try {
       const nextPage = page + 1;
-      const result = await getLikers(id, nextPage);
+      const result = await fetchLikers(nextPage);
       if (!result.success) {
         toast.error(result.message, { position: "top-center" });
         return;
@@ -62,7 +83,10 @@ const DiaryLikersDrawer = ({ id, count }: { id: string; count: number }) => {
     // autoFocus 開いた時にフォーカスをdrawer内に移す アクセシビリティ目的
     <Drawer direction="bottom" autoFocus onOpenChange={handleOpenChange}>
       <DrawerTrigger asChild>
-        <button type="button" className="cursor-pointer">
+        <button
+          type="button"
+          className={cn("cursor-pointer", triggerClassName)}
+        >
           {count}
         </button>
       </DrawerTrigger>
@@ -71,7 +95,7 @@ const DiaryLikersDrawer = ({ id, count }: { id: string; count: number }) => {
           <DrawerTitle>いいねユーザー一覧 : {count}人</DrawerTitle>
           {/* sr-only: 視覚的には隠しつつ、スクリーンリーダーには読ませる */}
           <DrawerDescription className="sr-only">
-            この投稿にいいねしたユーザーの一覧です。
+            {description}
           </DrawerDescription>
         </DrawerHeader>
         {likers.map((liker) => (
@@ -89,7 +113,14 @@ const DiaryLikersDrawer = ({ id, count }: { id: string; count: number }) => {
           </div>
         ))}
         {page < lastPage && (
-          <button type="button" onClick={handleLoadMore} disabled={busy} className="text-sm text-muted-foreground cursor-pointer">- 続きを見る-</button>
+          <button
+            type="button"
+            onClick={handleLoadMore}
+            disabled={busy}
+            className="text-sm text-muted-foreground cursor-pointer"
+          >
+            - 続きを見る-
+          </button>
         )}
         <DrawerFooter>
           <DrawerClose asChild>
@@ -101,4 +132,4 @@ const DiaryLikersDrawer = ({ id, count }: { id: string; count: number }) => {
   );
 };
 
-export default DiaryLikersDrawer;
+export default LikersDrawer;
