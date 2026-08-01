@@ -68,6 +68,7 @@ const PasswordUpdateForm = () => {
         }
         return;
       }
+      form.reset();
       toast.success(result.message, { position: "top-center" });
     } catch (error) {
       // updateEmail内のredirect("/login")はNext.jsがNEXT_REDIRECT例外を
