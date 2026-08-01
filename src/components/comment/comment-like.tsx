@@ -2,11 +2,11 @@
 
 import { Heart } from "lucide-react";
 import { useState } from "react";
-import { likeComment } from "./actions";
+import { getLikersForComment, likeComment } from "./actions";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { DiaryDetailPath } from "@/types/like";
-import CommentLikersDrawer from "./comment-likers-drawer";
+import LikersDrawer from "../likers-drawer";
 
 type Props = {
   likedByMe: boolean;
@@ -62,9 +62,13 @@ const CommentLike = ({
           )}
         />
       </button>
-      {/* <div className="text-accent/80">{count}</div> */}
       {ownerId === loginUserId ? (
-        <CommentLikersDrawer commentId={commentId} count={count} />
+        <LikersDrawer
+          count={count}
+          description="このコメントにいいねしたユーザーの一覧です。"
+          fetchLikers={(page) => getLikersForComment(commentId, page)}
+          triggerClassName="text-accent/80"
+        />
       ) : (
         <div className="text-accent/80">{count}</div>
       )}

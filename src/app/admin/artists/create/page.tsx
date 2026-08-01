@@ -1,6 +1,6 @@
 import { getCurrentUser } from "@/lib/auth";
 import { forbidden } from "next/navigation";
-import ArtistCreateForm from "./_components/artist-create-form";
+import ArtistForm from "../_components/artist-form";
 import BackButton from "@/components/back-button";
 
 const ArtistCreatePage = async () => {
@@ -14,7 +14,7 @@ const ArtistCreatePage = async () => {
         <BackButton />
       </div>
       <div className="w-75 mx-auto mt-4">
-        <ArtistCreateForm />
+        <ArtistForm mode="create" />
       </div>
     </div>
   );

@@ -1,50 +1,54 @@
 "use client";
 
 import {
-  ArtistFormSchema,
-  ArtistFormValues,
-} from "@/lib/schemas/artist";
-import { Artist } from "@/types/artist";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { unstable_rethrow, useRouter } from "next/navigation";
-import { Controller, useForm } from "react-hook-form";
-import { toast } from "sonner";
-import { updateArtist } from "../../../actions";
-import {
   Card,
   CardContent,
   CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { MicVocal } from "lucide-react";
 import {
   Field,
   FieldError,
   FieldGroup,
   FieldLabel,
 } from "@/components/ui/field";
+import { ArtistFormSchema, ArtistFormValues } from "@/lib/schemas/artist";
+import { Artist } from "@/types/artist";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Controller, useForm } from "react-hook-form";
+import { toast } from "sonner";
+import { unstable_rethrow, useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { MicVocal } from "lucide-react";
+import { createArtist, updateArtist } from "../actions";
 
-const ArtistEditForm = ({ id, artist }: { id: string; artist: Artist }) => {
+type Props = { mode: "create" } | { mode: "edit"; id: string; artist: Artist };
+
+const ArtistForm = (props: Props) => {
   const form = useForm<ArtistFormValues>({
     resolver: zodResolver(ArtistFormSchema),
     mode: "onSubmit",
-    defaultValues: {
-      name: artist.name,
-      kana: artist.kana,
-    },
+    defaultValues:
+      props.mode === "edit"
+        ? { name: props.artist.name, kana: props.artist.kana }
+        : { name: "", kana: "" },
   });
 
   const router = useRouter();
+  const formId =
+    props.mode === "edit" ? "form-edit-artist" : "form-create-artist";
 
   const onSubmit = async (data: ArtistFormValues) => {
     try {
       const formData = new FormData();
       formData.append("name", data.name);
       formData.append("kana", data.kana);
-      const result = await updateArtist(id, formData);
+      const result =
+        props.mode === "edit"
+          ? await updateArtist(props.id, formData)
+          : await createArtist(formData);
 
       if (!result.success) {
         if (result.errors) {
@@ -71,11 +75,11 @@ const ArtistEditForm = ({ id, artist }: { id: string; artist: Artist }) => {
       <CardHeader>
         <CardTitle className="flex justify-center gap-2 py-2 mb-2 font-semibold">
           <MicVocal />
-          アーティスト情報編集
+          {props.mode === "edit" ? "アーティスト情報編集" : "アーティスト新規登録"}
         </CardTitle>
       </CardHeader>
       <CardContent className="mb-4">
-        <form id="form-edit-artist" onSubmit={form.handleSubmit(onSubmit)}>
+        <form id={formId} onSubmit={form.handleSubmit(onSubmit)}>
           {form.formState.errors.root && (
             <p className="mb-4 rounded-md bg-red-50 px-4 py-2 text-sm text-red-600">
               {form.formState.errors.root.message}
@@ -88,12 +92,12 @@ const ArtistEditForm = ({ id, artist }: { id: string; artist: Artist }) => {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="form-edit-artist-name">
+                  <FieldLabel htmlFor={`${formId}-name`}>
                     アーティスト名
                   </FieldLabel>
                   <Input
                     {...field}
-                    id="form-edit-artist-name"
+                    id={`${formId}-name`}
                     type="text"
                     aria-invalid={fieldState.invalid}
                     placeholder="アーティスト名を入力..."
@@ -114,12 +118,12 @@ const ArtistEditForm = ({ id, artist }: { id: string; artist: Artist }) => {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="form-edit-artist-kana">
+                  <FieldLabel htmlFor={`${formId}-kana`}>
                     よみがな
                   </FieldLabel>
                   <Input
                     {...field}
-                    id="form-edit-artist-kana"
+                    id={`${formId}-kana`}
                     type="text"
                     aria-invalid={fieldState.invalid}
                     placeholder="ひらがなで入力してください"
@@ -139,7 +143,7 @@ const ArtistEditForm = ({ id, artist }: { id: string; artist: Artist }) => {
       </CardContent>
       <CardFooter>
         <Field orientation="horizontal" className="justify-center">
-          <Button type="submit" form="form-edit-artist">
+          <Button type="submit" form={formId}>
             保存
           </Button>
           <Button type="button" variant="outline" onClick={() => form.reset()}>
@@ -151,4 +155,4 @@ const ArtistEditForm = ({ id, artist }: { id: string; artist: Artist }) => {
   );
 };
 
-export default ArtistEditForm;
+export default ArtistForm;

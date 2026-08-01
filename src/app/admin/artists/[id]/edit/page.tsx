@@ -3,7 +3,7 @@ import { getCurrentUser } from "@/lib/auth";
 import { Artist } from "@/types/artist";
 import { cookies } from "next/headers";
 import { forbidden, notFound, redirect } from "next/navigation";
-import ArtistEditForm from "./_components/artist-edit-form";
+import ArtistForm from "../../_components/artist-form";
 
 const ArtistEditPage = async ({
   params,
@@ -43,7 +43,7 @@ const ArtistEditPage = async ({
         <BackButton />
       </div>
       <div className="w-75 mx-auto mt-4">
-        <ArtistEditForm id={id} artist={artist} />
+        <ArtistForm mode="edit" id={id} artist={artist} />
       </div>
     </div>
   );;
