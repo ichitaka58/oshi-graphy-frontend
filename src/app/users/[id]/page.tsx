@@ -14,12 +14,16 @@ const UserProfilePage = async ({
 }) => {
   const { id } = await params;
   const token = (await cookies()).get("token")?.value;
-  const res = await fetch(`${process.env.LARAVEL_API_URL}/api/users/${id}`, {
-    headers: {
-      Authorization: `Bearer ${token}`,
-      Accept: "application/json",
-    },
-  });
+  // ユーザーデータ取得とログインユーザー取得は互いに依存しないため並列実行する
+  const [res, loginUser] = await Promise.all([
+    fetch(`${process.env.LARAVEL_API_URL}/api/users/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: "application/json",
+      },
+    }),
+    getCurrentUser(), // 認証チェック
+  ]);
   if (res.status === 401) {
     redirect("/login");
   }
@@ -34,7 +38,6 @@ const UserProfilePage = async ({
   const user: UserProfile = data.user;
   const isFollowing: boolean = data.is_following; // ログインユーザーがこのユーザーをフォローしているか？
   const isBlocking: boolean = data.is_blocking; // ログインユーザーがこのユーザーをブロックしているか？
-  const loginUser = await getCurrentUser();
 
   return (
     <div>
