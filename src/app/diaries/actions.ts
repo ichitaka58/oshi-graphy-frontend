@@ -126,10 +126,11 @@ export async function suggestDiaryDraft(
       body: formData,
     },
   );
+  if (res.status === 401) redirect("/login");
   if (!res.ok) {
     return {
       success: false,
-      message: `AIの文案作成に削除に失敗しました(${res.status})。短い入力で試してください`,
+      message: `AIの文案作成に失敗しました(${res.status})。短い入力で試してください`,
     };
   }
   const result = await res.json();
