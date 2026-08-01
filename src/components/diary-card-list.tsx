@@ -10,7 +10,10 @@ import { useRouter } from "next/navigation";
 import DiaryLike from "@/components/diary-like";
 
 type DiaryCardListProps = {
-  diaries: DiaryListItem[];
+  // pathName === "public-diaries" のときは呼び出し元が必ず PublicDiaryListItem[]
+  // （userを含む）を渡す想定。その対応関係を型では表現しきれないため、
+  // 実際に描画する箇所では "user" in diary のランタイムガードで安全に絞り込む。
+  diaries: (DiaryListItem | PublicDiaryListItem)[];
   pathName: "diaries" | "public-diaries";
 };
 
@@ -63,15 +66,17 @@ const DiaryCardList = ({ diaries, pathName }: DiaryCardListProps) => {
                     </span>
                   ) : (
                     // みんなの日記、ユーザー別日記の場合、ユーザー名を表示
-                    <Link
-                      href={`/public-diaries/users/${diary.user_id}`}
-                      onClick={(e) => e.stopPropagation()}
-                      className="hover:underline decoration-muted-foreground"
-                    >
-                      <span className="text-[11px] px-2 py-0.5 rounded bg-secondary text-secondary-foreground">
-                        {(diary as unknown as PublicDiaryListItem).user.name}
-                      </span>
-                    </Link>
+                    "user" in diary && (
+                      <Link
+                        href={`/public-diaries/users/${diary.user_id}`}
+                        onClick={(e) => e.stopPropagation()}
+                        className="hover:underline decoration-muted-foreground"
+                      >
+                        <span className="text-[11px] px-2 py-0.5 rounded bg-secondary text-secondary-foreground">
+                          {diary.user.name}
+                        </span>
+                      </Link>
+                    )
                   )}
 
                   <div className="flex items-center gap-1 text-accent">
