@@ -25,7 +25,11 @@ export function DiaryCarousel({ images }: Props) {
     if (!api) return
     setCount(api.scrollSnapList().length)
     setCurrent(api.selectedScrollSnap())
-    api.on("select", () => setCurrent(api.selectedScrollSnap()))
+    const onSelect = () => setCurrent(api.selectedScrollSnap())
+    api.on("select", onSelect)
+    return () => {
+      api.off("select", onSelect)
+    }
   }, [api])
 
   const slides = images.length === 0 ? null : images
