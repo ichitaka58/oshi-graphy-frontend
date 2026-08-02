@@ -46,13 +46,13 @@ const DiaryCardList = ({ diaries, pathName }: DiaryCardListProps) => {
               </div>
               <div className="flex flex-col justify-between h-32 p-3">
                 <div>
-                  <div className="flex justify-between text-xs mb-1">
+                  <div className="flex justify-between items-center text-xs mb-1">
                     <span className="text-muted-foreground">
                       {DateFormatForHappenedOn(diary.happened_on)}
                     </span>
                     <Badge variant="default">{diary.artist.name}</Badge>
                   </div>
-                  <p className="text-sm line-clamp-2 lg:line-clamp-3 mb-2">
+                  <p className="text-sm line-clamp-2 mb-2">
                     {diary.body}
                   </p>
                 </div>
