@@ -89,7 +89,7 @@ const FollowersListDrawer = ({
             >
               <Avatar>
                 <AvatarImage
-                  src={follower.icon_url}
+                  src={follower.icon_path ? `/storage/${follower.icon_path}` : "/images/icon_placeholder.png"}
                   alt={`${follower.name}icon`}
                 />
                 <AvatarFallback>OG</AvatarFallback>

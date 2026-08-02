@@ -43,7 +43,10 @@ const BlockUsersListItem = ({ initialBlocks }: { initialBlocks: User[] }) => {
           >
             <div className="flex gap-2 items-center">
               <Avatar>
-                <AvatarImage src={user.icon_url} alt={`${user.name}icon`} />
+                <AvatarImage
+                  src={user.icon_path ? `/storage/${user.icon_path}` : "/images/icon_placeholder.png"}
+                  alt={`${user.name}icon`}
+                />
                 <AvatarFallback>OG</AvatarFallback>
               </Avatar>
               <p>{user.name}</p>

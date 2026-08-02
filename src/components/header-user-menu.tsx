@@ -76,7 +76,10 @@ const HeaderUserMenu = ({ user }: { user: User }) => {
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" size="icon" className="rounded-full">
             <Avatar>
-              <AvatarImage src={user.icon_url} alt={`${user.name}icon`} />
+              <AvatarImage
+                src={user.icon_path ? `/storage/${user.icon_path}` : "/images/icon_placeholder.png"}
+                alt={`${user.name}icon`}
+              />
               <AvatarFallback>OG</AvatarFallback>
               {unreadCount > 0 && <AvatarBadge className="bg-rose-600" />}
             </Avatar>

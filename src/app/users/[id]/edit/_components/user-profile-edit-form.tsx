@@ -48,7 +48,9 @@ const UserProfileEditForm = ({ id, user }: Props) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [iconFile, setIconFile] = useState<File | null>(null);
   const [deleteIcon, setDeleteIcon] = useState<boolean>(false);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(user.icon_url);
+  const [previewUrl, setPreviewUrl] = useState<string | null>(
+    user.icon_path ? `/storage/${user.icon_path}` : "/images/icon_placeholder.png"
+  );
 
   const router = useRouter();
 
