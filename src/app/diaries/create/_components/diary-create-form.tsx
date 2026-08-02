@@ -40,6 +40,7 @@ import {
 import { unstable_rethrow, useRouter } from "next/navigation";
 import { toast } from "sonner";
 import DiaryAiAssistForm from "./diary-ai-assist-form";
+import { NotebookPen } from "lucide-react";
 
 const DiaryCreateForm = () => {
   const form = useForm<DiaryCreateFormValues>({
@@ -130,7 +131,10 @@ const DiaryCreateForm = () => {
   return (
     <Card className="w-full sm:max-w-md">
       <CardHeader className="flex justify-center">
-        <CardTitle className="font-semibold">日記作成</CardTitle>
+        <CardTitle className="flex gap-1 font-semibold">
+          <NotebookPen className="size-5" />
+          日記作成
+        </CardTitle>
       </CardHeader>
       <CardContent>
         <form id="form-create-diary" onSubmit={form.handleSubmit(onSubmit)}>
