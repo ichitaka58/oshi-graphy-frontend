@@ -29,6 +29,8 @@ import {
   Bell,
   BookHeart,
   LogOutIcon,
+  MicVocal,
+  Music4,
   Notebook,
   NotebookPen,
   SettingsIcon,
@@ -138,13 +140,13 @@ const HeaderUserMenu = ({ user }: { user: User }) => {
                 <DropdownMenuLabel>管理画面</DropdownMenuLabel>
                 <Link href="/admin/artists">
                   <DropdownMenuItem>
-                    <ShieldUser />
+                    <Music4 />
                     アーティスト一覧
                   </DropdownMenuItem>
                 </Link>
                 <Link href="/admin/artists/create">
                   <DropdownMenuItem>
-                    <ShieldUser />
+                    <MicVocal />
                     アーティスト登録
                   </DropdownMenuItem>
                 </Link>
