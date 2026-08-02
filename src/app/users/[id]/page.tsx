@@ -56,7 +56,10 @@ const UserProfilePage = async ({
         <div className="flex flex-col items-center justify-center gap-4 px-6">
           <h1 className="font-semibold text-lg">Profile</h1>
           <Avatar className="size-40 shadow-md shadow-black/40 dark:shadow-primary/10">
-            <AvatarImage src={user.icon_url} alt={`${user.name}のアイコン`} />
+            <AvatarImage
+              src={user.icon_path ? `/storage/${user.icon_path}` : "/images/icon_placeholder.png"}
+              alt={`${user.name}のアイコン`}
+            />
             <AvatarFallback>OG</AvatarFallback>
           </Avatar>
           <p className="text-lg text-shadow-2xs">{user.name}</p>

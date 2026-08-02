@@ -105,7 +105,10 @@ const LikersDrawer = ({
               className="flex items-center gap-2 mb-2"
             >
               <Avatar>
-                <AvatarImage src={liker.icon_url} alt={`${liker.name}icon`} />
+                <AvatarImage
+                  src={liker.icon_path ? `/storage/${liker.icon_path}` : "/images/icon_placeholder.png"}
+                  alt={`${liker.name}icon`}
+                />
                 <AvatarFallback>OG</AvatarFallback>
               </Avatar>
               <p>{liker.name}</p>
