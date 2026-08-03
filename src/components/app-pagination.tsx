@@ -41,6 +41,7 @@ const AppPagination = ({ currentPage, lastPage }: AppPaginationProps) => {
             href={currentPage === 1 ? "#" : `?page=${currentPage - 1}`}
             aria-disabled={currentPage === 1}
             className={currentPage === 1 ? "pointer-events-none opacity-50" : ""}
+            text="前へ"
           />
         </PaginationItem>
 
@@ -78,6 +79,7 @@ const AppPagination = ({ currentPage, lastPage }: AppPaginationProps) => {
             href={currentPage === lastPage ? "#" : `?page=${currentPage + 1}`}
             aria-disabled={currentPage === lastPage}
             className={currentPage === lastPage ? "pointer-events-none opacity-50" : ""}
+            text="次へ"
           />
         </PaginationItem>
       </PaginationContent>
