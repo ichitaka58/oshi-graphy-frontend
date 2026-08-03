@@ -133,7 +133,10 @@ const DiaryCreateForm = () => {
       <CardHeader className="flex justify-center">
         <CardTitle className="flex gap-1 font-semibold">
           <NotebookPen className="size-5" />
-          日記作成
+          <span className="text-accent font-semibold">
+            推し活
+          </span>
+          日記を作る
         </CardTitle>
       </CardHeader>
       <CardContent>
