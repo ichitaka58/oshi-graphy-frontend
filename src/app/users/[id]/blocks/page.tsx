@@ -18,9 +18,7 @@ const UserBlocksPage = async ({
 
   return (
     <div>
-      <div className="text-muted-foreground py-3 flex items-center text-sm">
-        <BackButton />
-      </div>
+      <BackButton />
       <div className="px-6">
         <div className="max-w-md w-full mx-auto px-4 pt-4 pb-8 bg-card text-card-foreground">
           <h1 className="font-semibold text-lg text-center mb-4">

@@ -39,23 +39,18 @@ const AdminArtistsPage = async ({
   const from: number = fetchData.artists.from; // そのページの先頭要素が全体の何番目か
 
   return (
-    <>
-      <div className="text-muted-foreground py-3 flex items-center text-sm">
-        <BackButton />
-      </div>
-      <div className="max-w-4xl mx-auto pt-6 px-2">
+    <div>
+      <BackButton />
+      <div className="max-w-xl mx-auto pt-6 px-4">
         <h1 className="text-center mb-4 text-2xl text-foreground font-extrabold">
           登録済みアーティスト一覧
         </h1>
         <div className="w-full p-4 bg-card text-card-foreground">
           <ArtistsList artists={artists} from={from} />
-          {/* <Suspense fallback={<PublicDiarySkeleton />}>
-        <PublicDiariesList searchParams={searchParams} />
-      </Suspense> */}
           <AppPagination currentPage={currentPage} lastPage={lastPage} />
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

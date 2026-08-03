@@ -48,7 +48,7 @@ const DiaryDetail = async ({ params }: { params: Promise<{ id: string }> }) => {
 
   return (
     <div>
-      <section className="flex justify-between text-sm py-2 pr-2 mb-4">
+      <section className="flex justify-between max-w-4xl mx-auto text-sm py-2 px-4 mb-4">
         <div className="flex items-center gap-1">
           <BackToListButton pathName="diaries" />
           <div

@@ -41,23 +41,24 @@ const UserProfilePage = async ({
 
   return (
     <div>
-      <div className="text-muted-foreground py-3 flex items-center text-sm">
-        <BackButton />
-      </div>
+      <BackButton />
       <div className="max-w-md w-full mx-auto px-4 pt-4 pb-8 bg-card text-card-foreground">
         <div className="flex justify-end pb-2">
-          <UserProfileActionsMenu userId={id} loginUserId={loginUser.id} initialIsBlocking={isBlocking} />
+          <UserProfileActionsMenu
+            userId={id}
+            loginUserId={loginUser.id}
+            initialIsBlocking={isBlocking}
+          />
         </div>
-        {/* {Number(id) === loginUser.id && (
-          <div className="flex justify-end pb-2">
-            <UserProfileActionsMenu id={id} loginUserId={loginUser.id} />
-          </div>
-        )} */}
         <div className="flex flex-col items-center justify-center gap-4 px-6">
           <h1 className="font-semibold text-lg">Profile</h1>
           <Avatar className="size-40 shadow-md shadow-black/40 dark:shadow-primary/10">
             <AvatarImage
-              src={user.icon_path ? `/storage/${user.icon_path}` : "/images/icon_placeholder.png"}
+              src={
+                user.icon_path
+                  ? `/storage/${user.icon_path}`
+                  : "/images/icon_placeholder.png"
+              }
               alt={`${user.name}のアイコン`}
             />
             <AvatarFallback>OG</AvatarFallback>

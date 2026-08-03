@@ -7,17 +7,15 @@ import { getCurrentUser } from "@/lib/auth";
 const SettingsPage = async () => {
   await getCurrentUser(); // ログインチェック
   return (
-    <>
-      <div className="text-muted-foreground py-3 flex items-center text-sm">
-        <BackButton />
-      </div>
+    <div>
+      <BackButton />
       <div className="w-75 mx-auto mt-4 flex flex-col gap-4">
         <h1 className="font-bold text-center">アカウント設定</h1>
         <EmailEditForm />
         <PasswordUpdateForm />
         <AccountDeleteForm />
       </div>
-    </>
+    </div>
   );
 };
 
