@@ -15,9 +15,7 @@ const UserProfileEditPage = async ({
   }
   return (
     <div>
-      <div className="text-muted-foreground py-3 flex items-center text-sm">
-        <BackButton />
-      </div>
+      <BackButton />
       <div className="w-75 mx-auto mt-4">
         <UserProfileEditForm id={id} user={user} />
       </div>

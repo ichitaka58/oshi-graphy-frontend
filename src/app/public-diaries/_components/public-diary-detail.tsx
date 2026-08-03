@@ -54,7 +54,7 @@ const PublicDiaryDetail = async ({
 
   return (
     <div>
-      <section className="flex text-sm py-2 pr-2 mb-2">
+      <section className="flex max-w-4xl mx-auto py-2 px-4 mb-2 text-sm">
         <div className="flex items-center gap-1">
           <BackToListButton pathName="public-diaries" />
           <p>

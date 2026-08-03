@@ -13,16 +13,14 @@ const UserPublicDiariesPage = async ({
 }) => {
   await getCurrentUser();
   return (
-    <>
-      <div className="text-sm py-2">
-        <BackButton />
-      </div>
+    <div>
+      <BackButton />
       <div className="max-w-4xl mx-auto">
         <Suspense fallback={<UserPublicDiarySkeleton />}>
           <UserPublicDiariesList params={params} searchParams={searchParams} />
         </Suspense>
       </div>
-    </>
+    </div>
   );
 };
 
