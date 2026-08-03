@@ -12,7 +12,7 @@ const PublicDiariesPage = async ({
   return (
     <div className="max-w-4xl mx-auto pt-6">
       <h1 className="text-center mb-4 text-2xl text-foreground font-extrabold">
-        All Diaries
+        みんなの{" "}<span className="text-3xl text-accent text-shadow-sm text-shadow-orange-500/30">推し活</span>{" "}日記
       </h1>
       <Suspense fallback={<PublicDiarySkeleton />}>
         <PublicDiariesList searchParams={searchParams} />
