@@ -4,6 +4,7 @@ export function DateFormatForHappenedOn(happenedOn: string) {
     year: "numeric",
     month: "long",
     day: "numeric",
+    timeZone: "Asia/Tokyo",
   }).format(new Date(happenedOn));
 }
 
@@ -15,10 +16,13 @@ export function DateFormatForUpdatedAt(updatedAt: string) {
     day: "2-digit",
     hour: "2-digit",
     minute: "2-digit",
+    timeZone: "Asia/Tokyo",
   }).format(new Date(updatedAt));
 }
 
 // "2025-06-01T00:00:00Z" → "2025-06-01"（input[type="date"] の value 形式）
 export function toDateInputValue (happened_on: string) {
-  return new Date(happened_on).toLocaleDateString("sv-SE");
+  return new Date(happened_on).toLocaleDateString("sv-SE", {
+    timeZone: "Asia/Tokyo",
+  });
 }
