@@ -5,12 +5,12 @@ import Link from "next/link";
 const Register = () => {
   return (
     <div>
-      <div className="flex items-center mt-1">
+      <div className="flex items-center max-w-4xl mx-auto px-4 py-3 text-muted-foreground text-sm">
         <Link href="/" className="text-muted-foreground">
           <ChevronLeft />
         </Link>
       </div>
-      <div className="max-w-md w-full mx-auto flex items-center justify-center p-4 mt-8">
+      <div className="max-w-md w-full mx-auto flex items-center justify-center p-4 mt-4">
         <RegisterForm />
       </div>
     </div>
