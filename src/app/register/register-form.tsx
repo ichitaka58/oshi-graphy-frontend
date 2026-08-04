@@ -18,6 +18,7 @@ import { Input } from "@/components/ui/input";
 import { RegisterFormSchema, RegisterFormValues } from "@/lib/schemas/register";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
+import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 
 const RegisterForm = () => {
@@ -32,7 +33,10 @@ const RegisterForm = () => {
     },
   });
 
+  const [busy, setBusy] = useState<boolean>(false);
+
   const onSubmit = async (data: RegisterFormValues) => {
+    setBusy(true);
     try {
       const res = await fetch("/api/auth/register", {
         method: "POST",
@@ -58,8 +62,9 @@ const RegisterForm = () => {
     } catch (error) {
       console.error("Error:", error);
       form.setError("root", { message: "通信エラーが発生しました" });
+    } finally {
+      setBusy(false);
     }
-    form.reset();
   };
 
   return (
@@ -161,10 +166,10 @@ const RegisterForm = () => {
       </CardContent>
       <CardFooter className="flex-col gap-2">
         <Field orientation="horizontal" className="justify-center">
-          <Button type="button" variant="outline" onClick={() => form.reset()}>
+          <Button type="button" variant="outline" onClick={() => form.reset()} disabled={busy}>
             Reset
           </Button>
-          <Button type="submit" form="form-register">
+          <Button type="submit" form="form-register" disabled={busy}>
             新規登録
           </Button>
         </Field>

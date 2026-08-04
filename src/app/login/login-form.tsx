@@ -1,17 +1,27 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Field,
+  FieldError,
+  FieldGroup,
+  FieldLabel,
+} from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { LoginFormSchema, LoginFormValues } from "@/lib/schemas/login";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
+import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 
-
 const LoginForm = () => {
-
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(LoginFormSchema),
     mode: "onBlur",
@@ -21,7 +31,10 @@ const LoginForm = () => {
     },
   });
 
+  const [busy, setBusy] = useState<boolean>(false);
+
   const onSubmit = async (data: LoginFormValues) => {
+    setBusy(true);
     try {
       const res = await fetch("/api/auth/login", {
         method: "POST",
@@ -40,9 +53,11 @@ const LoginForm = () => {
     } catch (error) {
       console.error("Error:", error);
       form.setError("root", { message: "通信エラーが発生しました" });
+    } finally {
+      setBusy(false);
     }
-    form.reset();
   };
+
   return (
     <Card className="w-full sm:max-w-md mx-auto">
       <CardHeader className="flex justify-center">
@@ -101,10 +116,15 @@ const LoginForm = () => {
       </CardContent>
       <CardFooter className="flex-col gap-2">
         <Field orientation="horizontal" className="justify-center">
-          <Button type="button" variant="outline" onClick={() => form.reset()}>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => form.reset()}
+            disabled={busy}
+          >
             Reset
           </Button>
-          <Button type="submit" form="form-login">
+          <Button type="submit" form="form-login" disabled={busy}>
             ログイン
           </Button>
         </Field>
@@ -122,5 +142,3 @@ const LoginForm = () => {
 };
 
 export default LoginForm;
-
-
