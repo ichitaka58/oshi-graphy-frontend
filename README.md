@@ -46,13 +46,14 @@ npm install
 
 ### 環境変数
 
-ルートに `.env.local` を作成し、Laravel バックエンドの URL を設定する。
+ルートに `.env.local` を作成し、Laravel バックエンドの URL と、画像配信元の Cloudflare R2 の公開URLを設定する。
 
 ```bash
 LARAVEL_API_URL=http://localhost
+R2_PUBLIC_URL=https://pub-xxxxxxxx.r2.dev
 ```
 
-`next.config.ts` の rewrites 設定により、Laravel が配信する画像（`/storage`, `/images`）は同一オリジン経由でプロキシされる。
+`next.config.ts` の rewrites 設定により、アップロード画像（`/storage`、実体はR2）と Laravel 配信アセット（`/images`）は同一オリジン経由でプロキシされる。
 
 ### 本番環境
 
