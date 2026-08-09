@@ -10,14 +10,20 @@ const nextConfig: NextConfig = {
   // アップロード画像・Laravel配信アセットを same-origin でプロキシする。
   // これにより next/image が「内部画像」として扱えるため、絶対URLに対する
   // Next.js 16 の SSRF ガード（private IP 拒否）を踏まずに最適化が効く。
-  // dev/本番で同じ挙動になり、remotePatterns も危険フラグも不要。
-  // - /storage : アップロードされた画像（日記の写真・アイコン）。実体はCloudflare R2
+  // remotePatterns も危険フラグも不要。
+  // - /storage : アップロードされた画像（日記の写真・アイコン）。
+  //   本番はMEDIA_DISK=r2のため実体はCloudflare R2。開発環境はMEDIA_DISK=publicの
+  //   ままローカル保存されるため、開発環境だけLaravel側の/storageを見に行く
   // - /images  : Laravel public のアセット（アイコンのプレースホルダ等）
   async rewrites() {
     const backend = process.env.LARAVEL_API_URL;
     const r2 = process.env.R2_PUBLIC_URL;
+    const isDev = process.env.NODE_ENV === "development";
     return [
-      { source: "/storage/:path*", destination: `${r2}/:path*` },
+      {
+        source: "/storage/:path*",
+        destination: isDev ? `${backend}/storage/:path*` : `${r2}/:path*`,
+      },
       { source: "/images/:path*", destination: `${backend}/images/:path*` },
     ];
   },
