@@ -26,7 +26,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 import { Artist } from "@/types/artist";
 import { searchArtists } from "@/app/artists/actions";
 import {
@@ -41,6 +41,7 @@ import { unstable_rethrow, useRouter } from "next/navigation";
 import { toast } from "sonner";
 import DiaryAiAssistForm from "./diary-ai-assist-form";
 import { NotebookPen } from "lucide-react";
+import { Spinner } from "@/components/ui/spinner";
 
 const DiaryCreateForm = () => {
   const form = useForm<DiaryCreateFormValues>({
@@ -80,6 +81,8 @@ const DiaryCreateForm = () => {
   // 選択後に artists（検索結果）が変わっても名前を表示し続けるため別 state で保持する
   const [selectedArtistName, setSelectedArtistName] = useState<string>("");
 
+  const [isPending, startTransition] = useTransition();
+
   // 入力のたびに API を叩かないよう 300ms デバウンスする
   useEffect(() => {
     if (query.length < 1) return;
@@ -108,6 +111,8 @@ const DiaryCreateForm = () => {
       data.images?.forEach((file) => formData.append("images[]", file));
 
       const result = await createDiary(formData);
+      // TODO: オーバーレイの動作確認用。確認後に削除する
+      // await new Promise((resolve) => setTimeout(resolve, 3000));
       if (!result.success) {
         if (result.errors) {
           for (const [field, messages] of Object.entries(result.errors)) {
@@ -121,7 +126,9 @@ const DiaryCreateForm = () => {
         return;
       }
       toast.success(result.message, { position: "top-center" });
-      router.push("/diaries");
+      startTransition(() => {
+        router.push("/diaries");
+      });
     } catch (error) {
       unstable_rethrow(error);
       form.setError("root", { message: "通信エラーが発生しました" });
@@ -130,12 +137,15 @@ const DiaryCreateForm = () => {
 
   return (
     <Card className="w-full sm:max-w-md">
+      {(form.formState.isSubmitting || isPending) && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/70 backdrop-blur-sm">
+          <Spinner className="size-8" />
+        </div>
+      )}
       <CardHeader className="flex justify-center">
         <CardTitle className="flex gap-1 font-semibold">
           <NotebookPen className="size-5" />
-          <span className="text-accent font-semibold">
-            推し活
-          </span>
+          <span className="text-accent font-semibold">推し活</span>
           日記を作る
         </CardTitle>
       </CardHeader>
@@ -367,8 +377,12 @@ const DiaryCreateForm = () => {
       </CardContent>
       <CardFooter>
         <Field orientation="horizontal" className="justify-center">
-          <Button type="submit" form="form-create-diary">
-            保存
+          <Button
+            type="submit"
+            form="form-create-diary"
+            disabled={form.formState.isSubmitting || isPending}
+          >
+            {form.formState.isSubmitting ? "保存中..." : "保存"}
           </Button>
           <Button
             type="button"
