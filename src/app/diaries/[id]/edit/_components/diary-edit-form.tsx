@@ -2,7 +2,7 @@
 
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 import { searchArtists } from "@/app/artists/actions";
 import {
   Card,
@@ -44,6 +44,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { toDateInputValue } from "@/lib/date";
 import { useRouter, unstable_rethrow } from "next/navigation";
 import { toast } from "sonner";
+import { Spinner } from "@/components/ui/spinner";
+import { NotebookPen } from "lucide-react";
 
 type Props = {
   id: string;
@@ -89,6 +91,8 @@ const DiaryEditForm = ({ id, diary }: Props) => {
     diary.artist.name,
   );
 
+  const [isPending, startTransition] = useTransition();
+
   // 入力のたびに API を叩かないよう 300ms デバウンスする
   useEffect(() => {
     if (query.length < 1) return;
@@ -117,6 +121,8 @@ const DiaryEditForm = ({ id, diary }: Props) => {
 
       /// 成功時は トースト表示＆/diariesへ遷移、失敗時はフォームにエラー表示
       const result = await updateDiary(id, formData);
+      // TODO: オーバーレイの動作確認用。確認後に削除する
+      // await new Promise((resolve) => setTimeout(resolve, 3000));
       if (!result.success) {
         if (result.errors) {
           for (const [field, messages] of Object.entries(result.errors)) {
@@ -132,7 +138,9 @@ const DiaryEditForm = ({ id, diary }: Props) => {
       toast.success(result.message, {
         position: "top-center",
       });
-      router.push("/diaries");
+      startTransition(() => {
+        router.push("/diaries");
+      });
     } catch (error) {
       // updateDiary内のredirect("/login")はNext.jsがNEXT_REDIRECT例外を
       // throwすることで実現されている。ここで無条件にcatchすると
@@ -146,8 +154,17 @@ const DiaryEditForm = ({ id, diary }: Props) => {
 
   return (
     <Card className="w-full sm:max-w-md">
+      {(form.formState.isSubmitting || isPending) && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/70 backdrop-blur-sm">
+          <Spinner className="size-8" />
+        </div>
+      )}
       <CardHeader className="flex justify-center">
-        <CardTitle className="font-semibold">日記編集</CardTitle>
+        <CardTitle className="flex gap-1 font-semibold">
+          <NotebookPen className="size-5" />
+          <span className="text-accent font-semibold">推し活</span>
+          日記を編集
+        </CardTitle>
       </CardHeader>
       <CardContent>
         <form id="form-update-diary" onSubmit={form.handleSubmit(onSubmit)}>
@@ -415,7 +432,7 @@ const DiaryEditForm = ({ id, diary }: Props) => {
                     checked={field.value}
                     onCheckedChange={field.onChange}
                     aria-invalid={fieldState.invalid}
-                    className="data-checked:bg-[#F8DE6F]"
+                    className="data-unchecked:bg-input/50"
                   />
                 </Field>
               )}
@@ -425,20 +442,20 @@ const DiaryEditForm = ({ id, diary }: Props) => {
       </CardContent>
       <CardFooter>
         <Field orientation="horizontal" className="justify-center">
-          <Button type="submit" form="form-update-diary">
-            保存
+          <Button
+            type="submit"
+            form="form-update-diary"
+            disabled={form.formState.isSubmitting || isPending}
+          >
+            {form.formState.isSubmitting ? "保存中..." : "保存"}
           </Button>
           <Button
             type="button"
             variant="outline"
-            onClick={() => {
-              form.reset();
-              if (imageInputRef.current) {
-                imageInputRef.current.value = "";
-              }
-            }}
+            onClick={() => router.back()}
+            aria-label="前の画面に戻る"
           >
-            クリア
+            キャンセル
           </Button>
         </Field>
       </CardFooter>

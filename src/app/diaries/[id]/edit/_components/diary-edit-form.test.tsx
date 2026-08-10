@@ -4,13 +4,19 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import DiaryEditForm from "./diary-edit-form";
 import { DiaryEditItem } from "@/types/diary";
 
-const { updateDiaryMock, searchArtistsMock, pushMock, toastSuccessMock } =
-  vi.hoisted(() => ({
-    updateDiaryMock: vi.fn(),
-    searchArtistsMock: vi.fn(),
-    pushMock: vi.fn(),
-    toastSuccessMock: vi.fn(),
-  }));
+const {
+  updateDiaryMock,
+  searchArtistsMock,
+  pushMock,
+  backMock,
+  toastSuccessMock,
+} = vi.hoisted(() => ({
+  updateDiaryMock: vi.fn(),
+  searchArtistsMock: vi.fn(),
+  pushMock: vi.fn(),
+  backMock: vi.fn(),
+  toastSuccessMock: vi.fn(),
+}));
 
 vi.mock("@/app/diaries/actions", () => ({
   updateDiary: updateDiaryMock,
@@ -21,7 +27,7 @@ vi.mock("@/app/artists/actions", () => ({
 }));
 
 vi.mock("next/navigation", () => ({
-  useRouter: () => ({ push: pushMock }),
+  useRouter: () => ({ push: pushMock, back: backMock }),
   unstable_rethrow: vi.fn(),
 }));
 
@@ -68,6 +74,7 @@ describe("DiaryEditForm", () => {
   beforeEach(() => {
     updateDiaryMock.mockReset();
     pushMock.mockReset();
+    backMock.mockReset();
     toastSuccessMock.mockClear();
     searchArtistsMock.mockReset();
     searchArtistsMock.mockResolvedValue([
@@ -205,14 +212,12 @@ describe("DiaryEditForm", () => {
     expect(await screen.findByAltText("preview-0")).toBeInTheDocument();
   });
 
-  it("クリアボタンで初期値に戻る", async () => {
+  it("キャンセルボタンで前の画面に戻る", async () => {
     const user = userEvent.setup();
     render(<DiaryEditForm id="10" diary={diary} />);
 
-    await user.clear(screen.getByLabelText("本文"));
-    await user.type(screen.getByLabelText("本文"), "書き換えた本文");
-    await user.click(screen.getByRole("button", { name: "クリア" }));
+    await user.click(screen.getByRole("button", { name: "前の画面に戻る" }));
 
-    expect(screen.getByLabelText("本文")).toHaveValue("元の本文です");
+    expect(backMock).toHaveBeenCalledOnce();
   });
 });
