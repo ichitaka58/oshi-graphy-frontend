@@ -24,6 +24,42 @@ Oshi-Graphy（推しグラフィー）は、80〜90年代から今も活躍す�
 - [shadcn/ui](https://ui.shadcn.com/)（Radix UI ベース）
 - [Base UI](https://base-ui.com/)（Combobox コンポーネントのみ）
 - [React Hook Form](https://react-hook-form.com/) + [Zod](https://zod.dev/)
+- [Vitest](https://vitest.dev/) + [Testing Library](https://testing-library.com/)（コンポーネントテスト）
+
+## アーキテクチャ
+
+フロントエンド（本リポジトリ、Vercel）とバックエンド（Laravel、さくらレンタルサーバ）が分離した構成。日記画像・ユーザーアイコンは Laravel から Cloudflare R2 に書き込まれ、Next.js は `next.config.ts` の rewrite で環境ごとに配信元を切り替える（開発 = Laravel ローカルディスク、本番 = R2 カスタムドメイン `cdn.oshi-graphy.com`）。
+
+```mermaid
+flowchart LR
+    Browser["ブラウザ"]
+
+    subgraph Vercel["Vercel (Next.js)"]
+        RouteHandler["Route Handlers<br/>/api/auth/*"]
+        ServerComponent["Server Components<br/>getCurrentUser()"]
+        ServerAction["Server Actions<br/>各 actions.ts"]
+        Rewrite["next.config.ts<br/>rewrites()"]
+    end
+
+    subgraph Backend["Laravel API (さくらレンタルサーバ)"]
+        Laravel["REST API<br/>Sanctum トークン認証"]
+    end
+
+    DB[("MySQL")]
+
+    subgraph Storage["画像ストレージ"]
+        LocalDisk["ローカル storage<br/>開発 / MEDIA_DISK=public"]
+        R2[("Cloudflare R2<br/>oshi-graphy-images<br/>本番 / MEDIA_DISK=r2")]
+    end
+
+    Browser -- "HTTPS / Cookie: token (httpOnly)" --> Vercel
+    Vercel -- "Bearer token / REST" --> Laravel
+    Laravel --> DB
+    Laravel -- "開発" --> LocalDisk
+    Laravel -- "本番" --> R2
+    Rewrite -. "/storage/* 開発" .-> LocalDisk
+    Rewrite -. "/storage/* 本番 (cdn.oshi-graphy.com)" .-> R2
+```
 
 ## 認証設計
 
@@ -74,6 +110,10 @@ npm run dev
 | `npm run build` | 本番用ビルド |
 | `npm run start` | 本番ビルドの起動 |
 | `npm run lint` | ESLint によるコード検査 |
+| `npm run test` | Vitest によるテストを実行（1回のみ） |
+| `npm run test:watch` | Vitest をウォッチモードで実行 |
+
+テストファイルはテスト対象のコンポーネントと同じディレクトリに `*.test.tsx` として配置する。
 
 ## ディレクトリ構成（`src/`）
 
