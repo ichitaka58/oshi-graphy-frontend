@@ -21,30 +21,29 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { useState } from "react";
-import { useRouter, unstable_rethrow } from "next/navigation";
+import { unstable_rethrow } from "next/navigation";
 import { toast } from "sonner";
+import { Spinner } from "@/components/kibo-ui/spinner";
 
 const DiaryActionsMenu = ({ id }: { id: string }) => {
-  const router = useRouter();
   const [alertOpen, setAlertOpen] = useState<boolean>(false);
+  const [isDeleting, setIsDeleting] = useState<boolean>(false);
 
   const handleDelete = async () => {
+    setIsDeleting(true);
     try {
       const result = await deleteDiary(id);
-      if (!result.success) {
-        toast.error(result.message, { position: "top-center" });
-        return;
-      }
-      toast.success(result.message, { position: "top-center" });
-      router.push("/diaries");
+      // TODO: オーバーレイの動作確認用。確認後に削除する
+      // await new Promise((resolve) => setTimeout(resolve, 3000));
+
+      // 成功時はdeleteDiary内でredirectされるため、ここに来るのは失敗時のみ
+      toast.error(result.message, { position: "top-center" });
+      // 失敗の時だけ、明示的にsetIsDeleting(false)する。成功時はredirectで画面遷移するのでstateを戻す必要がない
+      setIsDeleting(false);
     } catch (error) {
-      // deleteDiary内のredirect("/login")はNext.jsがNEXT_REDIRECT例外を
-      // throwすることで実現されている。ここで無条件にcatchすると
-      // そのリダイレクト用の例外まで握りつぶしてしまうため、
-      // redirect/notFound等の例外だけはunstable_rethrowで再送出しNext.jsに処理を戻す。
       unstable_rethrow(error);
-      // ここに到達するのは本当の通信エラー等のみ
       toast.error("通信エラーが発生しました", { position: "top-center" });
+      setIsDeleting(false);
     }
   };
   return (
@@ -91,6 +90,13 @@ const DiaryActionsMenu = ({ id }: { id: string }) => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* 削除処理中のオーバーレイ */}
+      {isDeleting && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/70 backdrop-blur-sm">
+          <Spinner variant="bars" className="size-10 text-accent" />
+        </div>
+      )}
     </>
   );
 };
