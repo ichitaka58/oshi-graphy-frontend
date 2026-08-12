@@ -7,6 +7,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/sonner";
 import { UnreadCountProvider } from "@/contexts/unread-count-context";
 import { getCurrentUserOrNull } from "@/lib/auth";
+import { Analytics } from "@vercel/analytics/next";
 
 const poppins = Poppins({
   variable: "--font-heading",
@@ -55,6 +56,7 @@ export default async function RootLayout({
           </main>
         </UnreadCountProvider>
         <Footer />
+        <Analytics />
       </body>
     </html>
   );
