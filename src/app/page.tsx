@@ -1,3 +1,4 @@
+import LogoutToast from "./_components/logout-toast";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -43,6 +44,8 @@ export default function Home() {
           新規登録は<Link href="/register" className="underline">こちら</Link>
         </p>
       </div>
+      {/* ログアウト成功時のトースト表示 */}
+      <LogoutToast />
     </div>
   );
 }

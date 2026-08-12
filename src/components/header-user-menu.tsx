@@ -34,19 +34,21 @@ import {
   Notebook,
   NotebookPen,
   SettingsIcon,
-  ShieldUser,
   UserIcon,
   UserRoundX,
 } from "lucide-react";
 import { useUnreadCount } from "@/contexts/unread-count-context";
+import { Spinner } from "./kibo-ui/spinner";
 
 const HeaderUserMenu = ({ user }: { user: User }) => {
   const [alertOpen, setAlertOpen] = useState<boolean>(false);
+  const [isLoggingOut, setIsLoggingOut] = useState<boolean>(false);
   // propsではなくContextから未読件数を取得する。
   // どこかでrefetch()が呼ばれるとunreadCountが更新され、このコンポーネントも自動的に再描画される。
   const { unreadCount } = useUnreadCount();
 
   const handleLogout = async () => {
+    setIsLoggingOut(true);
     try {
       const res = await fetch("/api/auth/logout", {
         method: "POST",
@@ -63,10 +65,13 @@ const HeaderUserMenu = ({ user }: { user: User }) => {
         });
         return;
       }
-      window.location.href = "/";
+      window.location.href = "/?logged_out=1";
     } catch (error) {
       console.error("Logout error:", error);
-      alert("ログアウトに失敗しました");
+      toast.error("ログアウトに失敗しました", {
+        position: "top-center",
+      });
+      setIsLoggingOut(false);
     }
   };
 
@@ -77,7 +82,11 @@ const HeaderUserMenu = ({ user }: { user: User }) => {
           <Button variant="ghost" size="icon" className="rounded-full">
             <Avatar>
               <AvatarImage
-                src={user.icon_path ? `/storage/${user.icon_path}` : "/images/icon_placeholder.png"}
+                src={
+                  user.icon_path
+                    ? `/storage/${user.icon_path}`
+                    : "/images/icon_placeholder.png"
+                }
                 alt={`${user.name}icon`}
               />
               <AvatarFallback>OG</AvatarFallback>
@@ -187,6 +196,13 @@ const HeaderUserMenu = ({ user }: { user: User }) => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* ログアウトのオーバーレイ */}
+      {isLoggingOut && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/70 backdrop-blur-sm">
+          <Spinner variant="bars" className="size-10 text-accent" />
+        </div>
+      )}
     </>
   );
 };
