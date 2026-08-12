@@ -1,5 +1,6 @@
 "use client";
 
+import { Spinner } from "@/components/kibo-ui/spinner";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -31,10 +32,10 @@ const LoginForm = () => {
     },
   });
 
-  const [busy, setBusy] = useState<boolean>(false);
+  const [isLoggingIn, setIsLoggingIn] = useState<boolean>(false);
 
   const onSubmit = async (data: LoginFormValues) => {
-    setBusy(true);
+    setIsLoggingIn(true);
     try {
       const res = await fetch("/api/auth/login", {
         method: "POST",
@@ -47,19 +48,25 @@ const LoginForm = () => {
         form.setError("root", {
           message: "メールアドレスまたはパスワードが違います",
         });
+        setIsLoggingIn(false);
         return;
       }
       window.location.href = "/public-diaries";
     } catch (error) {
       console.error("Error:", error);
       form.setError("root", { message: "通信エラーが発生しました" });
-    } finally {
-      setBusy(false);
+      setIsLoggingIn(false);
     }
   };
 
   return (
     <Card className="w-full sm:max-w-md mx-auto">
+      {/* ログイン中のオーバーレイ */}
+      {isLoggingIn && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/70 backdrop-blur-sm">
+          <Spinner variant="bars" className="size-10 text-accent" />
+        </div>
+      )}
       <CardHeader className="flex justify-center">
         <CardTitle className="font-bold">ログイン</CardTitle>
       </CardHeader>
@@ -120,11 +127,11 @@ const LoginForm = () => {
             type="button"
             variant="outline"
             onClick={() => form.reset()}
-            disabled={busy}
+            disabled={isLoggingIn}
           >
             Reset
           </Button>
-          <Button type="submit" form="form-login" disabled={busy}>
+          <Button type="submit" form="form-login" disabled={isLoggingIn}>
             ログイン
           </Button>
         </Field>
