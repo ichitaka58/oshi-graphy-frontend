@@ -1,6 +1,7 @@
 "use client";
 
 import { updateUserProfile } from "@/app/users/actions";
+import { Spinner } from "@/components/kibo-ui/spinner";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -24,7 +25,7 @@ import {
 import { User } from "@/types/user";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter, unstable_rethrow } from "next/navigation";
-import { useRef, useState } from "react";
+import { useRef, useState, useTransition } from "react";
 import { Controller, useForm } from "react-hook-form";
 
 type Props = {
@@ -49,10 +50,13 @@ const UserProfileEditForm = ({ id, user }: Props) => {
   const [iconFile, setIconFile] = useState<File | null>(null);
   const [deleteIcon, setDeleteIcon] = useState<boolean>(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(
-    user.icon_path ? `/storage/${user.icon_path}` : "/images/icon_placeholder.png"
+    user.icon_path
+      ? `/storage/${user.icon_path}`
+      : "/images/icon_placeholder.png",
   );
 
   const router = useRouter();
+  const [isPending, startTransition] = useTransition();
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -92,6 +96,8 @@ const UserProfileEditForm = ({ id, user }: Props) => {
       }
 
       const result = await updateUserProfile(id, formData);
+      // TODO: オーバーレイの動作確認用。確認後に削除する
+      // await new Promise((resolve) => setTimeout(resolve, 3000));
       if (!result.success) {
         if (result.errors) {
           for (const [field, messages] of Object.entries(result.errors)) {
@@ -104,7 +110,9 @@ const UserProfileEditForm = ({ id, user }: Props) => {
         }
         return;
       }
-      router.replace(`/users/${id}`);
+      startTransition(() => {
+        router.replace(`/users/${id}`);
+      });
     } catch (error) {
       // updateUserProfile内のredirect("/login")はNext.jsがNEXT_REDIRECT例外を
       // throwすることで実現されている。ここで無条件にcatchすると
@@ -118,6 +126,11 @@ const UserProfileEditForm = ({ id, user }: Props) => {
 
   return (
     <Card>
+      {(form.formState.isSubmitting || isPending) && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/70 backdrop-blur-sm">
+          <Spinner variant="bars" className="size-10 text-accent" />
+        </div>
+      )}
       <CardHeader className="justify-center">
         <CardTitle className="font-semibold">プロフィール編集</CardTitle>
       </CardHeader>
