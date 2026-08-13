@@ -20,11 +20,11 @@ type DiaryCardListProps = {
 const DiaryCardList = ({ diaries, pathName }: DiaryCardListProps) => {
   const router = useRouter();
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-      {diaries.length === 0 ? (
-        <p>まだ日記がありません</p>
-      ) : (
-        diaries.map((diary, index) => (
+    diaries.length === 0 ? (
+      <p className="text-center mt-6">まだ日記がありません</p>
+    ) : (
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {diaries.map((diary, index) => (
           <div
             key={diary.id}
             onClick={() => router.push(`/${pathName}/${diary.id}`)}
@@ -52,9 +52,7 @@ const DiaryCardList = ({ diaries, pathName }: DiaryCardListProps) => {
                     </span>
                     <Badge variant="default">{diary.artist.name}</Badge>
                   </div>
-                  <p className="text-sm line-clamp-2 mb-2">
-                    {diary.body}
-                  </p>
+                  <p className="text-sm line-clamp-2 mb-2">{diary.body}</p>
                 </div>
                 <div className="flex justify-between items-center">
                   {pathName === "diaries" ? (
@@ -96,9 +94,9 @@ const DiaryCardList = ({ diaries, pathName }: DiaryCardListProps) => {
               </div>
             </article>
           </div>
-        ))
-      )}
-    </div>
+        ))}
+      </div>
+    )
   );
 };
 
