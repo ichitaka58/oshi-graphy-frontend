@@ -41,7 +41,7 @@ import { unstable_rethrow, useRouter } from "next/navigation";
 import { toast } from "sonner";
 import DiaryAiAssistForm from "./diary-ai-assist-form";
 import { NotebookPen } from "lucide-react";
-import { Spinner } from "@/components/kibo-ui/spinner";
+import { FullScreenLoadingOverlay } from "@/components/full-screen-loading-overlay";
 
 const DiaryCreateForm = () => {
   const form = useForm<DiaryCreateFormValues>({
@@ -137,11 +137,7 @@ const DiaryCreateForm = () => {
 
   return (
     <Card className="w-full sm:max-w-md">
-      {(form.formState.isSubmitting || isPending) && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/70 backdrop-blur-sm">
-          <Spinner variant="bars" className="size-10 text-accent" />
-        </div>
-      )}
+      {(form.formState.isSubmitting || isPending) && <FullScreenLoadingOverlay />}
       <CardHeader className="flex justify-center">
         <CardTitle className="flex gap-1 font-semibold">
           <NotebookPen className="size-5" />

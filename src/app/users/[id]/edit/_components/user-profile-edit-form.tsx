@@ -1,7 +1,7 @@
 "use client";
 
 import { updateUserProfile } from "@/app/users/actions";
-import { Spinner } from "@/components/kibo-ui/spinner";
+import { FullScreenLoadingOverlay } from "@/components/full-screen-loading-overlay";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -126,11 +126,7 @@ const UserProfileEditForm = ({ id, user }: Props) => {
 
   return (
     <Card>
-      {(form.formState.isSubmitting || isPending) && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/70 backdrop-blur-sm">
-          <Spinner variant="bars" className="size-10 text-accent" />
-        </div>
-      )}
+      {(form.formState.isSubmitting || isPending) && <FullScreenLoadingOverlay />}
       <CardHeader className="justify-center">
         <CardTitle className="font-semibold">プロフィール編集</CardTitle>
       </CardHeader>

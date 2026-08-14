@@ -1,5 +1,6 @@
 "use client";
 
+import { FullScreenLoadingOverlay } from "@/components/full-screen-loading-overlay";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -33,10 +34,10 @@ const RegisterForm = () => {
     },
   });
 
-  const [busy, setBusy] = useState<boolean>(false);
+  const [isRegistering, setIsRegistering] = useState<boolean>(false);
 
   const onSubmit = async (data: RegisterFormValues) => {
-    setBusy(true);
+    setIsRegistering(true);
     try {
       const res = await fetch("/api/auth/register", {
         method: "POST",
@@ -56,19 +57,21 @@ const RegisterForm = () => {
         } else {
           form.setError("root", { message: "登録ができませんでした" });
         }
+        setIsRegistering(false);
         return;
       }
       window.location.href = "/diaries";
     } catch (error) {
       console.error("Error:", error);
       form.setError("root", { message: "通信エラーが発生しました" });
-    } finally {
-      setBusy(false);
+      setIsRegistering(false);
     }
   };
 
   return (
     <Card className="w-full sm:max-w-md max-auto">
+      {/* 新規登録中のオーバーレイ */}
+      {isRegistering && <FullScreenLoadingOverlay />}
       <CardHeader className="flex justify-center">
         <CardTitle className="font-bold">新規登録</CardTitle>
       </CardHeader>
@@ -166,10 +169,15 @@ const RegisterForm = () => {
       </CardContent>
       <CardFooter className="flex-col gap-2">
         <Field orientation="horizontal" className="justify-center">
-          <Button type="button" variant="outline" onClick={() => form.reset()} disabled={busy}>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => form.reset()}
+            disabled={isRegistering}
+          >
             Reset
           </Button>
-          <Button type="submit" form="form-register" disabled={busy}>
+          <Button type="submit" form="form-register" disabled={isRegistering}>
             新規登録
           </Button>
         </Field>

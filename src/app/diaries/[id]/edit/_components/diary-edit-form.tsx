@@ -44,7 +44,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { toDateInputValue } from "@/lib/date";
 import { useRouter, unstable_rethrow } from "next/navigation";
 import { toast } from "sonner";
-import { Spinner } from "@/components/kibo-ui/spinner";
+import { FullScreenLoadingOverlay } from "@/components/full-screen-loading-overlay";
 import { NotebookPen } from "lucide-react";
 
 type Props = {
@@ -154,11 +154,7 @@ const DiaryEditForm = ({ id, diary }: Props) => {
 
   return (
     <Card className="w-full sm:max-w-md">
-      {(form.formState.isSubmitting || isPending) && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/70 backdrop-blur-sm">
-          <Spinner variant="bars" className="size-10 text-accent" />
-        </div>
-      )}
+      {(form.formState.isSubmitting || isPending) && <FullScreenLoadingOverlay />}
       <CardHeader className="flex justify-center">
         <CardTitle className="flex gap-1 font-semibold">
           <NotebookPen className="size-5" />
