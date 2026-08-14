@@ -1,8 +1,14 @@
 import { ChevronLeft } from "lucide-react";
 import RegisterForm from "./register-form";
 import Link from "next/link";
+import { getCurrentUserOrNull } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
-const Register = () => {
+const Register = async () => {
+  const user = await getCurrentUserOrNull();
+  if (user) {
+    redirect("/diaries");
+  }
   return (
     <div>
       <div className="flex items-center max-w-4xl mx-auto px-4 py-3 text-muted-foreground text-sm">
@@ -15,6 +21,6 @@ const Register = () => {
       </div>
     </div>
   );
-}
+};
 
 export default Register;
