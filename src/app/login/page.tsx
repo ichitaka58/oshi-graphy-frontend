@@ -1,8 +1,14 @@
 import Link from "next/link";
 import LoginForm from "./login-form";
 import { ChevronLeft } from "lucide-react";
+import { getCurrentUserOrNull } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
-const Login = () => {
+const Login = async () => {
+  const user = await getCurrentUserOrNull();
+  if(user) {
+    redirect("/diaries");
+  }
   return (
     <div>
       <div className="flex items-center max-w-4xl mx-auto px-4 py-3 text-muted-foreground text-sm">

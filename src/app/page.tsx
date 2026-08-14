@@ -1,8 +1,11 @@
+import { getCurrentUserOrNull } from "@/lib/auth";
 import LogoutToast from "./_components/logout-toast";
 import Image from "next/image";
 import Link from "next/link";
 
-export default function Home() {
+export default async function Home() {
+  const user = await getCurrentUserOrNull();
+
   return (
     <div className="flex flex-col flex-1 items-center h-screen justify-center gap-4 mt-6 bg-zinc-50 font-sans dark:bg-black">
       <div className="flex flex-col items-center gap-4 motion-safe:animate-fade-up">
@@ -36,14 +39,21 @@ export default function Home() {
           </p>
         </div>
       </div>
-      <div className="flex flex-col items-center gap-1 mt-4">
-        <p className="text-sm">
-          <Link href="/login" className="underline">ログイン</Link>
-        </p>
-        <p className="text-sm">
-          新規登録は<Link href="/register" className="underline">こちら</Link>
-        </p>
-      </div>
+      {!user && (
+        <div className="flex flex-col items-center gap-1 mt-4">
+          <p className="text-sm">
+            <Link href="/login" className="underline">
+              ログイン
+            </Link>
+          </p>
+          <p className="text-sm">
+            新規登録は
+            <Link href="/register" className="underline">
+              こちら
+            </Link>
+          </p>
+        </div>
+      )}
       {/* ログアウト成功時のトースト表示 */}
       <LogoutToast />
     </div>
