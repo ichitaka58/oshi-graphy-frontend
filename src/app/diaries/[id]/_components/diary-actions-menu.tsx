@@ -23,7 +23,7 @@ import {
 import { useState } from "react";
 import { unstable_rethrow } from "next/navigation";
 import { toast } from "sonner";
-import { Spinner } from "@/components/kibo-ui/spinner";
+import { FullScreenLoadingOverlay } from "@/components/full-screen-loading-overlay";
 
 const DiaryActionsMenu = ({ id }: { id: string }) => {
   const [alertOpen, setAlertOpen] = useState<boolean>(false);
@@ -92,11 +92,7 @@ const DiaryActionsMenu = ({ id }: { id: string }) => {
       </AlertDialog>
 
       {/* 削除処理中のオーバーレイ */}
-      {isDeleting && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/70 backdrop-blur-sm">
-          <Spinner variant="bars" className="size-10 text-accent" />
-        </div>
-      )}
+      {isDeleting && <FullScreenLoadingOverlay />}
     </>
   );
 };

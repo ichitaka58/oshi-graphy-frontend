@@ -1,6 +1,6 @@
 "use client";
 
-import { Spinner } from "@/components/kibo-ui/spinner";
+import { FullScreenLoadingOverlay } from "@/components/full-screen-loading-overlay";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -51,7 +51,7 @@ const LoginForm = () => {
         setIsLoggingIn(false);
         return;
       }
-      window.location.href = "/public-diaries";
+      window.location.href = "/diaries";
     } catch (error) {
       console.error("Error:", error);
       form.setError("root", { message: "通信エラーが発生しました" });
@@ -62,11 +62,7 @@ const LoginForm = () => {
   return (
     <Card className="w-full sm:max-w-md mx-auto">
       {/* ログイン中のオーバーレイ */}
-      {isLoggingIn && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/70 backdrop-blur-sm">
-          <Spinner variant="bars" className="size-10 text-accent" />
-        </div>
-      )}
+      {isLoggingIn && <FullScreenLoadingOverlay />}
       <CardHeader className="flex justify-center">
         <CardTitle className="font-bold">ログイン</CardTitle>
       </CardHeader>
