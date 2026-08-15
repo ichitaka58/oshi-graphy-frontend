@@ -23,6 +23,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { MicVocal } from "lucide-react";
 import { createArtist, updateArtist } from "../actions";
+import { useTransition } from "react";
+import { FullScreenLoadingOverlay } from "@/components/full-screen-loading-overlay";
 
 type Props = { mode: "create" } | { mode: "edit"; id: string; artist: Artist };
 
@@ -37,6 +39,7 @@ const ArtistForm = (props: Props) => {
   });
 
   const router = useRouter();
+  const [isPending, startTransition] = useTransition();
   const formId =
     props.mode === "edit" ? "form-edit-artist" : "form-create-artist";
 
@@ -63,7 +66,9 @@ const ArtistForm = (props: Props) => {
         return;
       }
       toast.success(result.message, { position: "top-center" });
-      router.push("/admin/artists");
+      startTransition(() => {
+        router.push("/admin/artists");
+      });
     } catch (error) {
       unstable_rethrow(error);
       form.setError("root", { message: "通信エラーが発生しました" });
@@ -72,10 +77,15 @@ const ArtistForm = (props: Props) => {
 
   return (
     <Card>
+      {(form.formState.isSubmitting || isPending) && (
+        <FullScreenLoadingOverlay />
+      )}
       <CardHeader>
         <CardTitle className="flex justify-center gap-2 py-2 mb-2 font-semibold">
           <MicVocal />
-          {props.mode === "edit" ? "アーティスト情報編集" : "アーティスト新規登録"}
+          {props.mode === "edit"
+            ? "アーティスト情報編集"
+            : "アーティスト新規登録"}
         </CardTitle>
       </CardHeader>
       <CardContent className="mb-4">
@@ -118,9 +128,7 @@ const ArtistForm = (props: Props) => {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor={`${formId}-kana`}>
-                    よみがな
-                  </FieldLabel>
+                  <FieldLabel htmlFor={`${formId}-kana`}>よみがな</FieldLabel>
                   <Input
                     {...field}
                     id={`${formId}-kana`}
@@ -143,8 +151,8 @@ const ArtistForm = (props: Props) => {
       </CardContent>
       <CardFooter>
         <Field orientation="horizontal" className="justify-center">
-          <Button type="submit" form={formId}>
-            保存
+          <Button type="submit" form={formId} disabled={form.formState.isSubmitting || isPending}>
+            {form.formState.isSubmitting ? "保存中..." : "保存"}
           </Button>
           <Button type="button" variant="outline" onClick={() => form.reset()}>
             クリア
