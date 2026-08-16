@@ -1,10 +1,9 @@
-import AppPagination from "@/components/app-pagination";
 import { getCurrentUser } from "@/lib/auth";
-import { cookies } from "next/headers";
-import { forbidden, redirect } from "next/navigation";
-import ArtistsList from "./_components/artists-list";
-import { Artist } from "@/types/artist";
+import { forbidden } from "next/navigation";
 import BackButton from "@/components/back-button";
+import ArtistsListFetcher from "./_components/artists-list-fetcher";
+import { Suspense } from "react";
+import ArtistsListSkeleton from "./_components/artists-list-skeleton";
 
 const AdminArtistsPage = async ({
   searchParams,
@@ -16,27 +15,6 @@ const AdminArtistsPage = async ({
     forbidden();
   }
   const { page = "1" } = await searchParams;
-  const token = (await cookies()).get("token")?.value;
-  const res = await fetch(
-    `${process.env.LARAVEL_API_URL}/api/admin/artists?page=${page}`,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        Accept: "application/json",
-      },
-    },
-  );
-  if (res.status === 401) {
-    redirect("/login");
-  }
-  if (!res.ok) {
-    throw new Error("データの取得に失敗しました");
-  }
-  const fetchData = await res.json();
-  const artists: Artist[] = fetchData.artists.data;
-  const currentPage: number = fetchData.artists.current_page;
-  const lastPage: number = fetchData.artists.last_page;
-  const from: number = fetchData.artists.from; // そのページの先頭要素が全体の何番目か
 
   return (
     <div>
@@ -46,8 +24,9 @@ const AdminArtistsPage = async ({
           登録済みアーティスト一覧
         </h1>
         <div className="w-full p-4 bg-card text-card-foreground">
-          <ArtistsList artists={artists} from={from} />
-          <AppPagination currentPage={currentPage} lastPage={lastPage} />
+          <Suspense fallback={<ArtistsListSkeleton />}>
+            <ArtistsListFetcher page={page} />
+          </Suspense>
         </div>
       </div>
     </div>
