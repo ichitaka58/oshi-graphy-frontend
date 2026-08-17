@@ -37,6 +37,9 @@ export default async function Home() {
             <br />
             思い出を美しく残そう。
           </p>
+          <p className="text-xs text-red-500">
+            ⚠️本アプリは個人のプログラミング学習用制作物です⚠️
+          </p>
         </div>
       </div>
       {!user && (
