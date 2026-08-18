@@ -50,7 +50,7 @@ const DiaryActionsMenu = ({ id }: { id: string }) => {
     <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <button>
+          <button type="button" aria-label="メニューを開く">
             <Ellipsis />
           </button>
         </DropdownMenuTrigger>

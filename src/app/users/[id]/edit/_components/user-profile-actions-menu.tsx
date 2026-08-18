@@ -46,7 +46,7 @@ const UserProfileActionsMenu = ({
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button>
+        <button type="button" aria-label="メニューを開く">
           <Ellipsis className="text-muted-foreground/30 hover:text-muted-foreground cursor-pointer" />
         </button>
       </DropdownMenuTrigger>

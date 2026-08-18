@@ -57,6 +57,8 @@ const DiaryLike = ({
         type="button"
         onClick={handleLike}
         disabled={busy}
+        aria-label={liked ? "いいねを取り消す" : "いいねする"}
+        aria-pressed={liked}
         className="disabled:cursor-not-allowed"
       >
         <Heart
