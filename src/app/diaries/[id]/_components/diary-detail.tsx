@@ -62,10 +62,10 @@ const DiaryDetail = async ({ params }: { params: Promise<{ id: string }> }) => {
         </div>
       </section>
       <div className="w-72 mx-auto">
-        <h2 className="flex items-center justify-center gap-2 mb-2 flex-wrap">
+        <h1 className="flex items-center justify-center gap-2 mb-2 flex-wrap">
           <span>{DateFormatForHappenedOn(diary.happened_on)}</span>
           <Badge variant="default">{diary.artist.name}</Badge>
-        </h2>
+        </h1>
         <section className="mb-2">
           <DiaryCarousel images={images} />
         </section>
@@ -89,7 +89,7 @@ const DiaryDetail = async ({ params }: { params: Promise<{ id: string }> }) => {
         </section>
         <section className="px-2 text-sm my-4 py-4 bg-muted text-muted-foreground">
           <div className="flex gap-1 items-center">
-            <h3>コメント</h3>
+            <h2>コメント</h2>
             <span className="text-accent/80">({diary.comments_count})</span>
             {/* コメントフォーム */}
             <CommentFormDrawer
