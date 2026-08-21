@@ -42,6 +42,12 @@ export default async function RootLayout({
       className={`${poppins.variable} ${mPlusRounded.variable} h-full antialiased`}
     >
       <body className="min-h-screen flex flex-col">
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:bg-primary focus:text-primary-foreground focus:px-4 focus:py-2 focus:rounded"
+        >
+          本文へスキップ
+        </a>
         {/* Toasterはchildrenより先にマウントする。
             フルリロード時、React はeffectをツリーの出現順に発火するため、
             Toasterがchildrenより後ろにあると、children内のtoast.success()等が
@@ -52,7 +58,11 @@ export default async function RootLayout({
             両者が同じ未読件数の箱を共有できるようにする */}
         <UnreadCountProvider enabled={!!user}>
           <Header user={user} />
-          <main className="flex flex-col flex-1 min-w-0">
+          <main
+            id="main-content"
+            tabIndex={-1}
+            className="flex flex-col flex-1 min-w-0"
+          >
             <TooltipProvider>{children}</TooltipProvider>
           </main>
         </UnreadCountProvider>

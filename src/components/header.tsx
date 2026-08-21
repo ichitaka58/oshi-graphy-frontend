@@ -7,7 +7,7 @@ import Link from "next/link";
 // シンプルなコンポーネントになった(未読件数はUnreadCountProvider経由でHeaderUserMenuが直接読む)
 const Header = ({ user }: { user: User | null }) => {
   return (
-    <div className="h-12 bg-primary">
+    <header className="h-12 bg-primary">
       <div className="flex items-center justify-between h-12 max-w-4xl mx-auto px-4">
         <Link href="/">
           <Image
@@ -27,7 +27,7 @@ const Header = ({ user }: { user: User | null }) => {
           </div>
         )}
       </div>
-    </div>
+    </header>
   );
 };
 
