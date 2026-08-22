@@ -126,7 +126,9 @@ const UserProfileEditForm = ({ id, user }: Props) => {
 
   return (
     <Card>
-      {(form.formState.isSubmitting || isPending) && <FullScreenLoadingOverlay />}
+      {(form.formState.isSubmitting || isPending) && (
+        <FullScreenLoadingOverlay />
+      )}
       <CardHeader className="justify-center">
         <CardTitle className="font-semibold">プロフィール編集</CardTitle>
       </CardHeader>
@@ -159,10 +161,16 @@ const UserProfileEditForm = ({ id, user }: Props) => {
                     id="form-update-user-profile-name"
                     type="text"
                     aria-invalid={fieldState.invalid}
+                    aria-describedby={
+                      fieldState.invalid
+                        ? "form-update-user-profile-name-error"
+                        : undefined
+                    }
                     autoComplete="off"
                   />
                   {fieldState.invalid && (
                     <FieldError
+                      id="form-update-user-profile-name-error"
                       errors={[fieldState.error]}
                       className="text-xs"
                     />
@@ -213,11 +221,17 @@ const UserProfileEditForm = ({ id, user }: Props) => {
                     type="file"
                     accept="image/*"
                     aria-invalid={fieldState.invalid}
+                    aria-describedby={
+                      fieldState.invalid
+                        ? "form-update-user-profile-icon-error"
+                        : undefined
+                    }
                     name={field.name}
                     onChange={handleFileChange}
                   />
                   {fieldState.invalid && (
                     <FieldError
+                      id="form-update-user-profile-icon-error"
                       errors={[fieldState.error]}
                       className="text-xs"
                     />
@@ -241,9 +255,17 @@ const UserProfileEditForm = ({ id, user }: Props) => {
                     {...field}
                     id="form-update-user-profile-profile"
                     aria-invalid={fieldState.invalid}
+                    aria-describedby={
+                      fieldState.invalid
+                        ? "form-update-user-profile-profile-error"
+                        : undefined
+                    }
                   />
                   {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
+                    <FieldError
+                      id="form-update-user-profile-profile-error"
+                      errors={[fieldState.error]}
+                    />
                   )}
                 </Field>
               )}

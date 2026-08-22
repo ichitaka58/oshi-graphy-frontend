@@ -110,11 +110,15 @@ const ArtistForm = (props: Props) => {
                     id={`${formId}-name`}
                     type="text"
                     aria-invalid={fieldState.invalid}
+                    aria-describedby={
+                      fieldState.invalid ? `${formId}-name-error` : undefined
+                    }
                     placeholder="アーティスト名を入力..."
                     autoComplete="off"
                   />
                   {fieldState.invalid && (
                     <FieldError
+                      id={`${formId}-name-error`}
                       errors={[fieldState.error]}
                       className="text-xs"
                     />
@@ -134,11 +138,15 @@ const ArtistForm = (props: Props) => {
                     id={`${formId}-kana`}
                     type="text"
                     aria-invalid={fieldState.invalid}
+                    aria-describedby={
+                      fieldState.invalid ? `${formId}-kana-error` : undefined
+                    }
                     placeholder="ひらがなで入力してください"
                     autoComplete="off"
                   />
                   {fieldState.invalid && (
                     <FieldError
+                      id={`${formId}-kana-error`}
                       errors={[fieldState.error]}
                       className="text-xs"
                     />
@@ -151,7 +159,11 @@ const ArtistForm = (props: Props) => {
       </CardContent>
       <CardFooter>
         <Field orientation="horizontal" className="justify-center">
-          <Button type="submit" form={formId} disabled={form.formState.isSubmitting || isPending}>
+          <Button
+            type="submit"
+            form={formId}
+            disabled={form.formState.isSubmitting || isPending}
+          >
             {form.formState.isSubmitting ? "保存中..." : "保存"}
           </Button>
           <Button type="button" variant="outline" onClick={() => form.reset()}>
