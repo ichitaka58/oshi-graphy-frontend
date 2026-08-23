@@ -137,7 +137,9 @@ const DiaryCreateForm = () => {
 
   return (
     <Card className="w-full sm:max-w-md">
-      {(form.formState.isSubmitting || isPending) && <FullScreenLoadingOverlay />}
+      {(form.formState.isSubmitting || isPending) && (
+        <FullScreenLoadingOverlay />
+      )}
       <CardHeader className="flex justify-center">
         <CardTitle className="flex gap-1 font-semibold">
           <NotebookPen className="size-5" />
@@ -170,10 +172,16 @@ const DiaryCreateForm = () => {
                     id="form-create-diary-happened_on"
                     type="date"
                     aria-invalid={fieldState.invalid}
+                    aria-describedby={
+                      fieldState.invalid
+                        ? "form-create-diary-happened_on-error"
+                        : undefined
+                    }
                     autoComplete="off"
                   />
                   {fieldState.invalid && (
                     <FieldError
+                      id="form-create-diary-happened_on-error"
                       errors={[fieldState.error]}
                       className="text-xs"
                     />
@@ -231,6 +239,11 @@ const DiaryCreateForm = () => {
                       placeholder="アーティストを選択"
                       id="form-create-diary-artist_id"
                       aria-invalid={fieldState.invalid}
+                      aria-describedby={
+                        fieldState.invalid
+                          ? "form-create-diary-artist_id-error"
+                          : undefined
+                      }
                       showClear
                     />
                     <ComboboxContent>
@@ -246,6 +259,7 @@ const DiaryCreateForm = () => {
                   </Combobox>
                   {fieldState.invalid && (
                     <FieldError
+                      id="form-create-diary-artist_id-error"
                       errors={[fieldState.error]}
                       className="text-xs"
                     />
@@ -269,11 +283,17 @@ const DiaryCreateForm = () => {
                     {...field}
                     id="form-create-diary-body"
                     aria-invalid={fieldState.invalid}
+                    aria-describedby={
+                      fieldState.invalid
+                        ? "form-create-diary-body-error"
+                        : undefined
+                    }
                     rows={6}
                     className="text-xs"
                   />
                   {fieldState.invalid && (
                     <FieldError
+                      id="form-create-diary-body-error"
                       errors={[fieldState.error]}
                       className="text-xs"
                     />
@@ -295,16 +315,21 @@ const DiaryCreateForm = () => {
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel
-                    htmlFor="form-crete-diary-images"
+                    htmlFor="form-create-diary-images"
                     className="font-semibold"
                   >
                     写真
                   </FieldLabel>
                   <Input
-                    id="form-crete-diary-images"
+                    id="form-create-diary-images"
                     type="file"
                     accept="image/*"
                     aria-invalid={fieldState.invalid}
+                    aria-describedby={
+                      fieldState.invalid
+                        ? "form-create-diary-images-error"
+                        : undefined
+                    }
                     multiple
                     name={field.name}
                     ref={(el) => {
@@ -319,7 +344,10 @@ const DiaryCreateForm = () => {
                     className="text-sm text-muted-foreground/70 file:text-muted-foreground/70"
                   />
                   {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
+                    <FieldError
+                      id="form-create-diary-images-error"
+                      errors={[fieldState.error]}
+                    />
                   )}
                   {/* 写真のプレビュー表示 */}
                   {previewUrl && (
@@ -354,7 +382,10 @@ const DiaryCreateForm = () => {
                       公開する
                     </FieldLabel>
                     {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
+                      <FieldError
+                        id="form-create-diary-is_public-error"
+                        errors={[fieldState.error]}
+                      />
                     )}
                   </FieldContent>
                   <Switch
@@ -363,6 +394,11 @@ const DiaryCreateForm = () => {
                     checked={field.value}
                     onCheckedChange={field.onChange}
                     aria-invalid={fieldState.invalid}
+                    aria-describedby={
+                      fieldState.invalid
+                        ? "form-create-diary-is_public-error"
+                        : undefined
+                    }
                     className="data-unchecked:bg-input/50"
                   />
                 </Field>
