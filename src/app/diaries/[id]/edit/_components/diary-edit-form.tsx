@@ -154,7 +154,9 @@ const DiaryEditForm = ({ id, diary }: Props) => {
 
   return (
     <Card className="w-full sm:max-w-md">
-      {(form.formState.isSubmitting || isPending) && <FullScreenLoadingOverlay />}
+      {(form.formState.isSubmitting || isPending) && (
+        <FullScreenLoadingOverlay />
+      )}
       <CardHeader className="flex justify-center">
         <CardTitle className="flex gap-1 font-semibold">
           <NotebookPen className="size-5" />
@@ -187,10 +189,16 @@ const DiaryEditForm = ({ id, diary }: Props) => {
                     id="form-update-diary-happened_on"
                     type="date"
                     aria-invalid={fieldState.invalid}
+                    aria-describedby={
+                      fieldState.invalid
+                        ? "form-update-diary-happened_on-error"
+                        : undefined
+                    }
                     autoComplete="off"
                   />
                   {fieldState.invalid && (
                     <FieldError
+                      id="form-update-diary-happened_on-error"
                       errors={[fieldState.error]}
                       className="text-xs"
                     />
@@ -248,6 +256,11 @@ const DiaryEditForm = ({ id, diary }: Props) => {
                       placeholder="アーティストを選択"
                       id="form-update-diary-artist_id"
                       aria-invalid={fieldState.invalid}
+                      aria-describedby={
+                        fieldState.invalid
+                          ? "form-update-diary-artist_id-error"
+                          : undefined
+                      }
                       showClear
                     />
                     <ComboboxContent>
@@ -263,6 +276,7 @@ const DiaryEditForm = ({ id, diary }: Props) => {
                   </Combobox>
                   {fieldState.invalid && (
                     <FieldError
+                      id="form-update-diary-artist_id-error"
                       errors={[fieldState.error]}
                       className="text-xs"
                     />
@@ -286,10 +300,16 @@ const DiaryEditForm = ({ id, diary }: Props) => {
                     {...field}
                     id="form-update-diary-body"
                     aria-invalid={fieldState.invalid}
+                    aria-describedby={
+                      fieldState.invalid
+                        ? "form-update-diary-body-error"
+                        : undefined
+                    }
                     rows={6}
                   />
                   {fieldState.invalid && (
                     <FieldError
+                      id="form-update-diary-body-error"
                       errors={[fieldState.error]}
                       className="text-xs"
                     />
@@ -314,6 +334,11 @@ const DiaryEditForm = ({ id, diary }: Props) => {
                     type="file"
                     accept="image/*"
                     aria-invalid={fieldState.invalid}
+                    aria-describedby={
+                      fieldState.invalid
+                        ? "form-update-diary-images-error"
+                        : undefined
+                    }
                     multiple
                     name={field.name}
                     ref={(el) => {
@@ -327,7 +352,10 @@ const DiaryEditForm = ({ id, diary }: Props) => {
                     }}
                   />
                   {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
+                    <FieldError
+                      id="form-update-diary-images-error"
+                      errors={[fieldState.error]}
+                    />
                   )}
                   {/* 写真のプレビュー表示 */}
                   {previewUrl.length > 0 && (
@@ -370,6 +398,11 @@ const DiaryEditForm = ({ id, diary }: Props) => {
                             id={`form-update-diary-delete_images-${image.id}`}
                             name={field.name}
                             aria-invalid={fieldState.invalid}
+                            aria-describedby={
+                              fieldState.invalid
+                                ? "form-update-diary-delete_images-error"
+                                : undefined
+                            }
                             checked={field.value?.includes(image.id)}
                             onCheckedChange={(checked) => {
                               const newValue = checked
@@ -393,7 +426,10 @@ const DiaryEditForm = ({ id, diary }: Props) => {
                       ))}
                     </FieldGroup>
                     {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
+                      <FieldError
+                        id="form-update-diary-delete_images-error"
+                        errors={[fieldState.error]}
+                      />
                     )}
                   </FieldSet>
                 )}
@@ -419,7 +455,10 @@ const DiaryEditForm = ({ id, diary }: Props) => {
                       公開する
                     </FieldLabel>
                     {fieldState.invalid && (
-                      <FieldError errors={[fieldState.error]} />
+                      <FieldError
+                        id="form-update-diary-is_public-error"
+                        errors={[fieldState.error]}
+                      />
                     )}
                   </FieldContent>
                   <Switch
@@ -428,6 +467,11 @@ const DiaryEditForm = ({ id, diary }: Props) => {
                     checked={field.value}
                     onCheckedChange={field.onChange}
                     aria-invalid={fieldState.invalid}
+                    aria-describedby={
+                      fieldState.invalid
+                        ? "form-update-diary-is_public-error"
+                        : undefined
+                    }
                     className="data-unchecked:bg-input/50"
                   />
                 </Field>
