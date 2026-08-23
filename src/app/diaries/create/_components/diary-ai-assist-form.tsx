@@ -61,7 +61,7 @@ const DiaryAiAssistForm = ({ onCopyReplyToBody }: DiaryAiAssistFormProps) => {
       // 次の会話のためにGeminiから帰ってくる会話IDをinputタグにセットする
       form.setValue("interaction_id", result.interactionId);
       form.setValue("prompt", "");
-    } catch (error){
+    } catch (error) {
       // suggestDiaryDraft内のredirect("/login")はNext.jsがNEXT_REDIRECT例外を
       // throwすることで実現されている。ここで無条件にcatchすると
       // そのリダイレクト用の例外まで握りつぶしてしまうため、
@@ -113,12 +113,19 @@ const DiaryAiAssistForm = ({ onCopyReplyToBody }: DiaryAiAssistFormProps) => {
                 {...field}
                 id="form-ai-assist-prompt"
                 aria-invalid={fieldState.invalid}
+                aria-describedby={
+                  fieldState.invalid ? "form-ai-assist-prompt-error" : undefined
+                }
                 rows={6}
                 placeholder="文案作成に必要な情報（日時、場所、アーティスト、感想など）を入力してください"
                 className="text-xs placeholder:text-muted-foreground/50 placeholder:text-xs bg-card"
               />
               {fieldState.invalid && (
-                <FieldError errors={[fieldState.error]} className="text-xs" />
+                <FieldError
+                  id="form-ai-assist-prompt-error"
+                  errors={[fieldState.error]}
+                  className="text-xs"
+                />
               )}
             </Field>
           )}
@@ -154,7 +161,9 @@ const DiaryAiAssistForm = ({ onCopyReplyToBody }: DiaryAiAssistFormProps) => {
         </Button>
       </Field>
       <Field className="mt-4">
-        <FieldTitle className="font-semibold text-foreground/70 pl-2">AIの回答</FieldTitle>
+        <FieldTitle className="font-semibold text-foreground/70 pl-2">
+          AIの回答
+        </FieldTitle>
         <Card className="py-2 px-2 min-h-16">
           <CardContent className="px-0">
             <p className="text-xs">{reply}</p>
