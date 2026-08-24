@@ -92,11 +92,17 @@ const EmailEditForm = () => {
                     id="form-update-email-input"
                     type="email"
                     aria-invalid={fieldState.invalid}
+                    aria-describedby={
+                      fieldState.invalid
+                        ? "form-update-email-input-error"
+                        : undefined
+                    }
                     placeholder="example@example.com"
                     autoComplete="email"
                   />
                   {fieldState.invalid && (
                     <FieldError
+                      id="form-update-email-input-error"
                       errors={[fieldState.error]}
                       className="text-xs"
                     />
