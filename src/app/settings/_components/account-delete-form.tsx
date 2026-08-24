@@ -117,8 +117,14 @@ const AccountDeleteForm = () => {
                     <InputGroup>
                       <InputGroupInput
                         {...field}
+                        id="form-delete-account-password"
                         type={showPassword ? "text" : "password"}
                         aria-invalid={fieldState.invalid}
+                        aria-describedby={
+                          fieldState.invalid
+                            ? "form-delete-account-password-error"
+                            : undefined
+                        }
                         placeholder="パスワード..."
                         autoComplete="current-password"
                       />
@@ -134,6 +140,7 @@ const AccountDeleteForm = () => {
                     </InputGroup>
                     {fieldState.invalid && (
                       <FieldError
+                        id="form-delete-account-password-error"
                         errors={[fieldState.error]}
                         className="text-xs"
                       />

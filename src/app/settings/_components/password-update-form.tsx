@@ -107,6 +107,11 @@ const PasswordUpdateForm = () => {
                       id="form-update-password-current_password"
                       type={showCurrentPassword ? "text" : "password"}
                       aria-invalid={fieldState.invalid}
+                      aria-describedby={
+                        fieldState.invalid
+                          ? "form-update-password-current_password-error"
+                          : undefined
+                      }
                       placeholder="現在のパスワードを入力"
                       autoComplete="current-password"
                     />
@@ -124,6 +129,7 @@ const PasswordUpdateForm = () => {
                   </InputGroup>
                   {fieldState.invalid && (
                     <FieldError
+                      id="form-update-password-current_password-error"
                       errors={[fieldState.error]}
                       className="text-xs"
                     />
@@ -145,6 +151,11 @@ const PasswordUpdateForm = () => {
                       id="form-update-password-password"
                       type={showNewPassword ? "text" : "password"}
                       aria-invalid={fieldState.invalid}
+                      aria-describedby={
+                        fieldState.invalid
+                          ? "form-update-password-password-error"
+                          : undefined
+                      }
                       placeholder="新しいパスワードを入力"
                       autoComplete="new-password"
                     />
@@ -160,6 +171,7 @@ const PasswordUpdateForm = () => {
                   </InputGroup>
                   {fieldState.invalid && (
                     <FieldError
+                      id="form-update-password-password-error"
                       errors={[fieldState.error]}
                       className="text-xs"
                     />
@@ -181,6 +193,11 @@ const PasswordUpdateForm = () => {
                       id="form-update-password-password_confirmation"
                       type={showPasswordConfirmation ? "text" : "password"}
                       aria-invalid={fieldState.invalid}
+                      aria-describedby={
+                        fieldState.invalid
+                          ? "form-update-password-password_confirmation-error"
+                          : undefined
+                      }
                       placeholder="確認用パスワードを入力"
                       autoComplete="new-password"
                     />
@@ -198,6 +215,7 @@ const PasswordUpdateForm = () => {
                   </InputGroup>
                   {fieldState.invalid && (
                     <FieldError
+                      id="form-update-password-password_confirmation-error"
                       errors={[fieldState.error]}
                       className="text-xs"
                     />
