@@ -64,7 +64,7 @@ describe("LoginForm", () => {
     expect(window.location.href).toBe("");
   });
 
-  it("ログインに成功した場合は/public-diariesへ遷移する", async () => {
+  it("ログインに成功した場合は/diariesへ遷移する", async () => {
     vi.mocked(fetch).mockResolvedValue({ ok: true } as Response);
     const user = userEvent.setup();
     render(<LoginForm />);
@@ -74,7 +74,7 @@ describe("LoginForm", () => {
     await user.click(screen.getByRole("button", { name: "ログイン" }));
 
     await waitFor(() => {
-      expect(window.location.href).toBe("/public-diaries");
+      expect(window.location.href).toBe("/diaries");
     });
     expect(fetch).toHaveBeenCalledWith(
       "/api/auth/login",
