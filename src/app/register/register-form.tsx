@@ -91,11 +91,19 @@ const RegisterForm = () => {
                     {...field}
                     id="form-register-name"
                     aria-invalid={fieldState.invalid}
+                    aria-describedby={
+                      fieldState.invalid
+                        ? "form-register-name-error"
+                        : undefined
+                    }
                     placeholder="名前を入力"
                     autoComplete="off"
                   />
                   {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
+                    <FieldError
+                      id="form-register-name-error"
+                      errors={[fieldState.error]}
+                    />
                   )}
                 </Field>
               )}
@@ -111,11 +119,19 @@ const RegisterForm = () => {
                     id="form-register-email"
                     type="email"
                     aria-invalid={fieldState.invalid}
+                    aria-describedby={
+                      fieldState.invalid
+                        ? "form-register-email-error"
+                        : undefined
+                    }
                     placeholder="メールアドレスを入力"
                     autoComplete="email"
                   />
                   {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
+                    <FieldError
+                      id="form-register-email-error"
+                      errors={[fieldState.error]}
+                    />
                   )}
                 </Field>
               )}
@@ -133,11 +149,19 @@ const RegisterForm = () => {
                     id="form-register-password"
                     type="password"
                     aria-invalid={fieldState.invalid}
+                    aria-describedby={
+                      fieldState.invalid
+                        ? "form-register-password-error"
+                        : undefined
+                    }
                     placeholder="パスワードを入力"
                     autoComplete="new-password"
                   />
                   {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
+                    <FieldError
+                      id="form-register-password-error"
+                      errors={[fieldState.error]}
+                    />
                   )}
                 </Field>
               )}
@@ -155,11 +179,19 @@ const RegisterForm = () => {
                     id="form-register-password_confirmation"
                     type="password"
                     aria-invalid={fieldState.invalid}
+                    aria-describedby={
+                      fieldState.invalid
+                        ? "form-register-password_confirmation-error"
+                        : undefined
+                    }
                     placeholder="確認用パスワードを入力"
                     autoComplete="new-password"
                   />
                   {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
+                    <FieldError
+                      id="form-register-password_confirmation-error"
+                      errors={[fieldState.error]}
+                    />
                   )}
                 </Field>
               )}
