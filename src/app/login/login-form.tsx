@@ -83,11 +83,17 @@ const LoginForm = () => {
                     id="form-login-email"
                     type="email"
                     aria-invalid={fieldState.invalid}
+                    aria-describedby={
+                      fieldState.invalid ? "form-login-email-error" : undefined
+                    }
                     placeholder="メールアドレスを入力"
                     autoComplete="email"
                   />
                   {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
+                    <FieldError
+                      id="form-login-email-error"
+                      errors={[fieldState.error]}
+                    />
                   )}
                 </Field>
               )}
@@ -105,11 +111,19 @@ const LoginForm = () => {
                     id="form-login-password"
                     type="password"
                     aria-invalid={fieldState.invalid}
+                    aria-describedby={
+                      fieldState.invalid
+                        ? "form-login-password-error"
+                        : undefined
+                    }
                     placeholder="パスワードを入力"
                     autoComplete="current-password"
                   />
                   {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
+                    <FieldError
+                      id="form-login-password-error"
+                      errors={[fieldState.error]}
+                    />
                   )}
                 </Field>
               )}
