@@ -135,7 +135,11 @@ const CommentFormDrawer = ({
                 <Field data-invalid={fieldState.invalid}>
                   <Textarea
                     {...field}
+                    id="body"
                     aria-invalid={fieldState.invalid}
+                    aria-describedby={
+                      fieldState.invalid ? "body-error" : undefined
+                    }
                     className="text-xs"
                     placeholder={
                       !isReply
@@ -145,6 +149,7 @@ const CommentFormDrawer = ({
                   />
                   {fieldState.invalid && (
                     <FieldError
+                      id="body-error"
                       errors={[fieldState.error]}
                       className="text-xs"
                     />
