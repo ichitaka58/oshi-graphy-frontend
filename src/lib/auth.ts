@@ -1,11 +1,11 @@
-import { User } from "@/types/user";
+import { CurrentUser } from "@/types/user";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 // ヘッダーページで使用
-export async function getCurrentUserOrNull ():Promise<User | null> {
+export async function getCurrentUserOrNull(): Promise<CurrentUser | null> {
   const token = (await cookies()).get("token")?.value;
-  if(!token) return null;
+  if (!token) return null;
 
   const res = await fetch(`${process.env.LARAVEL_API_URL}/api/user`, {
     headers: {
@@ -14,16 +14,15 @@ export async function getCurrentUserOrNull ():Promise<User | null> {
     },
     cache: "no-store", // ユーザー情報はキャッシュしない
   });
-  if(!res.ok) return null;
+  if (!res.ok) return null;
 
   return res.json();
-
 }
 
 // 認証必須のページで使用
-export async function getCurrentUser ():Promise<User> {
+export async function getCurrentUser(): Promise<CurrentUser> {
   const user = await getCurrentUserOrNull();
-  if(!user) {
+  if (!user) {
     redirect("/login");
   }
   return user;

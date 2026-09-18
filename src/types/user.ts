@@ -1,13 +1,16 @@
 export type User = {
   id: number;
   name: string;
-  email: string;
   icon_path: string | null;
   profile: string | null;
-  is_admin: boolean;
   created_at: string;
   updated_at: string;
   icon_url: string;
+};
+
+export type CurrentUser = User & {
+  email: string;
+  is_admin: boolean;
 };
 
 export type UserProfile = User & {

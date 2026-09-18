@@ -21,10 +21,8 @@ vi.mock("next/navigation", () => ({
 const user: User = {
   id: 1,
   name: "元の名前",
-  email: "user@example.com",
   icon_path: "icons/1.png",
   profile: "元の自己紹介",
-  is_admin: false,
   created_at: "2026-01-01T00:00:00Z",
   updated_at: "2026-01-01T00:00:00Z",
   icon_url: "https://example.com/icons/1.png",

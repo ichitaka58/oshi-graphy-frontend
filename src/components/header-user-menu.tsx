@@ -22,7 +22,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "./ui/alert-dialog";
-import { User } from "@/types/user";
+import { CurrentUser } from "@/types/user";
 import Link from "next/link";
 import { toast } from "sonner";
 import {
@@ -40,7 +40,7 @@ import {
 import { useUnreadCount } from "@/contexts/unread-count-context";
 import { Spinner } from "./kibo-ui/spinner";
 
-const HeaderUserMenu = ({ user }: { user: User }) => {
+const HeaderUserMenu = ({ user }: { user: CurrentUser }) => {
   const [alertOpen, setAlertOpen] = useState<boolean>(false);
   const [isLoggingOut, setIsLoggingOut] = useState<boolean>(false);
   // propsではなくContextから未読件数を取得する。
