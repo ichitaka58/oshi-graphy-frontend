@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { User } from "@/types/user";
+import type { CurrentUser } from "@/types/user";
 
 const { cookiesMock, redirectMock } = vi.hoisted(() => ({
   cookiesMock: vi.fn(),
@@ -16,7 +16,7 @@ vi.mock("next/navigation", () => ({
   redirect: redirectMock,
 }));
 
-const mockUser: User = {
+const mockUser: CurrentUser = {
   id: 1,
   name: "テスト太郎",
   email: "test@example.com",
