@@ -87,7 +87,7 @@ const HeaderUserMenu = ({ user }: { user: CurrentUser }) => {
                     ? `/storage/${user.icon_path}`
                     : "/images/icon_placeholder.png"
                 }
-                alt={`${user.name}icon`}
+                alt={`${user.name}のアイコン`}
               />
               <AvatarFallback>OG</AvatarFallback>
               {unreadCount > 0 && <AvatarBadge className="bg-rose-600" />}
