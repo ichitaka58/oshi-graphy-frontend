@@ -1,4 +1,9 @@
-import { Avatar, AvatarBadge, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import {
+  Avatar,
+  AvatarBadge,
+  AvatarFallback,
+  AvatarImage,
+} from "@/components/ui/avatar";
 import { ConversationWithUser } from "@/types/conversation";
 import { Message } from "@/types/message";
 import { MoveLeft } from "lucide-react";
@@ -43,8 +48,8 @@ const ConversationDetailPage = async ({
   const currentPage = fetchData.messages.current_page;
 
   return (
-    <div className="max-w-xl mx-auto pt-6 px-6">
-      <div className="flex items-center gap-1">
+    <div className="max-w-xl w-full mx-auto pt-6 px-6 flex flex-col flex-1">
+      <div className="flex items-center gap-1 py-2">
         <Link href="/messages" aria-label="メッセージ一覧に戻る">
           <MoveLeft />
         </Link>
@@ -61,7 +66,7 @@ const ConversationDetailPage = async ({
         </Avatar>
         <span className="text-sm">{conversation.other_user.name}</span>
       </div>
-      <MessageThread messages={messages} />
+      <MessageThread messages={messages} currentUserId={currentUser.id} />
       <MessageForm />
     </div>
   );
