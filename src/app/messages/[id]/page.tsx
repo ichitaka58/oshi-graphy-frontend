@@ -1,6 +1,5 @@
 import {
   Avatar,
-  AvatarBadge,
   AvatarFallback,
   AvatarImage,
 } from "@/components/ui/avatar";
@@ -44,8 +43,6 @@ const ConversationDetailPage = async ({
   const fetchData = await res.json();
   const conversation: ConversationWithUser = fetchData.conversation;
   const messages: Message[] = fetchData.messages.data;
-  const lastPage = fetchData.messages.last_page;
-  const currentPage = fetchData.messages.current_page;
 
   return (
     <div className="max-w-xl w-full mx-auto pt-6 px-6 flex flex-col flex-1">
@@ -67,7 +64,7 @@ const ConversationDetailPage = async ({
         <span className="text-sm">{conversation.other_user.name}</span>
       </div>
       <MessageThread messages={messages} currentUserId={currentUser.id} />
-      <MessageForm />
+      <MessageForm id={conversation.id} />
     </div>
   );
 };
