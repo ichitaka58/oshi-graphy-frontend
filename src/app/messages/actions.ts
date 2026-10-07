@@ -1,6 +1,7 @@
 "use server";
 
 import { ActionResult } from "@/types/action-result";
+import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
@@ -32,6 +33,8 @@ export async function sendMessage(
       errors: errorData.errors as Record<string, string[]> | undefined,
     };
   }
+  revalidatePath(`/messages/${id}`);
+  revalidatePath("/messages");
   return { success: true };
 }
 
