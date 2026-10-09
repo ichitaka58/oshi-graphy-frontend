@@ -1,8 +1,4 @@
-import {
-  Avatar,
-  AvatarFallback,
-  AvatarImage,
-} from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ConversationWithUser } from "@/types/conversation";
 import { Message } from "@/types/message";
 import { MoveLeft } from "lucide-react";
@@ -12,6 +8,7 @@ import MessageThread from "./_components/message-thread";
 import MessageForm from "./_components/message-form";
 import { getCurrentUser } from "@/lib/auth";
 import Link from "next/link";
+import MarkAsRead from "./_components/mark-as-read";
 
 const ConversationDetailPage = async ({
   params,
@@ -64,6 +61,8 @@ const ConversationDetailPage = async ({
         <span className="text-sm">{conversation.other_user.name}</span>
       </div>
       <MessageThread messages={messages} currentUserId={currentUser.id} />
+      {/* 画面には何も表示せず、スレッドを既読にするためだけのコンポーネント */}
+      <MarkAsRead id={conversation.id} lastMessageId={messages[0]?.id} />
       <MessageForm id={conversation.id} />
     </div>
   );

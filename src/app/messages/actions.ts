@@ -60,6 +60,7 @@ export async function markConversationRead(id: number): Promise<ActionResult> {
       message: `会話の既読に失敗しました(${res.status})`,
     };
   }
+  revalidatePath("/messages");
   return { success: true };
 }
 
