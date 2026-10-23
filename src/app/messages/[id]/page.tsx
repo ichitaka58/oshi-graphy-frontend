@@ -40,6 +40,7 @@ const ConversationDetailPage = async ({
   const fetchData = await res.json();
   const conversation: ConversationWithUser = fetchData.conversation;
   const messages: Message[] = fetchData.messages.data;
+  const lastPage: number = fetchData.messages.last_page;
 
   return (
     <div className="max-w-xl w-full mx-auto pt-6 px-6 flex flex-col flex-1">
@@ -60,7 +61,13 @@ const ConversationDetailPage = async ({
         </Avatar>
         <span className="text-sm">{conversation.other_user.name}</span>
       </div>
-      <MessageThread messages={messages} currentUserId={currentUser.id} />
+      {/* メッセージ一覧のコンポーネント */}
+      <MessageThread
+        latestMessages={messages}
+        currentUserId={currentUser.id}
+        conversationId={conversation.id}
+        lastPage={lastPage}
+      />
       {/* 画面には何も表示せず、スレッドを既読にするためだけのコンポーネント */}
       <MarkAsRead id={conversation.id} lastMessageId={messages[0]?.id} />
       <MessageForm id={conversation.id} />

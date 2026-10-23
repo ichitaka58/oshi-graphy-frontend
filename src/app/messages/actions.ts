@@ -1,6 +1,7 @@
 "use server";
 
 import { ActionResult } from "@/types/action-result";
+import { Message } from "@/types/message";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
@@ -117,5 +118,36 @@ export async function getUnreadConversationCount(): Promise<
   return {
     success: true,
     unreadCount: result.unread_count,
+  };
+}
+
+export async function getMoreMessages(
+  id: number,
+  page: number,
+): Promise<ActionResult<{ moreMessages: Message[]; lastPage: number; }>> {
+  const token = (await cookies()).get("token")?.value;
+  const res = await fetch(
+    `${process.env.LARAVEL_API_URL}/api/conversations/${id}?page=${page}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: "application/json",
+      },
+    },
+  );
+  if (res.status === 401) redirect("/login");
+  if (!res.ok) {
+    return {
+      success: false,
+      message: `メッセージの取得に失敗しました(${res.status})`,
+    };
+  }
+  const fetchData = await res.json();
+  const moreMessages: Message[] = fetchData.messages.data;
+  const lastPage: number = fetchData.messages.last_page;
+  return {
+    success: true,
+    moreMessages: moreMessages,
+    lastPage: lastPage,
   };
 }
