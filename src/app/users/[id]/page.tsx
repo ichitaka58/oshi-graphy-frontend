@@ -38,6 +38,7 @@ const UserProfilePage = async ({
   const user: UserProfile = data.user;
   const isFollowing: boolean = data.is_following; // ログインユーザーがこのユーザーをフォローしているか？
   const isBlocking: boolean = data.is_blocking; // ログインユーザーがこのユーザーをブロックしているか？
+  const isFollowedBy: boolean = data.is_followed_by; // このユーザーがログインユーザーをフォローしているか？
 
   return (
     <div>
@@ -72,6 +73,7 @@ const UserProfilePage = async ({
             initialFollowersCount={user.followers_count}
             initialIsFollowing={isFollowing}
             showFollowButton={Number(id) !== loginUser.id && !isBlocking}
+            isFollowedBy={isFollowedBy}
           />
           <p className="text-sm text-muted-foreground">{user.profile}</p>
           <p className="text-accent text-shadow-2xs">
