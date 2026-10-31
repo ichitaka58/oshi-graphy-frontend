@@ -107,7 +107,7 @@ const LikersDrawer = ({
               <Avatar>
                 <AvatarImage
                   src={liker.icon_path ? `/storage/${liker.icon_path}` : "/images/icon_placeholder.png"}
-                  alt={`${liker.name}icon`}
+                  alt={`${liker.name}のアイコン`}
                 />
                 <AvatarFallback>OG</AvatarFallback>
               </Avatar>

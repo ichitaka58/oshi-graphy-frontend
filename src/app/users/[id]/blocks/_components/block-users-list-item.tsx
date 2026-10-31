@@ -45,7 +45,7 @@ const BlockUsersListItem = ({ initialBlocks }: { initialBlocks: User[] }) => {
               <Avatar>
                 <AvatarImage
                   src={user.icon_path ? `/storage/${user.icon_path}` : "/images/icon_placeholder.png"}
-                  alt={`${user.name}icon`}
+                  alt={`${user.name}のアイコン`}
                 />
                 <AvatarFallback>OG</AvatarFallback>
               </Avatar>

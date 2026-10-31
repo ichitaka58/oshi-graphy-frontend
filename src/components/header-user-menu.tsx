@@ -29,6 +29,7 @@ import {
   Bell,
   BookHeart,
   LogOutIcon,
+  MessageSquare,
   MicVocal,
   Music4,
   Notebook,
@@ -39,6 +40,7 @@ import {
 } from "lucide-react";
 import { useUnreadCount } from "@/contexts/unread-count-context";
 import { Spinner } from "./kibo-ui/spinner";
+import { useUnreadConversationCount } from "@/contexts/unread-conversation-count-context";
 
 const HeaderUserMenu = ({ user }: { user: CurrentUser }) => {
   const [alertOpen, setAlertOpen] = useState<boolean>(false);
@@ -46,6 +48,7 @@ const HeaderUserMenu = ({ user }: { user: CurrentUser }) => {
   // propsではなくContextから未読件数を取得する。
   // どこかでrefetch()が呼ばれるとunreadCountが更新され、このコンポーネントも自動的に再描画される。
   const { unreadCount } = useUnreadCount();
+  const { unreadConversationCount } = useUnreadConversationCount();
 
   const handleLogout = async () => {
     setIsLoggingOut(true);
@@ -87,10 +90,12 @@ const HeaderUserMenu = ({ user }: { user: CurrentUser }) => {
                     ? `/storage/${user.icon_path}`
                     : "/images/icon_placeholder.png"
                 }
-                alt={`${user.name}icon`}
+                alt={`${user.name}のアイコン`}
               />
               <AvatarFallback>OG</AvatarFallback>
-              {unreadCount > 0 && <AvatarBadge className="bg-rose-600" />}
+              {(unreadCount > 0 || unreadConversationCount > 0) && (
+                <AvatarBadge className="bg-rose-600" />
+              )}
             </Avatar>
           </Button>
         </DropdownMenuTrigger>
@@ -122,6 +127,19 @@ const HeaderUserMenu = ({ user }: { user: CurrentUser }) => {
                 {unreadCount > 0 && (
                   <span className="bg-rose-600 text-white text-[10px] font-semibold w-5 h-5 rounded-full text-center leading-5">
                     {unreadCount}
+                  </span>
+                )}
+              </DropdownMenuItem>
+            </Link>
+            <Link href={"/messages"}>
+              <DropdownMenuItem>
+                <MessageSquare
+                  className={`${unreadConversationCount > 0 ? "text-rose-600" : ""}`}
+                />
+                <span>メッセージ</span>
+                {unreadConversationCount > 0 && (
+                  <span className="bg-rose-600 text-white text-[10px] font-semibold w-5 h-5 rounded-full text-center leading-5">
+                    {unreadConversationCount}
                   </span>
                 )}
               </DropdownMenuItem>

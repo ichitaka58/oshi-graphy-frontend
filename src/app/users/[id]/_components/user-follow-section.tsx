@@ -7,6 +7,7 @@ import { unstable_rethrow } from "next/navigation";
 import { useState } from "react";
 import FollowersListDrawer from "./followers-list-drawer";
 import FollowingsListDrawer from "./followings-list-drawer";
+import { startConversation } from "@/app/messages/actions";
 
 type Props = {
   id: string;
@@ -14,6 +15,7 @@ type Props = {
   initialFollowersCount: number;
   initialIsFollowing: boolean;
   showFollowButton: boolean;
+  isFollowedBy: boolean;
 };
 
 const UserFollowSection = ({
@@ -22,6 +24,7 @@ const UserFollowSection = ({
   initialFollowersCount,
   initialIsFollowing,
   showFollowButton,
+  isFollowedBy,
 }: Props) => {
   const [followingsCount, setFollowingsCount] = useState<number>(
     initialFollowingsCount,
@@ -31,6 +34,8 @@ const UserFollowSection = ({
   );
   const [isFollowing, setIsFollowing] = useState<boolean>(initialIsFollowing);
   const [busy, setBusy] = useState<boolean>(false);
+  const [isStarting, setIsStarting] = useState<boolean>(false);
+  const isMutualFollow: boolean = isFollowing && isFollowedBy; // 相互フォローしているか
 
   const handleToggle = async () => {
     if (busy) return;
@@ -52,6 +57,24 @@ const UserFollowSection = ({
     }
   };
 
+  // 会話を作成（既にあれば取得）してスレッドへ移動
+  const handleStartConversation = async () => {
+    if (isStarting) return;
+    setIsStarting(true);
+    try {
+      const result = await startConversation(Number(id));
+      if (!result.success) {
+        toast.error(result.message, { position: "top-center" });
+        return;
+      }
+    } catch (error) {
+      unstable_rethrow(error);
+      toast.error("通信エラーが発生しました", { position: "top-center" });
+    } finally {
+      setIsStarting(false);
+    }
+  };
+
   return (
     <>
       {showFollowButton && (
@@ -65,11 +88,20 @@ const UserFollowSection = ({
           {isFollowing ? "フォロー中" : "フォロー"}
         </Button>
       )}
+      {isMutualFollow && (
+        <Button
+          type="button"
+          variant="default"
+          onClick={handleStartConversation}
+          disabled={isStarting}
+          className="hover:bg-primary/70"
+        >
+          メッセージを送る
+        </Button>
+      )}
 
       <div className="flex gap-2 text-xs">
-        {/* <span>フォロー: {followingsCount}人</span> */}
         <FollowingsListDrawer userId={id} followingsCount={followingsCount} />
-        {/* <span>フォロワー: {followersCount}人</span> */}
         <FollowersListDrawer userId={id} followersCount={followersCount} />
       </div>
     </>

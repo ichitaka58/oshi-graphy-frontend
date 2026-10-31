@@ -101,7 +101,7 @@ export async function deleteDiary(
     };
   }
   revalidatePath("/diaries");
-  redirect("/diaries?deleted=1")
+  redirect("/diaries?deleted=1");
 }
 
 // GeminiによるAI日記文案の作成
