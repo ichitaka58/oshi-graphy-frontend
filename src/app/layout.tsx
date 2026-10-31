@@ -9,6 +9,7 @@ import { UnreadCountProvider } from "@/contexts/unread-count-context";
 import { getCurrentUserOrNull } from "@/lib/auth";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { UnreadConversationCountProvider } from "@/contexts/unread-conversation-count-context";
 
 const poppins = Poppins({
   variable: "--font-heading",
@@ -54,17 +55,19 @@ export default async function RootLayout({
             Toasterの購読開始（useEffect内のsubscribe）より先に発行され、
             トーストが誰にも受信されず消えてしまう */}
         <Toaster />
-        {/* HeaderとmainページをどちらもUnreadCountProviderで包むことで、
+        {/* HeaderとmainページをどちらもUnreadCountProvider、UnreadConversationCountProviderで包むことで、
             両者が同じ未読件数の箱を共有できるようにする */}
         <UnreadCountProvider enabled={!!user}>
-          <Header user={user} />
-          <main
-            id="main-content"
-            tabIndex={-1}
-            className="flex flex-col flex-1 min-w-0"
-          >
-            <TooltipProvider>{children}</TooltipProvider>
-          </main>
+          <UnreadConversationCountProvider enabled={!!user}>
+            <Header user={user} />
+            <main
+              id="main-content"
+              tabIndex={-1}
+              className="flex flex-col flex-1 min-w-0"
+            >
+              <TooltipProvider>{children}</TooltipProvider>
+            </main>
+          </UnreadConversationCountProvider>
         </UnreadCountProvider>
         <Footer />
         <Analytics />
