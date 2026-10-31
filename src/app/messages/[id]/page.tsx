@@ -9,6 +9,7 @@ import MessageForm from "./_components/message-form";
 import { getCurrentUser } from "@/lib/auth";
 import Link from "next/link";
 import MarkAsRead from "./_components/mark-as-read";
+import BackButton from "@/components/back-button";
 
 const ConversationDetailPage = async ({
   params,
@@ -43,34 +44,37 @@ const ConversationDetailPage = async ({
   const lastPage: number = fetchData.messages.last_page;
 
   return (
-    <div className="max-w-xl w-full mx-auto pt-6 px-6 flex flex-col flex-1">
-      <div className="flex items-center gap-1 py-2">
-        <Link href="/messages" aria-label="メッセージ一覧に戻る">
-          <MoveLeft />
-        </Link>
-        <Avatar>
-          <AvatarImage
-            src={
-              conversation.other_user.icon_path
-                ? `/storage/${conversation.other_user.icon_path}`
-                : "/images/icon_placeholder.png"
-            }
-            alt={`${conversation.other_user.name}のアイコン`}
-          />
-          <AvatarFallback>OG</AvatarFallback>
-        </Avatar>
-        <span className="text-sm">{conversation.other_user.name}</span>
+    <div className="flex flex-col flex-1">
+      <BackButton />
+      <div className="max-w-xl w-full mx-auto px-6 flex flex-col flex-1">
+        <div className="flex items-center gap-1 py-2">
+          <Link href="/messages" aria-label="メッセージ一覧に戻る">
+            <MoveLeft />
+          </Link>
+          <Avatar>
+            <AvatarImage
+              src={
+                conversation.other_user.icon_path
+                  ? `/storage/${conversation.other_user.icon_path}`
+                  : "/images/icon_placeholder.png"
+              }
+              alt={`${conversation.other_user.name}のアイコン`}
+            />
+            <AvatarFallback>OG</AvatarFallback>
+          </Avatar>
+          <span className="text-sm">{conversation.other_user.name}</span>
+        </div>
+        {/* メッセージ一覧のコンポーネント */}
+        <MessageThread
+          latestMessages={messages}
+          currentUserId={currentUser.id}
+          conversationId={conversation.id}
+          lastPage={lastPage}
+        />
+        {/* 画面には何も表示せず、スレッドを既読にするためだけのコンポーネント */}
+        <MarkAsRead id={conversation.id} lastMessageId={messages[0]?.id} />
+        <MessageForm id={conversation.id} />
       </div>
-      {/* メッセージ一覧のコンポーネント */}
-      <MessageThread
-        latestMessages={messages}
-        currentUserId={currentUser.id}
-        conversationId={conversation.id}
-        lastPage={lastPage}
-      />
-      {/* 画面には何も表示せず、スレッドを既読にするためだけのコンポーネント */}
-      <MarkAsRead id={conversation.id} lastMessageId={messages[0]?.id} />
-      <MessageForm id={conversation.id} />
     </div>
   );
 };
