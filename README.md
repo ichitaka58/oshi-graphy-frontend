@@ -15,6 +15,20 @@ Oshi-Graphy（推しグラフィー）は、80〜90年代から今も活躍す�
 
 **【バックエンドリポジトリ】:** [https://github.com/ichitaka58/oshi-graphy](https://github.com/ichitaka58/oshi-graphy)
 
+## 主な機能
+
+- **日記**：推し活の日記を画像付きで作成・編集・削除。公開／非公開を切り替えられる。AI による文章作成アシスト付き。
+- **公開ダイアリー**：他のユーザーが公開した日記をアーティストで絞り込んで閲覧。
+- **いいね・コメント**：日記へのいいね、コメントと返信。
+- **フォロー・ブロック**：ユーザーのフォロー、フォロー／フォロワー一覧、ブロック。
+- **通知**：いいね・コメント・返信・フォローの通知と未読数の表示。
+- **DM（ダイレクトメッセージ）**：**相互フォローのユーザー同士だけ**が送り合える 1対1 のメッセージ。
+  - プロフィールの「メッセージを送る」ボタン（相互フォロー時のみ表示）から会話を始める。
+  - 会話一覧（`/messages`）とスレッド（`/messages/[id]`）。スレッドを開くと既読になり、過去のメッセージは「もっと読む」で読み込む。
+  - ユーザーメニューに未読の会話数を表示（ポーリングはせず、表示時と操作後に再取得）。
+  - 相互フォローが外れても、ブロックされていなければ過去のやり取りは読める（送信はできない）。
+- **管理者機能**：アーティストの登録・編集。
+
 ## 技術スタック
 
 - [Next.js](https://nextjs.org/) 16 (App Router)
@@ -71,7 +85,7 @@ flowchart LR
 
 ### 前提条件
 
-- Node.js（`package.json` の `next@16` / `react@19` が動作するバージョン）
+- Node.js 24 系（本番の Vercel も 24.x）
 - Laravel バックエンド（[oshi-graphy](https://github.com/ichitaka58/oshi-graphy)）が起動していること
 
 ### インストール
@@ -122,15 +136,16 @@ src/
 ├── app/          # App Router（ページ・Route Handler・Server Actions）
 │   ├── admin/          # アーティスト管理などの管理者向けページ
 │   ├── api/auth/        # ログイン・登録・ログアウトの Route Handler
-│   ├── artists/         # アーティスト一覧・詳細
-│   ├── diaries/         # 日記の一覧・詳細・作成
+│   ├── artists/         # アーティスト関連の Server Actions
+│   ├── diaries/         # 日記の一覧・詳細・作成・編集
 │   ├── login / register # 認証ページ
+│   ├── messages/        # DM（会話一覧・スレッド）
 │   ├── notifications/   # 通知
 │   ├── public-diaries/  # 公開ダイアリー（ログイン必須）
 │   ├── settings/        # アカウント設定
-│   └── users/           # ユーザー詳細
+│   └── users/           # ユーザー詳細・プロフィール編集・ブロック一覧
 ├── components/   # 共通コンポーネント（ui/ は shadcn/ui ベース）
-├── contexts/     # React Context（未読通知数など）
+├── contexts/     # React Context（未読通知数・未読の会話数）
 ├── lib/          # 認証・日付処理・バリデーションスキーマなどの共通ロジック
-└── types/        # ドメイン型定義（Diary, Artist, User など）
+└── types/        # ドメイン型定義（Diary, Artist, User, Conversation, Message など）
 ```
